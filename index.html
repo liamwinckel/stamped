@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="classic">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Stamped">
+<meta name="theme-color" content="#0F2A5C">
+<title>Stamped</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=DM+Mono:wght@400;500&family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{--ease:cubic-bezier(.22,1,.36,1);--spring:cubic-bezier(.34,1.56,.64,1)}
+html[data-theme=classic]{--frame:#0F2A5C;--frame-ink:#FFFFFF;--frame-muted:#C9D6EE;--eyebrow:#E9A92B;--page:#F3F6FB;--page-line:#DCE5F3;--ink:#0F2A5C;--muted:#5B6B85;--surface:#FFFFFF;--surface-2:#EEF4FC;--line:#D5E2F5;--accent:#E9A92B;--accent-ink:#0F2A5C;--accent-text:#8A5A00;--head:'Sora',sans-serif;--mono:'Courier Prime',monospace;--r:18px;--r-sm:12px;--btn-r:16px;--cover:#16336E;--cover-ink:#E9A92B;--shadow:0 14px 34px rgba(5,15,40,.35)}
+html[data-theme=vintage]{--frame:#3B2A20;--frame-ink:#F1E6D2;--frame-muted:#D9C7A8;--eyebrow:#E2B86B;--page:#F1E6D2;--page-line:#E2D3B8;--ink:#3B2A20;--muted:#6B5640;--surface:#F7EEDD;--surface-2:#EADCC2;--line:#D8C6A6;--accent:#A8352A;--accent-ink:#F7EEDD;--accent-text:#A8352A;--head:'DM Serif Display',serif;--mono:'Special Elite',monospace;--r:8px;--r-sm:6px;--btn-r:6px;--cover:#5A3E2B;--cover-ink:#E2B86B;--shadow:0 14px 34px rgba(20,10,5,.5)}
+html[data-theme=night]{--frame:#0A1428;--frame-ink:#F2F5FB;--frame-muted:#AFC0DE;--eyebrow:#E9B949;--page:#12213F;--page-line:#22355C;--ink:#F2F5FB;--muted:#AFC0DE;--surface:#12213F;--surface-2:#1A2C50;--line:#2A4170;--accent:#E9B949;--accent-ink:#0A1428;--accent-text:#E9B949;--head:'Space Grotesk',sans-serif;--mono:'DM Mono',monospace;--r:22px;--r-sm:14px;--btn-r:30px;--cover:#0E1B36;--cover-ink:#E9B949;--shadow:0 14px 40px rgba(0,0,0,.55)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--frame);color:var(--frame-ink);font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;transition:background-color .6s var(--ease),color .6s var(--ease);overscroll-behavior-y:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 104px)}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 14px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--head);font-size:22px;font-weight:700;letter-spacing:-.3px}
+.brand svg{width:30px;height:30px}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb,var(--frame-ink) 28%,transparent);background:transparent;display:grid;place-items:center;transition:transform .2s var(--ease),background .3s}
+.icon-btn:active{transform:scale(.92)}
+.view{display:none}
+html.book-mode,html.book-mode body{height:100%;overflow:hidden;overscroll-behavior:none}
+html.book-mode .app{height:100dvh;display:flex;flex-direction:column}
+html.book-mode main{flex:1;min-height:0;display:flex;flex-direction:column}
+html.book-mode #view-book.active{display:flex;flex-direction:column;flex:1;min-height:0}
+html.book-mode .viewport{flex:1;height:auto;min-height:0}
+.icon-btn{position:relative}
+.icon-btn.due::after{content:'';position:absolute;top:5px;right:5px;width:11px;height:11px;border-radius:50%;background:var(--eyebrow);box-shadow:0 0 0 2px var(--frame);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+.share-img{width:100%;border-radius:var(--r-sm);display:block;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);-webkit-touch-callout:default}
+.view.active{display:block;animation:viewIn .5s var(--ease) both}
+@keyframes viewIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--eyebrow)}
+.h1{font-family:var(--head);font-size:28px;font-weight:700;margin:4px 0 0;letter-spacing:-.4px;line-height:1.1}
+html[data-theme=vintage] .h1{font-weight:400}
+.muted{color:var(--frame-muted)}
+/* Book */
+.book-meta{display:flex;justify-content:space-between;align-items:flex-end;padding:0 4px 12px;gap:12px}
+.book-count{text-align:right;font-family:var(--mono);font-size:12.5px;color:var(--frame-muted);line-height:1.5}
+.viewport{position:relative;height:min(66dvh,590px);min-height:320px;touch-action:none;perspective:2200px;perspective-origin:20% 50%;overflow:hidden;border-radius:var(--r)}
+.track{position:relative;height:100%;transform-style:preserve-3d}
+.leaf{position:absolute;inset:0;display:none;transform-origin:left center;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;will-change:transform;transform:rotateY(0deg)}
+.leaf.leaving{display:block;z-index:0}
+.leaf.current,.leaf.under,.leaf.turning{display:block}
+.leaf.current{z-index:2}.leaf.under{z-index:1}.leaf.turning{z-index:3}
+.leaf>.page{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.leaf>.back{position:absolute;inset:0;border-radius:var(--r);background:var(--page);transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.leaf>.back::after{content:'';position:absolute;inset:0;background:linear-gradient(270deg,rgba(0,0,0,.2),rgba(0,0,0,0) 40%)}
+.leaf>.page:not(.cover)::after{content:'';position:absolute;left:0;top:0;bottom:0;width:22px;background:linear-gradient(90deg,rgba(0,0,0,.12),rgba(0,0,0,0));pointer-events:none}
+.shade{position:absolute;inset:0;pointer-events:none;background:#000;opacity:0;z-index:6}
+.curl{position:absolute;inset:0;pointer-events:none;opacity:0;z-index:6;background:linear-gradient(90deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.08) 70%,rgba(255,255,255,.18) 88%,rgba(0,0,0,.28) 100%)}
+.page{position:relative;height:100%;border-radius:var(--r);background:var(--page);color:var(--ink);overflow:hidden;box-shadow:var(--shadow);transition:background-color .6s var(--ease)}
+.page.thunk{animation:thunk .4s ease .38s}
+@keyframes thunk{0%,100%{transform:none}35%{transform:translateY(3px) scale(.994)}65%{transform:translateY(-1px)}}
+.decor{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.page-no{position:absolute;bottom:12px;right:16px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.stamp{position:absolute;left:var(--x);top:var(--y);width:52%;aspect-ratio:1;padding:0;border:0;background:none;transform:translate(-50%,-50%) rotate(var(--rot));border-radius:50%;transition:transform .35s var(--ease)}
+.stamp svg{width:100%;height:100%;overflow:visible;display:block}
+.stamp:active{transform:translate(-50%,-50%) rotate(var(--rot)) scale(.96)}
+.stamp:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.stamp.landing{animation:land .8s var(--ease) both}
+.stamp.landing::after{content:'';position:absolute;inset:12%;border-radius:50%;border:3px solid currentColor;opacity:0;animation:splat .7s ease-out .36s}
+@keyframes land{0%{opacity:0;transform:translate(-50%,-50%) rotate(calc(var(--rot) + 14deg)) scale(2.1);filter:blur(5px)}52%{opacity:1;transform:translate(-50%,-50%) rotate(var(--rot)) scale(.9);filter:blur(0)}72%{transform:translate(-50%,-50%) rotate(var(--rot)) scale(1.04)}100%{opacity:1;transform:translate(-50%,-50%) rotate(var(--rot)) scale(1)}}
+@keyframes splat{0%{opacity:.5;transform:scale(.7)}100%{opacity:0;transform:scale(1.5)}}
+.stamp.fade{animation:fadeIn .6s var(--ease) both}
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-50%) rotate(var(--rot)) scale(.94)}to{opacity:1}}
+.slot-empty{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:44%;aspect-ratio:1.3;border:2px dashed color-mix(in srgb,var(--muted) 55%,transparent);border-radius:var(--r);display:grid;place-items:center;text-align:center;color:var(--muted);font-family:var(--mono);font-size:13px;background:none;padding:8px}
+.empty-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px;text-align:center}
+.empty-state h2{font-family:var(--head);font-size:24px;margin:0}
+.empty-state p{margin:0;color:var(--muted);line-height:1.5}
+.cover{background:var(--cover);color:var(--cover-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
+.cover::before{content:'';position:absolute;inset:14px;border:1.5px solid color-mix(in srgb,var(--cover-ink) 45%,transparent);border-radius:calc(var(--r) - 6px);pointer-events:none}
+.cover-emblem{width:42%;aspect-ratio:1}
+.cover-title{font-family:var(--head);font-size:34px;letter-spacing:8px;font-weight:700}
+html[data-theme=vintage] .cover-title{font-weight:400;letter-spacing:5px}
+.cover-sub{font-family:var(--mono);font-size:14px;letter-spacing:2px;text-transform:uppercase;opacity:.9}
+.cover-meta{font-family:var(--mono);font-size:12px;opacity:.75;margin-top:6px}
+.cover-hint{position:absolute;bottom:26px;font-size:12px;opacity:.7;animation:nudge 2.4s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+.pager{display:flex;align-items:center;justify-content:space-between;padding:12px 2px 0}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:70%}
+.dot{width:7px;height:7px;border-radius:4px;background:color-mix(in srgb,var(--frame-ink) 30%,transparent);transition:width .35s var(--ease),background .35s}
+.dot.on{width:20px;background:var(--eyebrow)}
+.nudge-card{margin-top:14px;display:flex;gap:12px;align-items:center;background:var(--surface);color:var(--ink);border-radius:var(--r);padding:14px 16px;animation:viewIn .5s var(--ease) both}
+.nudge-card p{margin:0;font-size:14px;line-height:1.4;flex:1}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:var(--btn-r);border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;font-size:15px;transition:transform .2s var(--ease),filter .2s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn.ghost{background:transparent}
+.btn.small{min-height:40px;padding:0 14px;font-size:14px}
+.btn.danger{color:#B3261E;border-color:#E7B8B4}
+html[data-theme=night] .btn.danger{color:#FFB4AB;border-color:#6B3A3A}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.5}
+/* Nav */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px 10px calc(env(safe-area-inset-bottom) + 10px);background:color-mix(in srgb,var(--frame) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid color-mix(in srgb,var(--frame-ink) 12%,transparent)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--frame-muted);font-size:11px;font-weight:600;min-height:48px;justify-content:center;transition:color .3s}
+.tab svg{width:24px;height:24px;transition:transform .35s var(--spring)}
+.tab.active{color:var(--eyebrow)}
+.tab.active svg{transform:translateY(-2px) scale(1.08)}
+.add-btn{justify-self:center;width:62px;height:62px;margin-top:-26px;border-radius:50%;border:4px solid var(--frame);background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.3);transition:transform .25s var(--spring)}
+.add-btn:active{transform:scale(.9) rotate(-8deg)}
+.add-btn svg{width:28px;height:28px}
+/* Sheets */
+.backdrop{position:fixed;inset:0;z-index:40;background:rgba(3,8,20,.5);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.backdrop.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-width:480px;margin:0 auto;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;background:var(--surface);color:var(--ink);border-radius:26px 26px 0 0;padding:10px 20px calc(env(safe-area-inset-bottom) + 24px);transform:translateY(105%);transition:transform .55s var(--ease);box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+html[data-theme=vintage] .sheet{border-radius:14px 14px 0 0}
+.sheet.open{transform:none}
+.grabber{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.sheet h2{font-family:var(--head);font-size:24px;margin:0 0 4px}
+html[data-theme=vintage] .sheet h2{font-weight:400}
+.sheet-sub{color:var(--muted);font-size:14px;margin:0 0 16px}
+.preview{display:flex;justify-content:center;margin:4px 0 14px}
+.preview .pv{width:170px;height:170px;transition:transform .4s var(--ease)}
+.preview .pv svg{width:100%;height:100%;overflow:visible}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;position:relative}
+.field label,.label{font-size:13px;font-weight:600;color:var(--muted)}
+.input{width:100%;min-height:48px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface-2);padding:12px 14px;font-size:16px;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+textarea.input{min-height:76px;resize:vertical}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.suggest{position:absolute;top:100%;left:0;right:0;z-index:5;margin-top:4px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);box-shadow:0 12px 30px rgba(0,0,0,.18);overflow:hidden;display:none}
+.suggest.open{display:block;animation:viewIn .25s var(--ease)}
+.suggest button{display:flex;justify-content:space-between;width:100%;min-height:46px;padding:10px 14px;background:none;border:0;border-bottom:1px solid var(--line);text-align:left;color:var(--ink)}
+.suggest button:last-child{border-bottom:0}
+.suggest small{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-size:14px;font-weight:500;transition:all .25s var(--ease)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.loc-btn{width:100%;margin-bottom:14px}
+.photo-pick{display:flex;gap:12px;align-items:center}
+.photo-thumb{width:64px;height:64px;border-radius:var(--r-sm);object-fit:cover;background:var(--surface-2);border:1px solid var(--line)}
+.file-label{position:relative;overflow:hidden}
+.file-label input{position:absolute;inset:0;opacity:0;cursor:pointer}
+/* Detail */
+.detail-stamp{width:240px;height:240px;margin:6px auto 10px}
+.detail-stamp svg{width:100%;height:100%;overflow:visible}
+.detail-stamp.pop{animation:pop .6s var(--spring) both}
+@keyframes pop{from{opacity:0;transform:scale(.7) rotate(-8deg)}to{opacity:1;transform:none}}
+.detail-title{font-family:var(--head);font-size:28px;margin:0;text-align:center}
+html[data-theme=vintage] .detail-title{font-weight:400}
+.detail-sub{text-align:center;color:var(--muted);margin:4px 0 16px;font-size:15px}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.fact{background:var(--surface-2);border-radius:var(--r-sm);padding:12px}
+.fact b{display:block;font-size:15px}
+.fact span{font-size:12px;color:var(--muted)}
+.note{background:var(--surface-2);border-radius:var(--r-sm);padding:14px;font-size:15px;line-height:1.5;margin-bottom:14px;white-space:pre-wrap}
+.detail-photo{width:100%;border-radius:var(--r-sm);margin-bottom:14px;display:block}
+.actions{display:flex;gap:10px}
+.actions .btn{flex:1}
+/* Cards / stats */
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);color:var(--ink);border-radius:var(--r);padding:18px;transition:background-color .6s var(--ease)}
+.card h3{font-family:var(--head);font-size:18px;margin:0 0 12px}
+html[data-theme=vintage] .card h3{font-weight:400;font-size:20px}
+.hero{position:relative;overflow:hidden}
+.hero .big{font-family:var(--head);font-size:64px;font-weight:700;line-height:1;letter-spacing:-2px;margin:6px 0}
+html[data-theme=vintage] .hero .big{font-weight:400}
+.hero p{margin:0 0 14px;color:var(--muted);line-height:1.5;font-size:15px}
+.hero .eyebrow{color:var(--accent-text)}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{background:var(--surface-2);border-radius:var(--r-sm);padding:14px;animation:viewIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*60ms)}
+.tile .num{font-family:var(--head);font-size:30px;font-weight:700;line-height:1.1}
+html[data-theme=vintage] .tile .num{font-weight:400}
+.tile .lbl{font-size:12.5px;color:var(--muted);margin-top:2px}
+.tile .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.year-chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 14px;scrollbar-width:none}
+.year-chips::-webkit-scrollbar{display:none}
+.ychip{flex:0 0 auto;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid color-mix(in srgb,var(--frame-ink) 28%,transparent);background:transparent;color:var(--frame-ink);font-weight:600;transition:all .3s var(--ease)}
+.ychip[aria-pressed=true]{background:var(--eyebrow);color:var(--frame);border-color:transparent}
+.months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px;align-items:end;height:120px}
+.mcol{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar{width:100%;border-radius:6px 6px 3px 3px;background:var(--line);transform-origin:bottom;animation:grow .9s var(--ease) both;animation-delay:calc(var(--i)*45ms);min-height:4px}
+.bar.hot{background:var(--accent)}
+.bar.has{background:color-mix(in srgb,var(--ink) 55%,var(--surface))}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.mlabel{font-size:11px;color:var(--muted);font-weight:600}
+.minis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mini{aspect-ratio:1;border:0;background:var(--page);border-radius:var(--r-sm);padding:6px;transition:transform .2s var(--ease)}
+.mini:active{transform:scale(.95)}
+.mini svg{width:100%;height:100%;overflow:visible}
+.list-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.list-row:last-child{border-bottom:0}
+.list-row .grow{flex:1;min-width:0}
+.list-row b{font-weight:600;font-size:15px}
+.list-row small{display:block;color:var(--muted);font-size:12.5px}
+.flag{display:flex;width:30px;height:20px;border-radius:4px;overflow:hidden;flex-shrink:0;box-shadow:0 0 0 1px var(--line)}
+.flag i{flex:1}
+.count-pill{font-family:var(--mono);font-size:13px;background:var(--surface-2);border-radius:999px;padding:4px 10px}
+.progress{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;margin-top:6px}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:4px;transform-origin:left;animation:growX 1s var(--ease) both}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hbar-row{display:grid;grid-template-columns:44px 1fr 28px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.hbar{height:14px;border-radius:7px;background:var(--accent);transform-origin:left;animation:growX .9s var(--ease) both}
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.badge{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:12px 6px;border-radius:var(--r-sm);background:var(--surface-2);animation:viewIn .5s var(--ease) both;animation-delay:calc(var(--i)*40ms)}
+.badge svg{width:52px;height:52px}
+.badge b{font-size:12.5px;line-height:1.2}
+.badge small{font-size:11px;color:var(--muted);line-height:1.3}
+.badge.locked{opacity:.55}
+/* Settings */
+.theme-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.theme-opt{border:2px solid var(--line);border-radius:var(--r-sm);padding:8px 6px 10px;background:var(--surface-2);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink);transition:border-color .3s,transform .25s var(--ease)}
+.theme-opt[aria-pressed=true]{border-color:var(--accent);transform:translateY(-2px)}
+.theme-opt .sw{width:100%;aspect-ratio:1;border-radius:10px;display:grid;place-items:center;padding:6px}
+.theme-opt .sw svg{width:100%;height:100%;overflow:visible}
+.theme-opt b{font-size:12.5px}
+.switch-row{display:flex;align-items:center;justify-content:space-between;min-height:48px;gap:12px}
+.switch{position:relative;width:52px;height:32px;flex-shrink:0}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.switch span{position:absolute;inset:0;border-radius:16px;background:var(--line);transition:background .3s}
+.switch span::after{content:'';position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .35s var(--spring)}
+.switch input:checked+span{background:var(--accent)}
+.switch input:checked+span::after{transform:translateX(20px)}
+.help{font-size:13.5px;color:var(--muted);line-height:1.5;margin:0 0 12px}
+.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* Replay */
+.replay{position:fixed;inset:0;z-index:60;background:var(--frame);color:var(--frame-ink);display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 20px);opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+.replay.open{opacity:1;pointer-events:auto}
+.replay-head{text-align:center;margin-bottom:12px}
+.replay-year{font-family:var(--head);font-size:56px;font-weight:700;line-height:1;letter-spacing:-1px}
+.replay-month{font-family:var(--mono);letter-spacing:3px;text-transform:uppercase;color:var(--eyebrow);height:20px;margin-top:8px;transition:opacity .25s}
+.replay-grid{flex:1;width:100%;max-width:440px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-content:center;gap:4px;overflow:hidden}
+.replay-grid .rs{aspect-ratio:1;position:relative}
+.replay-grid .rs .stamp{width:100%;left:50%;top:50%}
+.replay-sum{text-align:center;opacity:0;transform:translateY(14px);transition:all .6s var(--ease);margin:10px 0 14px;font-size:17px;line-height:1.5}
+.replay-sum.show{opacity:1;transform:none}
+.replay-sum b{font-family:var(--head);font-size:22px;display:block}
+.replay-actions{display:flex;gap:10px;width:100%;max-width:440px}
+.replay-actions .btn{flex:1}
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 100px);z-index:70;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:14px;font-size:14px;max-width:min(92vw,420px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:all .4s var(--ease);pointer-events:none}
+html[data-theme=night] .toast{background:#F2F5FB;color:#0A1428}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="ink1" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -1.5 1.5" result="mask"/>
+      <feComposite in="disp" in2="mask" operator="in"/>
+    </filter>
+    <filter id="ink2" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" seed="12" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -2 1.62" result="mask"/>
+      <feComposite in="disp" in2="mask" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="var(--eyebrow)" stroke-width="2.5"/><circle cx="20" cy="20" r="12" fill="none" stroke="var(--eyebrow)" stroke-width="1.2" stroke-dasharray="1.5 3"/><path d="M13 24h14M15 24v-6h10v6M18 18v-4h4v4" fill="none" stroke="var(--eyebrow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Stamped
+    </div>
+    <button class="icon-btn" id="cloudBtn" aria-label="Back up to iCloud Drive"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.6 1.5A3.5 3.5 0 0 0 7 18z"/><path d="M12 15V10M9.5 12.5L12 10l2.5 2.5"/></svg></button>
+  </header>
+
+  <main>
+    <section class="view active" id="view-book" aria-label="Passport book">
+      <div class="book-meta">
+        <div><div class="eyebrow">My passport</div><h1 class="h1" id="bookTitle">Cover</h1></div>
+        <div class="book-count" id="bookCount"></div>
+      </div>
+      <div class="viewport" id="viewport"><div class="track" id="track"></div></div>
+      <div class="pager">
+        <button class="icon-btn" id="prevPage" aria-label="Previous page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="dots" id="dots"></div>
+        <button class="icon-btn" id="nextPage" aria-label="Next page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </section>
+
+    <section class="view" id="view-year" aria-label="Year in review"></section>
+    <section class="view" id="view-stats" aria-label="Lifetime stats"></section>
+    <section class="view" id="view-settings" aria-label="Settings"></section>
+  </main>
+</div>
+
+<nav class="tabs" aria-label="Main">
+  <button class="tab active" data-view="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><circle cx="12" cy="9" r="2.5"/></svg>Book</button>
+  <button class="tab" data-view="year"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15l2 2 4-4"/></svg>Year</button>
+  <button class="add-btn" id="addBtn" aria-label="Add a stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button class="tab" data-view="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Stats</button>
+  <button class="tab" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
+</nav>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
+<div class="replay" id="replay" role="dialog" aria-modal="true" aria-label="Year replay"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Data ---------- */
+// code: [name, continent, flag colours...]
+const COUNTRIES = {
+  CA:['Canada','NA','#D52B1E','#FFFFFF'], US:['United States','NA','#B22234','#FFFFFF','#3C3B6E'], MX:['Mexico','NA','#006847','#FFFFFF','#CE1126'],
+  CU:['Cuba','NA','#002A8F','#FFFFFF','#CF142B'], DO:['Dominican Republic','NA','#002D62','#FFFFFF','#CE1126'], JM:['Jamaica','NA','#009B3A','#FED100','#000000'],
+  BS:['Bahamas','NA','#00778B','#FFC72C','#000000'], PR:['Puerto Rico','NA','#ED0000','#FFFFFF','#0050F0'], AW:['Aruba','NA','#418FDE','#FBE122','#C8102E'],
+  BB:['Barbados','NA','#00267F','#FFC726','#000000'], CR:['Costa Rica','NA','#002B7F','#FFFFFF','#CE1126'],
+  BR:['Brazil','SA','#009C3B','#FFDF00','#002776'], AR:['Argentina','SA','#74ACDF','#FFFFFF','#F6B40E'], PE:['Peru','SA','#D91023','#FFFFFF'],
+  CL:['Chile','SA','#0039A6','#FFFFFF','#D52B1E'], CO:['Colombia','SA','#FCD116','#003893','#CE1126'],
+  GB:['United Kingdom','EU','#012169','#FFFFFF','#C8102E'], IE:['Ireland','EU','#169B62','#FFFFFF','#FF883E'], FR:['France','EU','#0055A4','#FFFFFF','#EF4135'],
+  IT:['Italy','EU','#009246','#FFFFFF','#CE2B37'], ES:['Spain','EU','#AA151B','#F1BF00'], PT:['Portugal','EU','#006600','#FF0000','#FFCC00'],
+  NL:['Netherlands','EU','#AE1C28','#FFFFFF','#21468B'], BE:['Belgium','EU','#000000','#FDDA24','#EF3340'], DE:['Germany','EU','#000000','#DD0000','#FFCE00'],
+  AT:['Austria','EU','#ED2939','#FFFFFF'], CH:['Switzerland','EU','#D52B1E','#FFFFFF'], CZ:['Czechia','EU','#11457E','#FFFFFF','#D7141A'],
+  HU:['Hungary','EU','#CD2A3E','#FFFFFF','#436F4D'], PL:['Poland','EU','#FFFFFF','#DC143C'], GR:['Greece','EU','#0D5EAF','#FFFFFF'],
+  HR:['Croatia','EU','#FF0000','#FFFFFF','#171796'], DK:['Denmark','EU','#C8102E','#FFFFFF'], SE:['Sweden','EU','#006AA7','#FECC00'],
+  NO:['Norway','EU','#BA0C2F','#FFFFFF','#00205B'], FI:['Finland','EU','#FFFFFF','#003580'], IS:['Iceland','EU','#02529C','#FFFFFF','#DC1E35'],
+  TR:['Türkiye','EU','#E30A17','#FFFFFF'],
+  JP:['Japan','AS','#FFFFFF','#BC002D'], KR:['South Korea','AS','#FFFFFF','#CD2E3A','#0047A0'], CN:['China','AS','#EE1C25','#FFFF00'],
+  HK:['Hong Kong','AS','#DE2910','#FFFFFF'], TW:['Taiwan','AS','#FE0000','#000095','#FFFFFF'], SG:['Singapore','AS','#EF3340','#FFFFFF'],
+  TH:['Thailand','AS','#A51931','#F4F5F8','#2D2A4A'], VN:['Vietnam','AS','#DA251D','#FFFF00'], ID:['Indonesia','AS','#FF0000','#FFFFFF'],
+  MY:['Malaysia','AS','#010066','#CC0001','#FFCC00'], PH:['Philippines','AS','#0038A8','#CE1126','#FCD116'], IN:['India','AS','#FF9933','#FFFFFF','#138808'],
+  AE:['United Arab Emirates','AS','#00732F','#FFFFFF','#FF0000'],
+  AU:['Australia','OC','#00008B','#FFFFFF','#FF0000'], NZ:['New Zealand','OC','#00247D','#FFFFFF','#CC142B'],
+  EG:['Egypt','AF','#CE1126','#FFFFFF','#000000'], MA:['Morocco','AF','#C1272D','#006233'], ZA:['South Africa','AF','#007A4D','#FFB612','#DE3831'],
+  KE:['Kenya','AF','#000000','#BB0000','#006600']
+};
+const CONT = {NA:'North America',SA:'South America',EU:'Europe',AS:'Asia',AF:'Africa',OC:'Oceania',AN:'Antarctica'};
+// [name, country, lat, lon, kind, landmark]
+const CITY_ROWS = [
+ ['Toronto','CA',43.65,-79.38,'c','cntower'],['Montreal','CA',45.50,-73.57,'c'],['Quebec City','CA',46.81,-71.21,'c','chateau'],['Ottawa','CA',45.42,-75.70,'c','parliament'],
+ ['Vancouver','CA',49.28,-123.12,'c'],['Victoria','CA',48.43,-123.37,'c'],['Calgary','CA',51.05,-114.07,'c'],['Edmonton','CA',53.55,-113.49,'c'],
+ ['Banff','CA',51.18,-115.57,'m'],['Jasper','CA',52.87,-118.08,'m'],['Whistler','CA',50.12,-122.95,'m'],['Kelowna','CA',49.89,-119.50,'l'],
+ ['Tofino','CA',49.15,-125.91,'b'],['Winnipeg','CA',49.90,-97.14,'c'],['Saskatoon','CA',52.13,-106.67,'c'],['Regina','CA',50.45,-104.61,'c'],
+ ['Halifax','CA',44.65,-63.57,'c','lighthouse'],["Peggy's Cove",'CA',44.49,-63.92,'b','lighthouse'],['Charlottetown','CA',46.24,-63.13,'i'],
+ ['Fredericton','CA',45.96,-66.64,'c'],['Moncton','CA',46.09,-64.78,'c'],["St. John's",'CA',47.56,-52.71,'c','lighthouse'],
+ ['Niagara Falls','CA',43.09,-79.08,'l','falls'],['Kingston','CA',44.23,-76.49,'l'],['Hamilton','CA',43.26,-79.87,'c'],['London, ON','CA',42.98,-81.25,'c'],
+ ['Muskoka','CA',45.33,-79.22,'l'],['Collingwood','CA',44.50,-80.22,'m'],['Mont-Tremblant','CA',46.12,-74.60,'m'],['Prince Edward County','CA',44.00,-77.25,'r'],
+ ['Tobermory','CA',45.25,-81.66,'l'],['Algonquin Park','CA',45.55,-78.60,'f'],['Yellowknife','CA',62.45,-114.37,'l'],['Whitehorse','CA',60.72,-135.06,'m'],
+ ['New York','US',40.71,-74.01,'c','liberty'],['Boston','US',42.36,-71.06,'c'],['Chicago','US',41.88,-87.63,'c'],['Washington','US',38.90,-77.04,'c','capitol'],
+ ['Philadelphia','US',39.95,-75.17,'c'],['Buffalo','US',42.89,-78.88,'c'],['Detroit','US',42.33,-83.05,'c'],['Nashville','US',36.16,-86.78,'c'],
+ ['New Orleans','US',29.95,-90.07,'c'],['Miami','US',25.76,-80.19,'b'],['Orlando','US',28.54,-81.38,'c'],['Myrtle Beach','US',33.69,-78.89,'b'],
+ ['Austin','US',30.27,-97.74,'c'],['Denver','US',39.74,-104.99,'m'],['Las Vegas','US',36.17,-115.14,'c'],['Phoenix','US',33.45,-112.07,'c'],
+ ['Los Angeles','US',34.05,-118.24,'c'],['San Diego','US',32.72,-117.16,'b'],['San Francisco','US',37.77,-122.42,'c','goldengate'],
+ ['Seattle','US',47.61,-122.33,'c','spaceneedle'],['Portland','US',45.52,-122.68,'c'],['Honolulu','US',21.31,-157.86,'i'],['Maui','US',20.80,-156.33,'i'],
+ ['Mexico City','MX',19.43,-99.13,'c'],['Cancún','MX',21.16,-86.85,'b'],['Playa del Carmen','MX',20.63,-87.08,'b'],['Tulum','MX',20.21,-87.47,'b','temple'],
+ ['Puerto Vallarta','MX',20.65,-105.23,'b'],['Cabo San Lucas','MX',22.89,-109.92,'b'],['Punta Cana','DO',18.58,-68.40,'b'],['Montego Bay','JM',18.47,-77.92,'b'],
+ ['Nassau','BS',25.04,-77.35,'i'],['Havana','CU',23.11,-82.37,'c'],['Varadero','CU',23.15,-81.25,'b'],['Oranjestad','AW',12.52,-70.03,'i'],
+ ['Bridgetown','BB',13.10,-59.61,'i'],['San Juan','PR',18.47,-66.11,'b'],['San José','CR',9.93,-84.08,'f'],
+ ['Rio de Janeiro','BR',-22.91,-43.17,'c','christ'],['Buenos Aires','AR',-34.60,-58.38,'c'],['Lima','PE',-12.05,-77.04,'c'],['Cusco','PE',-13.53,-71.97,'m'],
+ ['Santiago','CL',-33.45,-70.67,'c'],['Bogotá','CO',4.71,-74.07,'c'],['Cartagena','CO',10.39,-75.48,'b'],
+ ['London','GB',51.51,-0.13,'c','bigben'],['Edinburgh','GB',55.95,-3.19,'c','castle'],['Dublin','IE',53.35,-6.26,'c'],['Paris','FR',48.86,2.35,'c','eiffel'],
+ ['Nice','FR',43.70,7.27,'b'],['Rome','IT',41.90,12.50,'c','colosseum'],['Venice','IT',45.44,12.32,'c','gondola'],['Florence','IT',43.77,11.26,'c','dome'],
+ ['Milan','IT',45.46,9.19,'c'],['Pisa','IT',43.72,10.40,'c','pisa'],['Amalfi','IT',40.63,14.60,'b'],['Barcelona','ES',41.39,2.17,'c','sagrada'],
+ ['Madrid','ES',40.42,-3.70,'c'],['Seville','ES',37.39,-5.98,'c'],['Lisbon','PT',38.72,-9.14,'c','tram'],['Sintra','PT',38.80,-9.38,'m','castle'],
+ ['Porto','PT',41.15,-8.61,'c'],['Amsterdam','NL',52.37,4.90,'c','windmill'],['Brussels','BE',50.85,4.35,'c'],['Berlin','DE',52.52,13.40,'c','gate'],
+ ['Munich','DE',48.14,11.58,'c'],['Vienna','AT',48.21,16.37,'c'],['Zurich','CH',47.38,8.54,'l'],['Geneva','CH',46.20,6.14,'l'],['Zermatt','CH',46.02,7.75,'m'],
+ ['Prague','CZ',50.08,14.44,'c','castle'],['Budapest','HU',47.50,19.04,'c'],['Kraków','PL',50.06,19.94,'c'],['Athens','GR',37.98,23.73,'c','temple'],
+ ['Santorini','GR',36.39,25.46,'i','dome'],['Dubrovnik','HR',42.65,18.09,'b'],['Split','HR',43.51,16.44,'b'],['Copenhagen','DK',55.68,12.57,'c'],
+ ['Stockholm','SE',59.33,18.07,'c'],['Oslo','NO',59.91,10.75,'c'],['Bergen','NO',60.39,5.32,'m'],['Helsinki','FI',60.17,24.94,'c'],
+ ['Reykjavík','IS',64.15,-21.94,'c'],['Istanbul','TR',41.01,28.98,'c','mosque'],
+ ['Tokyo','JP',35.68,139.69,'c','fuji'],['Kyoto','JP',35.01,135.77,'c','pagoda'],['Osaka','JP',34.69,135.50,'c'],['Seoul','KR',37.57,126.98,'c'],
+ ['Beijing','CN',39.90,116.41,'c','pagoda'],['Shanghai','CN',31.23,121.47,'c'],['Hong Kong','HK',22.32,114.17,'c'],['Taipei','TW',25.03,121.57,'c'],
+ ['Singapore','SG',1.35,103.82,'c'],['Bangkok','TH',13.76,100.50,'c','pagoda'],['Phuket','TH',7.88,98.39,'i'],['Hanoi','VN',21.03,105.85,'c'],
+ ['Ho Chi Minh City','VN',10.82,106.63,'c'],['Bali','ID',-8.41,115.19,'i'],['Kuala Lumpur','MY',3.14,101.69,'c','twin'],['Manila','PH',14.60,120.98,'c'],
+ ['Dubai','AE',25.20,55.27,'c','burj'],['Delhi','IN',28.61,77.21,'c'],['Agra','IN',27.18,78.01,'c','taj'],['Mumbai','IN',19.08,72.88,'c'],
+ ['Sydney','AU',-33.87,151.21,'c','opera'],['Melbourne','AU',-37.81,144.96,'c'],['Cairns','AU',-16.92,145.77,'b'],['Auckland','NZ',-36.85,174.76,'c'],
+ ['Queenstown','NZ',-45.03,168.66,'m'],['Cairo','EG',30.04,31.24,'c','pyramids'],['Marrakech','MA',31.63,-7.99,'c','mosque'],['Cape Town','ZA',-33.92,18.42,'m'],
+ ['Nairobi','KE',-1.29,36.82,'r']
+];
+const KIND_CODE = {c:'city',b:'beach',m:'mountain',l:'lake',f:'forest',i:'island',r:'countryside'};
+const CITIES = CITY_ROWS.map(([name,cc,lat,lon,k,lm]) => ({name,cc,lat,lon,kind:KIND_CODE[k]||'city',lm:lm||null}));
+const KINDS = [['city','City'],['beach','Beach'],['mountain','Mountain'],['lake','Lake'],['forest','Forest'],['island','Island'],['countryside','Countryside']];
+const MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const MONTH_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+/* ---------- Icons (line art, box ~ -32..32 x -30..24) ---------- */
+const ICONS = {
+ cntower:'<path d="M0 -30V24M-3 24L-1.5 -4M3 24L1.5 -4"/><ellipse cx="0" cy="-6" rx="6" ry="3"/><ellipse cx="0" cy="-16" rx="3" ry="1.6"/><path d="M-28 24V12H-20V6H-14V24M14 24V10H20V16H27V24M-32 24H32"/>',
+ chateau:'<path d="M-24 24V2H24V24M-32 24H32M-24 2L-18 -10L-12 2M12 2L18 -10L24 2M-8 2V-12H8V2M-8 -12L0 -26L8 -12M-4 24V14H4V24M-18 10H-14M14 10H18"/>',
+ parliament:'<path d="M-5 24V-12H5V24M-5 -12L0 -28L5 -12M0 -28V-31M-28 24V8H-5M5 8H28V24M-28 8L-24 2L-20 8M20 8L24 2L28 8M-32 24H32"/><circle cx="0" cy="-4" r="2.5"/>',
+ lighthouse:'<path d="M-6 24L-4 -12H4L6 24Z"/><path d="M-5 6H5M-4.5 -3H4.5M-5.5 15H5.5M-5 -12V-19H5V-12M-6 -19L0 -25L6 -19"/><path d="M8 -16L22 -21M8 -14L22 -9" stroke-dasharray="3 3"/><path d="M-32 24Q-22 18 -12 24M12 24Q22 18 32 24"/>',
+ falls:'<path d="M-26 -16H26M-20 -16V16M-12 -16V20M-4 -16V16M4 -16V20M12 -16V16M20 -16V20"/><path d="M-32 24Q-24 18 -16 24T0 24T16 24T32 24"/>',
+ liberty:'<path d="M-10 24V14H10V24M-14 24H14M-6 14L-4 -6H4L6 14Z"/><circle cx="0" cy="-10" r="3.5"/><path d="M-5 -13L-7 -17M0 -14V-18M5 -13L7 -17M3 -6L9 -22M-4 -2L-8 4"/><path d="M7 -24Q9 -31 11 -24Z" fill="currentColor"/>',
+ capitol:'<path d="M-30 24H30M-26 24V10H26V24M-10 10V0H10V10M-10 0Q-10 -16 0 -18Q10 -16 10 0M0 -18V-25M-20 24V14M-14 24V14M14 24V14M20 24V14"/>',
+ goldengate:'<path d="M-16 24V-22M16 24V-22M-19 -22H-13M13 -22H19M-32 -2Q-24 -6 -16 -20Q0 6 16 -20Q24 -6 32 -2M-32 6H32"/><path d="M-32 18Q-24 14 -16 18T0 18T16 18T32 18" stroke-dasharray="4 3"/>',
+ spaceneedle:'<path d="M0 -30V-20M-13 -16Q0 -22 13 -16Q0 -11 -13 -16ZM-2 -13L-7 24M2 -13L7 24M-4 4H4M-32 24H32M-28 24V14H-20V24M20 24V10H27V24"/>',
+ temple:'<path d="M-26 -6L0 -20L26 -6ZM-26 -6H26M-22 20V-2M-13 20V-2M-4 20V-2M4 20V-2M13 20V-2M22 20V-2M-28 20H28M-30 24H30"/>',
+ christ:'<circle cx="0" cy="-20" r="3"/><path d="M-22 -13H22M0 -17V8M-4 8H4M-3 -13L-4 8M3 -13L4 8M-32 24Q-12 6 0 8Q12 6 32 24"/>',
+ bigben:'<path d="M-7 24V-12H7V24M-7 -12L0 -27L7 -12M0 -27V-31M-30 24V10H-7M7 10H30V24M-32 24H32M-24 10V4M24 10V4M0 -5V-8M0 -5L2 -4"/><circle cx="0" cy="-5" r="4"/>',
+ eiffel:'<path d="M-15 24L-3 -26H3L15 24M0 -26V-31M-9 0H9M-12 12H12M-6 -12H6M-8 24Q0 12 8 24"/>',
+ colosseum:'<path d="M-28 22V-8Q0 -16 28 -8V22ZM-28 6H28M-28 -2Q0 -10 28 -2M-22 22V16A4 4 0 0 1 -14 16V22M-9 22V16A4 4 0 0 1 -1 16V22M4 22V16A4 4 0 0 1 12 16V22M17 22V16A4 4 0 0 1 25 16V22M-22 5V0A4 3 0 0 1 -14 0V5M-9 5V0A4 3 0 0 1 -1 0V5M4 5V0A4 3 0 0 1 12 0V5M17 5V0A4 3 0 0 1 25 0V5"/>',
+ gondola:'<path d="M-30 -2Q-15 -22 0 -2M-30 -2H0M-26 -2V-8M-4 -2V-8M-30 8Q0 20 30 2M-30 8L-33 2M30 2L33 -4M10 6L18 -22M-32 22Q-24 17 -16 22T0 22T16 22T32 22"/>',
+ dome:'<path d="M-26 24V8H26V24M-32 24H32M-16 8Q-16 -14 0 -16Q16 -14 16 8M0 -16V-24M-3 -22H3M-6 24V14Q0 8 6 14V24"/>',
+ pisa:'<g transform="rotate(9)"><path d="M-7 24V-22H7V24ZM-7 14H7M-7 4H7M-7 -6H7M-7 -16H7M-5 -22V-26H5V-22"/></g><path d="M-32 24H32"/>',
+ sagrada:'<path d="M-22 24V-6L-18 -24L-14 -6V24M-8 24V-12L-4 -30L0 -12V24M6 24V-10L10 -28L14 -10V24M18 24V-4L22 -20L26 -4V24M-32 24H32M-30 24V10H-22M26 10H32V24"/>',
+ tram:'<path d="M-24 18V-6Q-24 -10 -20 -10H20Q24 -10 24 -6V18ZM-20 -6H-10V4H-20ZM-6 -6H6V4H-6ZM10 -6H20V4H10ZM0 -10L10 -26M-32 -26H32M-32 24H32"/><circle cx="-14" cy="21" r="3"/><circle cx="14" cy="21" r="3"/>',
+ castle:'<path d="M-26 24V-2H-16V24M16 24V-2H26V24M-16 24V6H16V24M-32 24H32M-26 -2V-8H-23V-4H-19V-8H-16V-2M16 -2V-8H19V-4H23V-8H26V-2M-6 6V-14H6V6M-6 -14Q0 -28 6 -14M0 -24V-30M-4 24V16Q0 12 4 16V24"/>',
+ windmill:'<path d="M-7 24L-5 -4H5L7 24ZM-5 -4L0 -10L5 -4M0 -8L-18 -26M0 -8L18 10M0 -8L18 -26M0 -8L-18 10M-2 24V18H2V24M-32 24H32"/><path d="M-18 -26L-13 -27L-1 -13M18 10L13 11L1 -3M18 -26L19 -21L5 -9M-18 10L-19 5L-5 -7"/>',
+ gate:'<path d="M-28 24H28M-26 20H26M-26 -6H26V-12H-26ZM-22 20V-6M-14 20V-6M-6 20V-6M6 20V-6M14 20V-6M22 20V-6M-5 -12V-18H5V-12M-2 -18L0 -24L2 -18"/>',
+ mosque:'<path d="M-16 24V4H16V24M-16 4Q-16 -16 0 -18Q16 -16 16 4M0 -18V-24M-26 24V-16M-22 24V-16M-26 -16L-24 -24L-22 -16M22 24V-16M26 24V-16M22 -16L24 -24L26 -16M-32 24H32M-4 24V14Q0 10 4 14V24"/>',
+ fuji:'<path d="M-32 24L-8 -14H8L32 24M-8 -14L-4 -8L0 -12L4 -8L8 -14M-32 24H32"/><circle cx="20" cy="-20" r="5"/>',
+ pagoda:'<path d="M0 -30V-22M-14 -16Q0 -26 14 -16ZM-9 -16V-8H9V-16M-19 -4Q0 -14 19 -4ZM-13 -4V6H13V-4M-24 8Q0 -2 24 8ZM-16 8V24H16V8M-4 24V16H4V24M-32 24H32"/>',
+ twin:'<path d="M-14 24V-14L-10 -22L-6 -14V24M6 24V-14L10 -22L14 -14V24M-10 -22V-30M10 -22V-30M-6 -2H6M-32 24H32M-14 4H-6M6 4H14M-14 12H-6M6 12H14"/>',
+ burj:'<path d="M0 -32V-24M-3 -24V-10H-6V6H-10V24M3 -24V-4H7V12H11V24M-32 24H32M-28 24V14H-20V24M20 24V16H28V24"/>',
+ taj:'<path d="M-12 2Q-14 -18 0 -22Q14 -18 12 2ZM0 -22V-28M-20 24V2H20V24M-6 24V12Q0 6 6 12V24M-28 24V-8M-25 24V-8M25 24V-8M28 24V-8M-28 -8L-26.5 -12L-25 -8M25 -8L26.5 -12L28 -8M-32 24H32"/>',
+ opera:'<path d="M-28 16Q-22 -14 -6 16M-16 16Q-4 -22 10 16M2 16Q14 -10 26 16M-30 16H30M-32 23Q-24 19 -16 23T0 23T16 23T32 23"/>',
+ pyramids:'<path d="M-30 22L-10 -14L10 22ZM4 22L18 -2L32 22M-10 -14L-4 22M-34 22H34"/><circle cx="-24" cy="-20" r="4"/>',
+ beach:'<circle cx="16" cy="-14" r="7"/><path d="M16 -26V-23M4 -14H7M25 -14H28M7 -22L9 -20M25 -22L23 -20M-20 4V-17M-32 -14Q-20 -28 -8 -14ZM-32 6Q-24 0 -16 6T0 6T16 6T32 6M-32 16Q-24 10 -16 16T0 16T16 16T32 16"/>',
+ mountain:'<path d="M-32 22L-12 -12L-2 4L10 -20L32 22ZM-16 -5L-12 -1L-8 -5M5 -11L10 -7L15 -11"/>',
+ lake:'<path d="M-30 4H30M-24 4L-18 -16L-12 4ZM-14 4L-8 -22L-2 4ZM14 4L20 -14L26 4ZM-26 12H-6M2 12H22M-18 19H12"/>',
+ forest:'<path d="M-22 22V14M-30 14L-22 -10L-14 14ZM0 22V12M-10 12L0 -24L10 12ZM22 22V14M14 14L22 -8L30 14ZM-32 22H32"/>',
+ island:'<path d="M-22 14Q0 2 22 14M2 8Q4 -6 -2 -18M-2 -18Q-14 -24 -22 -14M-2 -18Q-8 -28 4 -28M-2 -18Q10 -26 18 -16M-2 -18Q8 -14 10 -4M-32 20Q-24 15 -16 20T0 20T16 20T32 20"/><circle cx="20" cy="-22" r="4"/>',
+ countryside:'<path d="M-32 22Q-16 2 0 14Q14 0 32 12M-32 22H32M6 6V-6L12 -12L18 -6V6ZM10 6V0H14V6"/><circle cx="-18" cy="-14" r="5"/>'
+};
+
+/* ---------- Utilities ---------- */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+function hash(str){ let h = 2166136261 >>> 0; for (let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(seed){ let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const pick = (arr, r) => arr[Math.floor(r() * arr.length) % arr.length];
+function hexRgb(h){ h = h.replace('#',''); return [0,2,4].map(i => parseInt(h.slice(i,i+2),16)); }
+function rgbHex(c){ return '#' + c.map(v => Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join(''); }
+function mix(a,b,t){ const A = hexRgb(a), B = hexRgb(b); return rgbHex(A.map((v,i) => v + (B[i]-v)*t)); }
+function lum(h){ const [r,g,b] = hexRgb(h).map(v => { v/=255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); }); return .2126*r + .7152*g + .0722*b; }
+function km(a,b){ if (a==null||b==null||a.lat==null||b.lat==null) return null; const R=6371, toR=Math.PI/180; const dLat=(b.lat-a.lat)*toR, dLon=(b.lon-a.lon)*toR; const x=Math.sin(dLat/2)**2+Math.cos(a.lat*toR)*Math.cos(b.lat*toR)*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(x)); }
+const fmtNum = n => Math.round(n).toLocaleString('en-CA');
+function todayISO(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function parts(iso){ const [y,m,d] = iso.split('-').map(Number); return {y,m,d}; }
+function roman(n){ return ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'][n-1] || ''; }
+function fmtStampDate(iso, theme){ const {y,m,d} = parts(iso); if (theme==='night') return `${String(d).padStart(2,'0')}.${String(m).padStart(2,'0')}.${String(y).slice(2)}`; if (theme==='vintage') return `${d} · ${roman(m)} · ${y}`; return `${d} ${MON[m-1]} ${y}`; }
+function fmtLong(iso){ const {y,m,d} = parts(iso); return `${MONTH_LONG[m-1]} ${d}, ${y}`; }
+const countryName = cc => COUNTRIES[cc] ? COUNTRIES[cc][0] : '';
+const countryCols = cc => COUNTRIES[cc] ? COUNTRIES[cc].slice(2) : [];
+const continentOf = cc => COUNTRIES[cc] ? COUNTRIES[cc][1] : null;
+const cityByName = n => CITIES.find(c => norm(c.name) === norm(n));
+function nearestCity(lat, lon){ let best=null, bd=Infinity; for (const c of CITIES){ const d = km({lat,lon}, c); if (d < bd){ bd=d; best=c; } } return {city:best, dist:bd}; }
+function searchCities(q, n=6){ q = norm(q); if (!q) return []; const starts=[], has=[]; for (const c of CITIES){ const nm = norm(c.name); if (nm.startsWith(q)) starts.push(c); else if (nm.includes(q) || norm(countryName(c.cc)).startsWith(q)) has.push(c); } return starts.concat(has).slice(0,n); }
+
+/* ---------- Storage ---------- */
+const KEY = 'stamped.v1';
+const DEFAULTS = {name:'', home:'Toronto', theme:'classic', sound:true, haptics:true, lastBackup:null, stampsAtBackup:0};
+function loadState(){ try { const raw = localStorage.getItem(KEY); if (raw){ const s = JSON.parse(raw); if (s && Array.isArray(s.stamps)) return s; } } catch(e){} return null; }
+let state = loadState() || {stamps:[], settings:{}};
+state.settings = Object.assign({}, DEFAULTS, state.settings || {});
+let storageOK = true;
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; } catch(e){ storageOK = false; } scheduleBackupCache(); }
+let backupCache = null, cacheTimer = null;
+function scheduleBackupCache(){ backupCache = null; clearTimeout(cacheTimer); cacheTimer = setTimeout(() => { if (typeof buildBackup === 'function') buildBackup().then(t => { backupCache = t; }); }, 250); }
+
+const memPhotos = new Map();
+let dbp = null;
+function db(){ if (dbp) return dbp; dbp = new Promise(res => { try { const r = indexedDB.open('stamped', 1); r.onupgradeneeded = () => r.result.createObjectStore('photos'); r.onsuccess = () => res(r.result); r.onerror = () => res(null); r.onblocked = () => res(null); } catch(e){ res(null); } }); return dbp; }
+async function putPhoto(id, data){ memPhotos.set(id, data); const d = await db(); if (!d) return; try { await new Promise((res, rej) => { const t = d.transaction('photos','readwrite'); t.objectStore('photos').put(data, id); t.oncomplete = res; t.onerror = () => rej(t.error); }); } catch(e){} }
+async function getPhoto(id){ if (memPhotos.has(id)) return memPhotos.get(id); const d = await db(); if (!d) return null; try { return await new Promise(res => { const r = d.transaction('photos').objectStore('photos').get(id); r.onsuccess = () => { if (r.result) memPhotos.set(id, r.result); res(r.result || null); }; r.onerror = () => res(null); }); } catch(e){ return null; } }
+async function delPhoto(id){ memPhotos.delete(id); const d = await db(); if (!d) return; try { d.transaction('photos','readwrite').objectStore('photos').delete(id); } catch(e){} }
+async function clearPhotos(){ memPhotos.clear(); const d = await db(); if (!d) return; try { d.transaction('photos','readwrite').objectStore('photos').clear(); } catch(e){} }
+
+/* ---------- Feedback ---------- */
+let actx = null;
+function unlockAudio(){ if (!state.settings.sound) return; try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); } catch(e){} }
+function thunk(vol=1){
+  if (!state.settings.sound || !actx) return;
+  try {
+    const t = actx.currentTime;
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t+.2);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.55*vol, t+.008); g.gain.exponentialRampToValueAtTime(.0001, t+.28);
+    o.connect(g).connect(actx.destination); o.start(t); o.stop(t+.32);
+    const len = Math.floor(actx.sampleRate*.07), buf = actx.createBuffer(1, len, actx.sampleRate), ch = buf.getChannelData(0);
+    for (let i=0;i<len;i++) ch[i] = (Math.random()*2-1) * Math.pow(1-i/len, 3);
+    const n = actx.createBufferSource(); n.buffer = buf; const f = actx.createBiquadFilter(); f.type='lowpass'; f.frequency.value = 1400;
+    const g2 = actx.createGain(); g2.gain.value = .3*vol; n.connect(f).connect(g2).connect(actx.destination); n.start(t);
+  } catch(e){}
+}
+function rustle(){
+  if (!state.settings.sound || !actx) return;
+  try { const t = actx.currentTime, len = Math.floor(actx.sampleRate*.32), buf = actx.createBuffer(1, len, actx.sampleRate), ch = buf.getChannelData(0);
+    for (let i=0;i<len;i++){ const x = i/len; ch[i] = (Math.random()*2-1) * Math.sin(Math.PI*x) * (.6 + .4*Math.sin(x*40)); }
+    const n = actx.createBufferSource(); n.buffer = buf; const f = actx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2600; f.Q.value = .7;
+    const g = actx.createGain(); g.gain.value = .09; n.connect(f).connect(g).connect(actx.destination); n.start(t);
+  } catch(e){}
+}
+function buzz(ms=18){ if (state.settings.haptics && navigator.vibrate){ try { navigator.vibrate(ms); } catch(e){} } }
+let toastTimer = null;
+function toast(msg, ms=2800){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms); }
+
+/* ---------- Stamp generator ---------- */
+const SHAPES = ['circle','rect','oval','hex','shield','ticket'];
+const OUTLINE = {
+  circle:'M-90 0A90 90 0 1 0 90 0A90 90 0 1 0 -90 0Z',
+  rect:'M-78 -70H78Q84 -70 84 -64V64Q84 70 78 70H-78Q-84 70 -84 64V-64Q-84 -70 -78 -70Z',
+  oval:'M-94 0A94 72 0 1 0 94 0A94 72 0 1 0 -94 0Z',
+  hex:'M0 -92L80 -46V46L0 92L-80 46V-46Z',
+  shield:'M-78 -82H78V8Q78 66 0 92Q-78 66 -78 8Z',
+  ticket:'M-88 -60H88V-14A14 14 0 0 0 88 14V60H-88V14A14 14 0 0 0 -88 -14Z'
+};
+const LAYOUT = {
+  circle:{arc:true, inner:.82, iconY:-6, iconS:.76, bandY:24, dateY:45, dateW:100},
+  rect:{nameY:-40, nameW:146, nameS:20, ctryY:-25, ctryW:136, inner:.87, iconY:6, iconS:.7, bandY:34, dateY:53, dateW:136},
+  oval:{nameY:-32, nameW:136, nameS:19, ctryY:-18, ctryW:126, inner:.87, iconY:11, iconS:.64, bandY:37, dateY:54, dateW:100},
+  hex:{nameY:-38, nameW:118, nameS:18, ctryY:-25, ctryW:116, inner:.87, iconY:5, iconS:.6, bandY:30, dateY:48, dateW:96},
+  shield:{nameY:-54, nameW:136, nameS:19, ctryY:-40, ctryW:126, inner:.87, iconY:-6, iconS:.7, bandY:26, dateY:46, dateW:100},
+  ticket:{nameY:-30, nameW:140, nameS:19, ctryY:-17, ctryW:130, inner:.87, iconY:8, iconS:.56, bandY:31, dateY:46, dateW:130}
+};
+const THEMES = {
+  classic:{label:'Classic Passport', blurb:'Navy cover, inky stamps'},
+  vintage:{label:'Vintage Post', blurb:'Aged paper, postal inks'},
+  night:{label:'Golden Hour Night', blurb:'Gold line art on midnight'}
+};
+const FALLBACK_INKS = ['#1E4FA8','#0F2A5C','#B23A2E','#1F6A66','#5B3C8C','#8A5A00'];
+let uid = 0;
+
+function seedOf(s){ return hash(norm(s.place) + '|' + s.date); }
+function fit(text, maxW, base, ls, cw){ const n = Math.max(1, text.length); const fs = (maxW / n - ls) / cw; return Math.max(7, Math.min(base, fs)); }
+function iconFor(s, r){
+  if (s.lm && s.kind === s.lmKind && ICONS[s.lm]) return ICONS[s.lm];
+  if (s.kind && s.kind !== 'city' && ICONS[s.kind]) return ICONS[s.kind];
+  // procedural skyline
+  let x = -30, d = 'M-30 22', tallest = {h:0, x:0, w:0};
+  while (x < 30){ const w = Math.min(5 + Math.floor(r()*6), 30-x); const h = 8 + Math.floor(r()*30); d += ` V${22-h} H${x+w}`; if (h > tallest.h) tallest = {h, x, w}; x += w; }
+  d += ' V22 Z';
+  const cx = tallest.x + tallest.w/2, top = 22 - tallest.h;
+  const feature = r() < .5 ? `<path d="M${cx} ${top}V${top-9}"/>` : `<path d="M${tallest.x} ${top}Q${cx} ${top-9} ${tallest.x+tallest.w} ${top}"/>`;
+  let windows = ''; for (let i=0;i<5;i++){ const wx = -26 + Math.floor(r()*52), wy = 6 + Math.floor(r()*12); windows += `M${wx} ${wy}h2`; }
+  return `<path d="${d}"/>${feature}<path d="${windows}"/><path d="M-34 22H34"/>`;
+}
+function inkFor(s, theme, r){
+  if (theme === 'night') return pick(['#E9B949','#9CC3FF','#F4D9A6'], r);
+  const strong = countryCols(s.cc).filter(h => { const L = lum(h); return L > .01 && L < .45; });
+  const base = strong.length ? pick(strong, r) : pick(FALLBACK_INKS, r);
+  if (theme === 'vintage') return mix(base, '#4A3426', .42);
+  let ink = mix(base, '#0F2A5C', .16); if (lum(ink) > .22) ink = mix(ink, '#0F2A5C', .35); return ink;
+}
+function bandSVG(cols, y, ink, theme){
+  if (!cols.length) return '';
+  const w = cols.length === 2 ? 18 : 14, total = w * cols.length; let x = -total/2;
+  return cols.map(c => { const col = theme==='night' ? mix(c,'#FFFFFF',.15) : theme==='vintage' ? mix(c,'#C9B48F',.35) : c; const out = `<rect x="${x}" y="${y-3}" width="${w}" height="6" fill="${col}" stroke="${ink}" stroke-width=".8"/>`; x += w; return out; }).join('');
+}
+function stampInfo(s, theme){
+  theme = theme || state.settings.theme;
+  const seed = seedOf(s);
+  const rShape = rng(seed), rInk = rng(seed ^ 0x9E3779B9), rIcon = rng(seed ^ 0x85EBCA6B), rFont = rng(seed ^ 0xC2B2AE35);
+  const shape = SHAPES[Math.floor(rShape()*SHAPES.length)];
+  const innerStyle = pick(['solid','dashed','dotted','double'], rShape);
+  const ink = inkFor(s, theme, rInk);
+  return {seed, shape, innerStyle, ink, rShape, rIcon, rFont};
+}
+function revisitIndex(s){ const same = sorted().filter(x => norm(x.place) === norm(s.place)); return same.findIndex(x => x.id === s.id) + 1; }
+function stampSVG(s, theme, opts={}){
+  theme = theme || state.settings.theme;
+  const info = stampInfo(s, theme);
+  const {shape, ink} = info, L = LAYOUT[shape], id = 'st' + (++uid);
+  const sw = theme==='night' ? 1.6 : theme==='vintage' ? 3 : 3.4;
+  const thin = theme==='night' ? 1.1 : 1.4;
+  const ls = theme==='night' ? 2.2 : 1;
+  const monoFont = theme==='night' ? 'DM Mono, monospace' : theme==='vintage' ? 'Special Elite, monospace' : 'Courier Prime, monospace';
+  const serifName = theme==='vintage' && info.rFont() < .4;
+  const nameFont = theme==='night' ? 'Space Grotesk, sans-serif' : serifName ? 'DM Serif Display, serif' : monoFont;
+  const nameWeight = theme==='vintage' ? 400 : 700;
+  const cw = (theme==='night' || serifName) ? .66 : .6;
+  const placeText = serifName ? s.place : s.place.toUpperCase();
+  const ctry = countryName(s.cc).toUpperCase();
+  const rev = opts.revisit != null ? opts.revisit : revisitIndex(s);
+  const dateText = fmtStampDate(s.date, theme) + (rev > 1 ? ` · ${roman(rev)}` : '');
+  const filter = theme==='classic' ? 'url(#ink1)' : theme==='vintage' ? 'url(#ink2)' : '';
+  const opacity = theme==='night' ? 1 : theme==='vintage' ? (.74 + info.rShape()*.16).toFixed(2) : (.84 + info.rShape()*.12).toFixed(2);
+  const d = OUTLINE[shape];
+  let rings = '';
+  if (theme==='vintage'){
+    rings += `<path d="${d}" stroke-width="6" stroke-dasharray="0.1 7.5" stroke-linecap="round"/>`;
+    if (shape !== 'circle') rings += `<path d="${d}" transform="scale(.94)" vector-effect="non-scaling-stroke" stroke-width="2.4"/>`;
+    rings += `<path d="${d}" transform="scale(${L.inner})" vector-effect="non-scaling-stroke" stroke-width="${thin}"/>`;
+  } else {
+    rings += `<path d="${d}" stroke-width="${sw}"/>`;
+    const st = theme==='night' ? 'dotted' : info.innerStyle;
+    const dash = st==='dashed' ? ' stroke-dasharray="6 4"' : st==='dotted' ? ' stroke-dasharray="0.1 4.5" stroke-linecap="round"' : '';
+    rings += `<path d="${d}" transform="scale(${L.inner})" vector-effect="non-scaling-stroke" stroke-width="${st==='dotted'?thin+1.2:thin}"${dash}/>`;
+    if (st==='double' && theme!=='night') rings += `<path d="${d}" transform="scale(${L.inner-.05})" vector-effect="non-scaling-stroke" stroke-width="${thin}"/>`;
+  }
+  const iconSW = theme==='night' ? 1.6 : 2.4;
+  const icon = `<g transform="translate(0 ${L.iconY}) scale(${L.iconS})" style="color:${ink}" stroke="currentColor" stroke-width="${(iconSW/L.iconS).toFixed(2)}">${iconFor(s, info.rIcon)}</g>`;
+  let texts = '';
+  if (L.arc){
+    const top = placeText, bot = ctry || KINDS.find(k => k[0]===s.kind)?.[1]?.toUpperCase() || '';
+    const fsT = fit(top, 178, 15, ls, cw), fsB = fit(bot, 150, 10.5, ls, .6);
+    texts += `<defs><path id="${id}t" d="M-77 0A77 77 0 0 1 77 0"/><path id="${id}b" d="M-85 0A85 85 0 0 0 85 0"/></defs>`;
+    texts += `<text font-family="${nameFont}" font-weight="${nameWeight}" font-size="${fsT.toFixed(1)}" letter-spacing="${ls}" fill="${ink}" stroke="none"><textPath href="#${id}t" startOffset="50%" text-anchor="middle">${esc(top)}</textPath></text>`;
+    if (bot) texts += `<text font-family="${monoFont}" font-size="${fsB.toFixed(1)}" letter-spacing="${ls}" fill="${ink}" stroke="none"><textPath href="#${id}b" startOffset="50%" text-anchor="middle">${esc(bot)}</textPath></text>`;
+  } else {
+    const fsN = fit(placeText, L.nameW, L.nameS, ls, cw);
+    texts += `<text x="0" y="${L.nameY}" text-anchor="middle" font-family="${nameFont}" font-weight="${nameWeight}" font-size="${fsN.toFixed(1)}" letter-spacing="${ls}" fill="${ink}" stroke="none">${esc(placeText)}</text>`;
+    if (ctry){ const fsC = fit(ctry, L.ctryW, 9.5, ls, .6); texts += `<text x="0" y="${L.ctryY}" text-anchor="middle" font-family="${monoFont}" font-size="${fsC.toFixed(1)}" letter-spacing="${ls}" fill="${ink}" stroke="none">${esc(ctry)}</text>`; }
+  }
+  const fsD = fit(dateText, L.dateW, 12, theme==='night'?1.2:.5, .6);
+  texts += `<text x="0" y="${L.dateY}" text-anchor="middle" font-family="${monoFont}" font-weight="${theme==='classic'?700:400}" font-size="${fsD.toFixed(1)}" letter-spacing="${theme==='night'?1.2:.5}" fill="${ink}" stroke="none">${esc(dateText)}</text>`;
+  const band = bandSVG(countryCols(s.cc), L.bandY, ink, theme);
+  let extra = '';
+  if (theme==='vintage' && info.rShape() < .45){ const y0 = -82 + info.rShape()*10; extra += `<g opacity=".6" stroke-width="2"><path d="M8 ${y0} q8 -6 16 0 t16 0 t16 0 t16 0 t16 0"/><path d="M8 ${y0+9} q8 -6 16 0 t16 0 t16 0 t16 0 t16 0"/><path d="M8 ${y0+18} q8 -6 16 0 t16 0 t16 0 t16 0 t16 0"/></g>`; }
+  if (theme==='night' && info.rShape() < .6){ const sx = 58 + info.rShape()*20, sy = -70 + info.rShape()*12; extra += `<path d="M${sx} ${sy-7}L${sx+1.6} ${sy-1.6}L${sx+7} ${sy}L${sx+1.6} ${sy+1.6}L${sx} ${sy+7}L${sx-1.6} ${sy+1.6}L${sx-7} ${sy}L${sx-1.6} ${sy-1.6}Z" fill="${ink}" stroke="none"/>`; }
+  const label = opts.label !== false ? ` role="img" aria-label="${esc(s.place)} stamp, ${esc(fmtLong(s.date))}"` : ' aria-hidden="true"';
+  const svg = `<svg viewBox="-100 -100 200 200"${label}><g fill="none" stroke="${ink}" stroke-linejoin="round" opacity="${opacity}"${filter?` filter="${filter}"`:''}>${rings}${icon}${band}${texts}${extra}</g></svg>`;
+  return {svg, ink};
+}
+
+/* ---------- Model helpers ---------- */
+function sorted(){ return state.stamps.slice().sort((a,b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.created||0) - (b.created||0)); }
+function homeCity(){ return cityByName(state.settings.home) || cityByName('Toronto'); }
+function computeStats(list){
+  const home = homeCity();
+  const st = {n:list.length, countries:new Set(), continents:new Set(), places:new Set(), kindCount:{}, countryCounts:{}, placeCounts:{}, years:{}, months:Array(12).fill(0), farKm:0, farPlace:null, combinedKm:0, homeCountryCount:0, maxYear:0, maxRepeat:0, oldestYearsAgo:0, first:null, last:null};
+  const nowY = new Date().getFullYear();
+  for (const s of list){
+    if (s.cc){ st.countries.add(s.cc); st.countryCounts[s.cc] = (st.countryCounts[s.cc]||0)+1; const c = continentOf(s.cc); if (c) st.continents.add(c); if (home && s.cc === home.cc) st.homeCountryCount++; }
+    const pk = norm(s.place); st.places.add(pk); st.placeCounts[pk] = st.placeCounts[pk] || {name:s.place, n:0, cc:s.cc}; st.placeCounts[pk].n++;
+    st.kindCount[s.kind] = (st.kindCount[s.kind]||0)+1;
+    const {y,m} = parts(s.date); st.years[y] = (st.years[y]||0)+1; st.months[m-1]++;
+    const d = km(home, s); if (d != null){ st.combinedKm += d; if (d > st.farKm){ st.farKm = d; st.farPlace = s; } }
+    st.oldestYearsAgo = Math.max(st.oldestYearsAgo, nowY - y);
+    if (!st.first || s.date < st.first.date) st.first = s; if (!st.last || s.date > st.last.date) st.last = s;
+  }
+  st.maxYear = Math.max(0, ...Object.values(st.years));
+  st.maxRepeat = Math.max(0, ...Object.values(st.placeCounts).map(p => p.n));
+  return st;
+}
+function makeId(){ return 's' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function stampFromCity(c, date, extra={}){ return Object.assign({id:makeId(), place:c.name, cc:c.cc, lat:c.lat, lon:c.lon, kind:c.kind, lm:c.lm, lmKind:c.kind, date, note:'', with:'', hasPhoto:false, created:Date.now()}, extra); }
+
+/* ---------- Book ---------- */
+let page = 0, pageCount = 1, pendingLand = null;
+const track = $('#track'), viewport = $('#viewport');
+function decorSVG(){
+  const t = state.settings.theme;
+  if (t==='vintage'){ let l=''; for (let y=60;y<1000;y+=56) l += `<line x1="0" y1="${y}" x2="1000" y2="${y}"/>`; return `<svg class="decor" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 1000 1000"><g stroke="var(--page-line)" stroke-width="2">${l}</g></svg>`; }
+  if (t==='night'){ const r = rng(42); let d=''; for (let i=0;i<40;i++) d += `<circle cx="${(r()*400).toFixed(0)}" cy="${(r()*600).toFixed(0)}" r="${(r()*1.3+.4).toFixed(1)}"/>`; return `<svg class="decor" aria-hidden="true" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 600"><g fill="#AFC0DE" opacity=".45">${d}</g></svg>`; }
+  let w=''; for (let y=30;y<620;y+=48) w += `<path d="M-20 ${y} Q80 ${y-16} 180 ${y} T380 ${y} T580 ${y}"/>`;
+  return `<svg class="decor" aria-hidden="true" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 600"><g fill="none" stroke="var(--page-line)" stroke-width="1.2">${w}</g></svg>`;
+}
+function emblemSVG(){
+  const t = state.settings.theme, c = 'var(--cover-ink)';
+  if (t==='vintage') return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2"><circle r="52"/><circle r="44" stroke-dasharray="1 5" stroke-linecap="round"/><path d="M0 -40L8 -8L40 0L8 8L0 40L-8 8L-40 0L-8 -8Z"/><path d="M0 -40L0 40M-40 0H40" stroke-width="1"/><circle r="5"/></g><text y="-47" text-anchor="middle" font-family="Special Elite, monospace" font-size="8" fill="${c}">N</text></svg>`;
+  if (t==='night') return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round"><path d="M-34 14A34 34 0 0 1 34 14"/><path d="M-48 14H48M-38 26H38M-26 38H26" stroke-width="1.4"/><path d="M0 -40V-30M-28 -28L-21 -21M28 -28L21 -21M-42 -6H-34M42 -6H34"/></g></svg>`;
+  return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2"><circle r="44"/><ellipse rx="18" ry="44"/><path d="M0 -44V44M-44 0H44M-38 -22H38M-38 22H38"/><path d="M-52 -52L-44 -44M52 -52L44 -44" stroke-width="1" opacity=".6"/></g></svg>`;
+}
+function placement(s, slot){ const r = rng(seedOf(s) ^ 0x51ED27); const base = [[29,26],[71,29],[29,72],[71,74]][slot]; const spread = state.settings.theme==='night' ? 14 : 26; return {x:base[0] + (r()-.5)*7, y:base[1] + (r()-.5)*6, rot:((r()-.5)*spread).toFixed(1)}; }
+function stampButton(s, slot, cls=''){ const p = placement(s, slot); const {svg, ink} = stampSVG(s); return `<button class="stamp ${cls}" data-id="${s.id}" style="--x:${p.x}%;--y:${p.y}%;--rot:${p.rot}deg;color:${ink}">${svg}</button>`; }
+function leafHTML(inner, cls){ return `<div class="leaf"><div class="page ${cls||''}">${inner}<div class="curl"></div><div class="shade"></div></div><div class="back"></div></div>`; }
+function renderBook(opts={}){
+  flip = null;
+  const list = sorted(); const st = computeStats(list);
+  const pages = []; for (let i=0;i<list.length;i+=4) pages.push(list.slice(i,i+4));
+  if (!pages.length || pages[pages.length-1].length === 4) pages.push([]);
+  const name = state.settings.name.trim();
+  let html = leafHTML(`<div class="cover-emblem">${emblemSVG()}</div><div class="cover-title">PASSPORT</div><div class="cover-sub">${esc(name || 'Stamped')}</div><div class="cover-meta">${st.n} ${st.n===1?'stamp':'stamps'} · ${st.countries.size} ${st.countries.size===1?'country':'countries'}</div><div class="cover-hint">Swipe to open →</div>`, 'cover');
+  pages.forEach((p, pi) => {
+    const last = pi === pages.length-1;
+    let inner = decorSVG() + `<div class="page-no">${pi+1}</div>`;
+    if (!list.length){
+      inner += `<div class="empty-state"><svg width="84" height="84" viewBox="-50 -50 100 100" aria-hidden="true"><circle r="44" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 6"/><path d="M-16 12h32M-12 12v-14h24v14M-6 -2v-10h12v10" fill="none" stroke="var(--muted)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Your first page is waiting</h2><p>Add a stamp for a trip you're on, or one from years ago.</p><button class="btn primary" data-act="add">Add your first stamp</button><button class="btn ghost small" data-act="sample">Or load sample trips</button></div>`;
+    } else {
+      p.forEach((s, i) => { inner += stampButton(s, i, opts.fade ? 'fade' : ''); });
+      if (last && p.length < 4){ const pos = [[29,26],[71,29],[29,72],[71,74]][p.length]; inner += `<button class="slot-empty" data-act="add" style="--x:${pos[0]}%;--y:${pos[1]}%">Next stamp goes here</button>`; }
+    }
+    html += leafHTML(inner, '');
+  });
+  track.innerHTML = html;
+  pageCount = pages.length + 1;
+  page = Math.min(page, pageCount-1);
+  $('#bookCount').innerHTML = `${st.n} ${st.n===1?'stamp':'stamps'}<br>${st.countries.size} ${st.countries.size===1?'country':'countries'}`;
+  layoutLeaves(); renderDots(); renderNudge();
+}
+function renderDots(){
+  const max = 12; let html = '';
+  const n = pageCount;
+  for (let i=0;i<Math.min(n,max);i++){ const idx = n<=max ? i : Math.round(i*(n-1)/(max-1)); html += `<span class="dot${(n<=max ? i===page : idx===page || (i===max-1 && page===n-1)) ? ' on' : ''}"></span>`; }
+  $('#dots').innerHTML = html;
+  $('#bookTitle').textContent = page === 0 ? 'Cover' : `Page ${page}`;
+  $('#prevPage').disabled = page === 0; $('#nextPage').disabled = page === pageCount-1;
+}
+/* Page turning */
+let flip = null;
+function setShade(leaf, shade, curl){ const pg = leaf && leaf.firstElementChild; if (!pg) return; const s = pg.querySelector(':scope > .shade'), c = pg.querySelector(':scope > .curl'); if (s) s.style.opacity = shade; if (c) c.style.opacity = curl; }
+function layoutLeaves(){ [...track.children].forEach((el, i) => { el.classList.remove('under','turning','anim'); el.classList.toggle('current', i === page); el.style.transition = 'none'; el.style.transform = 'rotateY(0deg)'; setShade(el, 0, 0); }); }
+function startFlip(dir){
+  if (flip) return false;
+  $$('.leaf.leaving', track).forEach(el => el.classList.remove('leaving'));
+  const L = track.children;
+  if (dir > 0 && page >= pageCount-1) return false;
+  if (dir < 0 && page <= 0) return false;
+  const cur = L[page];
+  if (dir > 0){ const nxt = L[page+1]; nxt.classList.add('under'); cur.classList.remove('current'); cur.classList.add('turning'); flip = {dir, turning:cur, under:nxt, angle:0}; }
+  else { const prev = L[page-1]; prev.style.transform = 'rotateY(-180deg)'; prev.classList.add('turning'); cur.classList.remove('current'); cur.classList.add('under'); flip = {dir, turning:prev, under:cur, angle:-180}; }
+  setFlipAngle(flip, flip.angle);
+  return true;
+}
+function setFlipAngle(f, a){
+  f.angle = a; f.turning.style.transform = `rotateY(${a}deg)`;
+  const p = -a/180;
+  setShade(f.turning, p*.25, Math.sin(p*Math.PI)*.95);
+  setShade(f.under, (1-p)*.32, 0);
+}
+function finishFlip(complete){
+  const f = flip; if (!f) return;
+  const target = f.dir > 0 ? (complete ? -180 : 0) : (complete ? 0 : -180);
+  f.turning.classList.add('anim'); f.under.classList.add('anim');
+  const ms = Math.max(260, Math.abs(target - f.angle) / 180 * 720);
+  [f.turning, f.under].forEach(el => { el.style.transition = `transform ${ms}ms cubic-bezier(.3,.75,.25,1)`; const pg = el.firstElementChild; $$(':scope > .shade, :scope > .curl', pg).forEach(x => x.style.transition = `opacity ${ms}ms ease`); });
+  requestAnimationFrame(() => setFlipAngle(f, target));
+  if (complete) setTimeout(rustle, 40);
+  let done = false;
+  const end = () => {
+    if (done) return; done = true;
+    const leaving = complete ? (f.dir > 0 ? f.turning : f.under) : (f.dir > 0 ? f.under : f.turning);
+    [f.turning, f.under].forEach(el => { const pg = el.firstElementChild; if (pg) $$(':scope > .shade, :scope > .curl', pg).forEach(x => x.style.transition = 'none'); });
+    if (complete) page += f.dir;
+    flip = null;
+    leaving.classList.add('leaving');
+    layoutLeaves(); renderDots();
+    requestAnimationFrame(() => requestAnimationFrame(() => { leaving.classList.remove('leaving'); }));
+  };
+  setTimeout(end, ms + 40);
+}
+function goPage(p){
+  p = Math.max(0, Math.min(pageCount-1, p));
+  if (p === page || flip) return;
+  if (Math.abs(p - page) === 1){ if (startFlip(p > page ? 1 : -1)) requestAnimationFrame(() => finishFlip(true)); return; }
+  page = p; layoutLeaves(); renderDots();
+  const cur = track.children[page]; if (cur && cur.animate) cur.animate([{opacity:0, transform:'translateX(14px)'},{opacity:1, transform:'none'}], {duration:380, easing:'cubic-bezier(.22,1,.36,1)'});
+}
+$('#prevPage').addEventListener('click', () => goPage(page-1));
+$('#nextPage').addEventListener('click', () => goPage(page+1));
+let drag = null, suppressClick = false;
+viewport.addEventListener('scroll', () => { if (viewport.scrollLeft) viewport.scrollLeft = 0; });
+viewport.addEventListener('pointerdown', e => { unlockAudio(); if (flip) return; if (e.pointerType === 'mouse' && e.button !== 0) return; drag = {x:e.clientX, y:e.clientY, dx:0, moved:false, t:performance.now(), lastX:e.clientX, lastT:performance.now(), v:0, id:e.pointerId, locked:null, started:false, edge:false}; });
+viewport.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (drag.locked === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)){ drag.locked = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y'; if (drag.locked === 'x'){ try { viewport.setPointerCapture(e.pointerId); } catch(err){} } }
+  if (drag.locked !== 'x') return;
+  const now = performance.now(); drag.v = (e.clientX - drag.lastX) / Math.max(1, now - drag.lastT); drag.lastX = e.clientX; drag.lastT = now;
+  drag.moved = true; drag.dx = dx;
+  const w = viewport.clientWidth;
+  if (!drag.started && !drag.edge){ const dir = dx < 0 ? 1 : -1; if (startFlip(dir)) drag.started = true; else drag.edge = dir > 0; }
+  if (drag.started){ const f = flip; const k = dx / w * 180 * 1.15; const a = f.dir > 0 ? Math.max(-180, Math.min(0, k)) : Math.max(-180, Math.min(0, -180 + k)); setFlipAngle(f, a); }
+  else if (drag.edge){ const cur = track.children[page]; cur.style.transform = `rotateY(${Math.max(-12, Math.min(0, dx / w * 30))}deg)`; }
+});
+function endDrag(e){
+  if (!drag || (e && e.pointerId !== drag.id)) return;
+  const d = drag; drag = null;
+  if (!d.moved) return;
+  if (d.started && flip){ const f = flip; const complete = f.dir > 0 ? (f.angle < -75 || d.v < -.35) : (f.angle > -105 || d.v > .35); finishFlip(complete); }
+  else if (d.edge){ const cur = track.children[page]; cur.style.transition = 'transform .45s cubic-bezier(.34,1.56,.64,1)'; cur.style.transform = 'rotateY(0deg)'; setTimeout(() => { cur.style.transition = ''; }, 460); }
+  suppressClick = true; setTimeout(() => suppressClick = false, 80);
+}
+viewport.addEventListener('pointerup', endDrag);
+viewport.addEventListener('pointercancel', endDrag);
+viewport.addEventListener('click', e => {
+  if (suppressClick) { e.preventDefault(); e.stopPropagation(); return; }
+  const b = e.target.closest('[data-id]'); if (b) return openDetail(b.dataset.id);
+  const a = e.target.closest('[data-act]'); if (a) handleAct(a.dataset.act);
+});
+function handleAct(act){ if (act === 'add') openEditor(); else if (act === 'sample') loadSamples(); }
+function landStamp(id){
+  const list = sorted(); const idx = list.findIndex(s => s.id === id); if (idx < 0) return;
+  const target = Math.floor(idx/4) + 1;
+  renderBook();
+  const el = track.querySelector(`.stamp[data-id="${id}"]`);
+  const go = () => {
+    if (el){ el.style.visibility = ''; el.classList.remove('landing'); void el.offsetWidth; el.classList.add('landing'); const pg = el.closest('.page'); pg.classList.remove('thunk'); void pg.offsetWidth; pg.classList.add('thunk'); }
+    setTimeout(() => { thunk(); buzz(22); }, 400);
+  };
+  if (el) el.style.visibility = 'hidden';
+  if (page !== target){ const far = Math.abs(target - page) > 1; goPage(target); setTimeout(go, far ? 420 : 800); } else setTimeout(go, 60);
+}
+
+/* ---------- Backup nudge ---------- */
+function backupDue(){ const s = state.settings; return state.stamps.length > 0 && state.stamps.length - (s.stampsAtBackup||0) >= 3; }
+function renderNudge(){ const b = $('#cloudBtn'); if (b){ const due = backupDue(); b.classList.toggle('due', due); b.setAttribute('aria-label', due ? 'Back up to iCloud Drive (backup due)' : 'Back up to iCloud Drive'); } }
+
+/* ---------- Sheet ---------- */
+const sheet = $('#sheet'), backdrop = $('#backdrop');
+let sheetOnClose = null;
+function openSheet(html, onClose){ sheet.innerHTML = `<div class="grabber"></div>` + html; sheet.scrollTop = 0; sheetOnClose = onClose || null; requestAnimationFrame(() => { backdrop.classList.add('open'); sheet.classList.add('open'); }); }
+function closeSheet(){ sheet.classList.remove('open'); backdrop.classList.remove('open'); const cb = sheetOnClose; sheetOnClose = null; if (cb) cb(); }
+backdrop.addEventListener('click', closeSheet);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('open')) closeSheet(); });
+// swipe-down to close
+let sheetDrag = null;
+sheet.addEventListener('touchstart', e => { if (sheet.scrollTop > 0) return; sheetDrag = {y:e.touches[0].clientY, dy:0}; }, {passive:true});
+sheet.addEventListener('touchmove', e => { if (!sheetDrag) return; const dy = e.touches[0].clientY - sheetDrag.y; if (dy > 0 && sheet.scrollTop <= 0){ sheetDrag.dy = dy; sheet.style.transition = 'none'; sheet.style.transform = `translateY(${dy}px)`; } }, {passive:true});
+sheet.addEventListener('touchend', () => { if (!sheetDrag) return; const dy = sheetDrag.dy; sheetDrag = null; sheet.style.transition = ''; sheet.style.transform = ''; if (dy > 120) closeSheet(); });
+
+/* ---------- Editor ---------- */
+let draft = null;
+function openEditor(existing){
+  unlockAudio();
+  const s = existing;
+  draft = s ? Object.assign({}, s, {photo:null, photoChanged:false, kindTouched:true}) : {place:'', cc:'', lat:null, lon:null, kind:'city', lm:null, lmKind:null, date:todayISO(), note:'', with:'', photo:null, photoChanged:false, kindTouched:false, hasPhoto:false};
+  const countryOpts = Object.entries(COUNTRIES).sort((a,b) => a[1][0].localeCompare(b[1][0])).map(([cc,c]) => `<option value="${cc}">${esc(c[0])}</option>`).join('');
+  openSheet(`
+    <h2 id="sheetTitle">${s ? 'Edit stamp' : 'New stamp'}</h2>
+    <p class="sheet-sub">${s ? 'Change anything — the stamp redraws as you go.' : 'For a trip you\'re on now, or one from years ago.'}</p>
+    <div class="preview"><div class="pv" id="pv"></div></div>
+    <button class="btn block loc-btn" id="locBtn" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Use my location</button>
+    <div class="field"><label for="fPlace">Place</label><input class="input" id="fPlace" autocomplete="off" placeholder="City, town or park" value="${esc(draft.place)}"><div class="suggest" id="placeSuggest"></div></div>
+    <div class="row">
+      <div class="field"><label for="fDate">Date</label><input class="input" id="fDate" type="date" value="${esc(draft.date)}" max="2099-12-31"></div>
+      <div class="field"><label for="fCountry">Country</label><select class="input" id="fCountry"><option value="">—</option>${countryOpts}</select></div>
+    </div>
+    <div class="field"><span class="label" id="kindLbl">Kind of place</span><div class="chips" role="group" aria-labelledby="kindLbl">${KINDS.map(([k,l]) => `<button type="button" class="chip" data-kind="${k}" aria-pressed="${draft.kind===k}">${l}</button>`).join('')}</div></div>
+    <div class="field"><label for="fWith">Who you were with</label><input class="input" id="fWith" placeholder="Optional" value="${esc(draft.with)}"></div>
+    <div class="field"><label for="fNote">A note to remember</label><textarea class="input" id="fNote" placeholder="Optional">${esc(draft.note)}</textarea></div>
+    <div class="field"><span class="label">Photo</span><div class="photo-pick"><img class="photo-thumb" id="photoThumb" alt="" hidden><label class="btn small file-label"><span id="photoLbl">Add a photo</span><input type="file" id="fPhoto" accept="image/*"></label><button type="button" class="btn small ghost" id="photoRemove" hidden>Remove</button></div></div>
+    <div class="actions" style="margin-top:6px"><button class="btn" type="button" id="cancelEdit">Cancel</button><button class="btn primary" type="button" id="saveStamp">${s ? 'Save changes' : 'Stamp it'}</button></div>
+  `);
+  $('#fCountry').value = draft.cc || '';
+  if (s && s.hasPhoto){ getPhoto(s.id).then(p => { if (p && draft && draft.id === s.id && !draft.photoChanged){ showThumb(p); } }); }
+  updatePreview();
+  const place = $('#fPlace'), sug = $('#placeSuggest');
+  place.addEventListener('input', () => {
+    draft.place = place.value;
+    const m = cityByName(place.value);
+    if (m) applyCity(m, false); else { draft.lat = null; draft.lon = null; draft.lm = null; draft.lmKind = null; }
+    const res = searchCities(place.value);
+    sug.innerHTML = res.map((c,i) => `<button type="button" data-i="${i}"><span>${esc(c.name)}</span><small>${esc(countryName(c.cc))}</small></button>`).join('');
+    sug.classList.toggle('open', res.length > 0 && !(res.length === 1 && norm(res[0].name) === norm(place.value)));
+    sug._res = res; updatePreview();
+  });
+  place.addEventListener('blur', () => setTimeout(() => sug.classList.remove('open'), 150));
+  sug.addEventListener('mousedown', e => e.preventDefault());
+  sug.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (!b) return; const c = sug._res[+b.dataset.i]; place.value = c.name; draft.place = c.name; applyCity(c, true); sug.classList.remove('open'); updatePreview(); });
+  $('#fDate').addEventListener('input', e => { if (e.target.value){ draft.date = e.target.value; updatePreview(); } });
+  $('#fCountry').addEventListener('change', e => { draft.cc = e.target.value; updatePreview(); });
+  $$('.chip', sheet).forEach(ch => ch.addEventListener('click', () => { draft.kind = ch.dataset.kind; draft.kindTouched = true; $$('.chip', sheet).forEach(c => c.setAttribute('aria-pressed', c === ch)); updatePreview(); }));
+  $('#fWith').addEventListener('input', e => draft.with = e.target.value);
+  $('#fNote').addEventListener('input', e => draft.note = e.target.value);
+  $('#fPhoto').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; if (!f) return; try { const data = await shrinkImage(f); draft.photo = data; draft.photoChanged = true; showThumb(data); } catch(err){ toast('That photo couldn\'t be read. Try another one.'); } });
+  $('#photoRemove').addEventListener('click', () => { draft.photo = null; draft.photoChanged = true; $('#photoThumb').hidden = true; $('#photoRemove').hidden = true; $('#photoLbl').textContent = 'Add a photo'; });
+  $('#locBtn').addEventListener('click', useLocation);
+  $('#cancelEdit').addEventListener('click', closeSheet);
+  $('#saveStamp').addEventListener('click', saveDraft);
+}
+function showThumb(data){ const t = $('#photoThumb'); if (!t) return; t.src = data; t.hidden = false; $('#photoRemove').hidden = false; $('#photoLbl').textContent = 'Change photo'; }
+function applyCity(c, setKind){
+  draft.cc = c.cc; draft.lat = c.lat; draft.lon = c.lon; draft.lm = c.lm; draft.lmKind = c.kind;
+  if (setKind || !draft.kindTouched){ draft.kind = c.kind; $$('.chip', sheet).forEach(ch => ch.setAttribute('aria-pressed', ch.dataset.kind === c.kind)); }
+  const sel = $('#fCountry'); if (sel) sel.value = c.cc;
+}
+let pvRaf = 0;
+function updatePreview(){
+  cancelAnimationFrame(pvRaf);
+  pvRaf = requestAnimationFrame(() => {
+    const pv = $('#pv'); if (!pv || !draft) return;
+    const s = Object.assign({}, draft, {place: draft.place.trim() || 'Your place', date: draft.date || todayISO(), id: draft.id || 'preview'});
+    pv.innerHTML = stampSVG(s, null, {revisit: 1, label:false}).svg;
+    pv.style.transform = `rotate(${((seedOf(s)%9)-4)}deg)`;
+  });
+}
+function useLocation(){
+  const btn = $('#locBtn');
+  if (!('geolocation' in navigator)){ toast('Location isn\'t available here. Type the place instead.'); return; }
+  btn.disabled = true; btn.lastChild.textContent = 'Finding you…';
+  const done = () => { if (btn.isConnected){ btn.disabled = false; btn.lastChild.textContent = 'Use my location'; } };
+  try {
+    navigator.geolocation.getCurrentPosition(pos => {
+      done();
+      const {latitude:lat, longitude:lon} = pos.coords;
+      const {city, dist} = nearestCity(lat, lon);
+      if (!city || !draft) return;
+      $('#fPlace').value = city.name; draft.place = city.name; applyCity(city, true);
+      draft.lat = lat; draft.lon = lon;
+      updatePreview();
+      toast(dist > 60 ? `Closest place on the list is ${city.name}, ${fmtNum(dist)} km away. Edit it if that's not right.` : `Looks like you're in ${city.name}.`);
+    }, () => { done(); toast('Couldn\'t get your location. Type the place instead.'); }, {enableHighAccuracy:false, timeout:12000, maximumAge:600000});
+  } catch(e){ done(); toast('Location isn\'t available here. Type the place instead.'); }
+}
+function shrinkImage(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file); const img = new Image();
+    img.onload = () => { const max = 1200; let {width:w, height:h} = img; const k = Math.min(1, max/Math.max(w,h)); w = Math.round(w*k); h = Math.round(h*k); const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h); URL.revokeObjectURL(url); try { res(c.toDataURL('image/jpeg', .8)); } catch(e){ rej(e); } };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('bad image')); };
+    img.src = url;
+  });
+}
+async function saveDraft(){
+  unlockAudio();
+  const place = draft.place.trim();
+  if (!place){ toast('Add a place name first.'); $('#fPlace').focus(); return; }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(draft.date || '')){ toast('Pick a date for this stamp.'); return; }
+  const isNew = !draft.id;
+  const s = {id: draft.id || makeId(), place, cc: draft.cc || '', lat: draft.lat, lon: draft.lon, kind: draft.kind || 'city', lm: draft.lm || null, lmKind: draft.lmKind || null, date: draft.date, note: (draft.note||'').trim(), with: (draft.with||'').trim(), hasPhoto: draft.hasPhoto || false, created: draft.created || Date.now()};
+  if (draft.photoChanged){ if (draft.photo){ await putPhoto(s.id, draft.photo); s.hasPhoto = true; } else { await delPhoto(s.id); s.hasPhoto = false; } }
+  if (isNew) state.stamps.push(s); else state.stamps = state.stamps.map(x => x.id === s.id ? s : x);
+  save();
+  draft = null;
+  closeSheet();
+  showView('book');
+  setTimeout(() => { landStamp(s.id); if (!storageOK) toast('Heads up: this browser isn\'t saving data. Add the app to your home screen.'); }, 380);
+  refreshOtherViews();
+}
+
+/* ---------- Detail ---------- */
+function openDetail(id){
+  const s = state.stamps.find(x => x.id === id); if (!s) return;
+  unlockAudio();
+  const home = homeCity(); const d = km(home, s);
+  const rev = revisitIndex(s), total = state.stamps.filter(x => norm(x.place) === norm(s.place)).length;
+  const kindLabel = (KINDS.find(k => k[0]===s.kind)||[])[1] || 'Place';
+  const facts = [
+    [fmtLong(s.date), 'Date'],
+    [kindLabel, 'Kind of place'],
+    d != null ? [`${fmtNum(d)} km`, `From ${esc(home.name)}`] : null,
+    total > 1 ? [`Visit ${rev} of ${total}`, 'Times stamped here'] : null,
+    s.with ? [esc(s.with), 'With'] : null,
+    s.cc ? [esc(CONT[continentOf(s.cc)] || ''), 'Continent'] : null
+  ].filter(Boolean);
+  openSheet(`
+    <div class="detail-stamp pop" id="detailStamp">${stampSVG(s).svg}</div>
+    <h2 class="detail-title" id="sheetTitle">${esc(s.place)}</h2>
+    <p class="detail-sub">${esc(countryName(s.cc) || 'Somewhere wonderful')}</p>
+    <div id="detailPhoto"></div>
+    ${s.note ? `<div class="note">${esc(s.note)}</div>` : ''}
+    <div class="facts">${facts.map(f => `<div class="fact"><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div>
+    <button class="btn primary block" id="shareStamp" style="margin-bottom:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Share as image</button><div class="actions"><button class="btn" id="editStamp">Edit</button><button class="btn danger" id="delStamp">Remove</button></div>
+  `);
+  if (s.hasPhoto) getPhoto(s.id).then(p => { const box = $('#detailPhoto'); if (p && box) box.innerHTML = `<img class="detail-photo" src="${p}" alt="Photo from ${esc(s.place)}">`; });
+  $('#editStamp').addEventListener('click', () => { closeSheet(); setTimeout(() => openEditor(s), 420); });
+  $('#shareStamp').addEventListener('click', async e => { e.currentTarget.disabled = true; e.currentTarget.lastChild.textContent = 'Making your image…'; try { const c = await makeStampCard(s); openShareSheet(c, `Stamped-${s.place.replace(/[^a-z0-9]+/gi,'-')}.png`, s.place); } catch(err){ toast('Couldn\'t make the image.'); } });
+  let armed = false;
+  $('#delStamp').addEventListener('click', e => {
+    if (!armed){ armed = true; e.currentTarget.textContent = 'Tap again to remove'; return; }
+    state.stamps = state.stamps.filter(x => x.id !== s.id); delPhoto(s.id); save(); closeSheet(); renderBook(); refreshOtherViews(); toast(`Removed ${s.place}.`);
+  });
+}
+
+/* ---------- Theme ---------- */
+function applyTheme(key, animate=true){
+  if (!THEMES[key]) key = 'classic';
+  state.settings.theme = key; save();
+  document.documentElement.dataset.theme = key;
+  const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = getComputedStyle(document.documentElement).getPropertyValue('--frame').trim() || '#0F2A5C';
+  renderBook({fade: animate});
+  refreshOtherViews();
+}
+function themeOptionsHTML(){
+  const sample = stampFromCity(cityByName('Lisbon'), '2026-03-15', {id:'theme-sample'});
+  return `<div class="theme-opts">${Object.entries(THEMES).map(([k,t]) => {
+    const bg = k==='classic' ? '#F3F6FB' : k==='vintage' ? '#F1E6D2' : '#12213F';
+    return `<button class="theme-opt" data-theme-opt="${k}" aria-pressed="${state.settings.theme===k}"><span class="sw" style="background:${bg}">${stampSVG(sample, k, {revisit:1, label:false}).svg}</span><b>${t.label}</b></button>`; }).join('')}</div>`;
+}
+function bindThemeOptions(root){ $$('[data-theme-opt]', root).forEach(b => b.addEventListener('click', () => { applyTheme(b.dataset.themeOpt); $$('[data-theme-opt]', root).forEach(x => x.setAttribute('aria-pressed', x === b)); buzz(10); })); }
+$('#cloudBtn').addEventListener('click', backupToICloud);
+
+/* ---------- Views ---------- */
+let currentView = 'book';
+function showView(v){
+  currentView = v;
+  document.documentElement.classList.toggle('book-mode', v === 'book');
+  $$('.view').forEach(el => el.classList.toggle('active', el.id === 'view-' + v));
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
+  if (v === 'year') renderYear(); else if (v === 'stats') renderStats(); else if (v === 'settings') renderSettings();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+$$('.tab').forEach(t => t.addEventListener('click', () => showView(t.dataset.view)));
+$('#addBtn').addEventListener('click', () => openEditor());
+function refreshOtherViews(){ if (currentView === 'year') renderYear(); else if (currentView === 'stats') renderStats(); else if (currentView === 'settings') renderSettings(); }
+function countUp(root){
+  $$('[data-count]', root).forEach(el => {
+    const end = +el.dataset.count, suffix = el.dataset.suffix || '', t0 = performance.now(), dur = 1000;
+    const step = t => { const p = Math.min(1, (t - t0)/dur), e = 1 - Math.pow(1-p, 3); el.textContent = fmtNum(end*e) + suffix; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+function flagHTML(cc){ const c = countryCols(cc); return c.length ? `<span class="flag" aria-hidden="true">${c.map(x => `<i style="background:${x}"></i>`).join('')}</span>` : `<span class="flag" aria-hidden="true"><i style="background:var(--surface-2)"></i></span>`; }
+function emptyCard(title, text){ return `<div class="card hero"><div class="eyebrow">${title}</div><p style="margin-top:10px">${text}</p><button class="btn primary" data-go-add>Add a stamp</button> <button class="btn ghost small" data-go-sample>Load sample trips</button></div>`; }
+function bindEmpty(root){ const a = $('[data-go-add]', root); if (a) a.addEventListener('click', () => openEditor()); const b = $('[data-go-sample]', root); if (b) b.addEventListener('click', loadSamples); }
+
+/* Year in review */
+let selYear = null;
+function renderYear(){
+  const root = $('#view-year'); const list = sorted();
+  const years = [...new Set(list.map(s => parts(s.date).y))].sort((a,b) => b-a);
+  if (!years.length){ root.innerHTML = `<div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your year, in stamps</h1></div></div>` + emptyCard('Nothing here yet', 'Once you have a few stamps, your year comes together here with a replay you can watch.'); bindEmpty(root); return; }
+  if (!years.includes(selYear)) selYear = years[0];
+  const ys = list.filter(s => parts(s.date).y === selYear);
+  const before = list.filter(s => parts(s.date).y < selYear);
+  const prevCountries = new Set(before.map(s => s.cc).filter(Boolean));
+  const st = computeStats(ys);
+  const newC = [...st.countries].filter(c => !prevCountries.has(c));
+  const busiest = st.months.indexOf(Math.max(...st.months));
+  const maxM = Math.max(1, ...st.months);
+  const topCountry = Object.entries(st.countryCounts).sort((a,b) => b[1]-a[1])[0];
+  const sentence = `${st.n} ${st.n===1?'stamp':'stamps'} across ${st.countries.size} ${st.countries.size===1?'country':'countries'}${newC.length ? `, ${newC.length} of them new to you` : ''}.${st.farPlace ? ` Farthest from home: ${esc(st.farPlace.place)}.` : ''}`;
+  root.innerHTML = `
+    <div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your year, in stamps</h1></div></div>
+    <div class="year-chips" role="group" aria-label="Choose a year">${years.map(y => `<button class="ychip" data-y="${y}" aria-pressed="${y===selYear}">${y}</button>`).join('')}</div>
+    <div class="stack">
+      <div class="card hero"><div class="eyebrow">${selYear} in review</div><div class="big" data-count="${st.n}">0</div><p>${sentence}</p><button class="btn primary" id="playReplay"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Replay my year</button> <button class="btn" id="shareYear">Share</button></div>
+      <div class="tiles">
+        <div class="tile" style="--i:0"><div class="num" data-count="${st.countries.size}">0</div><div class="lbl">Countries</div></div>
+        <div class="tile" style="--i:1"><div class="num" data-count="${newC.length}">0</div><div class="lbl">New countries</div></div>
+        <div class="tile" style="--i:2"><div class="num" data-count="${st.places.size}">0</div><div class="lbl">Places</div></div>
+        <div class="tile" style="--i:3"><div class="num" data-count="${Math.round(st.farKm)}" data-suffix=" km">0</div><div class="lbl">Farthest from home</div>${st.farPlace ? `<div class="sub">${esc(st.farPlace.place)}</div>` : ''}</div>
+      </div>
+      <div class="card"><h3>Month by month</h3><div class="months">${st.months.map((n,i) => `<div class="mcol"><div class="bar ${n && i===busiest ? 'hot' : n ? 'has' : ''}" style="--i:${i};height:${n ? Math.max(12, n/maxM*100) : 4}%" title="${MONTH_LONG[i]}: ${n}"></div><div class="mlabel">${MONTH_LONG[i][0]}</div></div>`).join('')}</div><p class="help" style="margin:12px 0 0">Busiest month: <b>${MONTH_LONG[busiest]}</b> with ${st.months[busiest]} ${st.months[busiest]===1?'stamp':'stamps'}.</p></div>
+      ${newC.length ? `<div class="card"><h3>New countries</h3>${newC.map(c => `<div class="list-row">${flagHTML(c)}<div class="grow"><b>${esc(countryName(c))}</b><small>First stamp: ${esc(ys.find(s => s.cc === c).place)}</small></div></div>`).join('')}</div>` : ''}
+      <div class="card"><h3>Highlights</h3>
+        <div class="list-row"><div class="grow"><b>${esc(st.first.place)}</b><small>First stamp of the year · ${fmtLong(st.first.date)}</small></div></div>
+        <div class="list-row"><div class="grow"><b>${esc(st.last.place)}</b><small>Latest stamp · ${fmtLong(st.last.date)}</small></div></div>
+        ${topCountry ? `<div class="list-row">${flagHTML(topCountry[0])}<div class="grow"><b>${esc(countryName(topCountry[0]))}</b><small>Most-stamped country</small></div><span class="count-pill">${topCountry[1]}</span></div>` : ''}
+      </div>
+      <div class="card"><h3>Every stamp</h3><div class="minis">${ys.map(s => `<button class="mini" data-id="${s.id}" aria-label="${esc(s.place)}">${stampSVG(s, null, {label:false}).svg}</button>`).join('')}</div></div>
+    </div>`;
+  $$('.ychip', root).forEach(b => b.addEventListener('click', () => { selYear = +b.dataset.y; renderYear(); }));
+  $$('.mini', root).forEach(b => b.addEventListener('click', () => openDetail(b.dataset.id)));
+  $('#playReplay').addEventListener('click', () => playReplay(selYear));
+  $('#shareYear').addEventListener('click', async e => { const btn = e.currentTarget; btn.disabled = true; btn.textContent = 'Making…'; try { const c = await makeYearCard(selYear); openShareSheet(c, `Stamped-${selYear}.png`, `${selYear} in stamps`); } catch(err){ toast('Couldn\'t make the image.'); } btn.disabled = false; btn.textContent = 'Share'; });
+  countUp(root);
+}
+let replayTimers = [];
+function playReplay(year){
+  unlockAudio();
+  const ys = sorted().filter(s => parts(s.date).y === year);
+  if (!ys.length) return;
+  const st = computeStats(ys);
+  const prev = new Set(sorted().filter(s => parts(s.date).y < year).map(s => s.cc).filter(Boolean));
+  const newC = [...st.countries].filter(c => !prev.has(c)).length;
+  const R = $('#replay');
+  const show = ys.slice(0, 15);
+  R.innerHTML = `<div class="replay-head"><div class="eyebrow">Year in stamps</div><div class="replay-year">${year}</div><div class="replay-month" id="rMonth"> </div></div>
+    <div class="replay-grid" id="rGrid"></div>
+    <div class="replay-sum" id="rSum"><b>That was ${year}.</b>${st.n} ${st.n===1?'stamp':'stamps'} · ${st.countries.size} ${st.countries.size===1?'country':'countries'}${newC ? ` · ${newC} new` : ''}${ys.length > show.length ? `<br><small>Showing the first ${show.length}.</small>` : ''}</div>
+    <div class="replay-actions"><button class="btn" id="rSkip">Skip</button><button class="btn primary" id="rClose">Close</button></div>`;
+  R.classList.add('open');
+  const grid = $('#rGrid'), month = $('#rMonth');
+  const gap = Math.max(380, Math.min(900, 7000 / show.length));
+  replayTimers.forEach(clearTimeout); replayTimers = [];
+  show.forEach((s, i) => {
+    replayTimers.push(setTimeout(() => {
+      const {svg, ink} = stampSVG(s, null, {label:false});
+      const r = rng(seedOf(s)); const rot = ((r()-.5)*24).toFixed(1);
+      const cell = document.createElement('div'); cell.className = 'rs';
+      cell.innerHTML = `<div class="stamp landing" style="--x:50%;--y:50%;--rot:${rot}deg;color:${ink}">${svg}</div>`;
+      grid.appendChild(cell);
+      month.style.opacity = 0; setTimeout(() => { month.textContent = `${MONTH_LONG[parts(s.date).m-1]} · ${s.place}`; month.style.opacity = 1; }, 150);
+      setTimeout(() => { thunk(.6); buzz(12); }, 380);
+    }, 500 + i*gap));
+  });
+  replayTimers.push(setTimeout(() => { $('#rSum').classList.add('show'); month.style.opacity = 0; }, 900 + show.length*gap));
+  const close = () => { replayTimers.forEach(clearTimeout); R.classList.remove('open'); };
+  $('#rClose').addEventListener('click', close);
+  $('#rSkip').addEventListener('click', e => {
+    replayTimers.forEach(clearTimeout); replayTimers = [];
+    grid.innerHTML = show.map(s => { const {svg, ink} = stampSVG(s, null, {label:false}); const r = rng(seedOf(s)); return `<div class="rs"><div class="stamp fade" style="--x:50%;--y:50%;--rot:${((r()-.5)*24).toFixed(1)}deg;color:${ink}">${svg}</div></div>`; }).join('');
+    $('#rSum').classList.add('show'); month.style.opacity = 0; e.currentTarget.hidden = true;
+  });
+}
+
+/* Lifetime stats */
+const BADGES = [
+  ['First stamp','Your first stamp', st => st.n >= 1],
+  ['Ten stamps','Collect 10 stamps', st => st.n >= 10],
+  ['Well travelled','Collect 50 stamps', st => st.n >= 50],
+  ['Five flags','Visit 5 countries', st => st.countries.size >= 5],
+  ['Three continents','Stamp 3 continents', st => st.continents.size >= 3],
+  ['Globetrotter','Stamp 5 continents', st => st.continents.size >= 5],
+  ['Home & native land','10 stamps in your home country', st => st.homeCountryCount >= 10],
+  ['Island hopper','3 island stamps', st => (st.kindCount.island||0) >= 3],
+  ['Peak bagger','3 mountain stamps', st => (st.kindCount.mountain||0) >= 3],
+  ['Beach bum','3 beach stamps', st => (st.kindCount.beach||0) >= 3],
+  ['Busy year','10 stamps in one year', st => st.maxYear >= 10],
+  ['Far, far away','A stamp 8,000 km from home', st => st.farKm >= 8000],
+  ['Time traveller','A stamp from 5+ years ago', st => st.oldestYearsAgo >= 5],
+  ['Back again','Stamp the same place twice', st => st.maxRepeat >= 2],
+  ['Lakeside','3 lake stamps', st => (st.kindCount.lake||0) >= 3]
+];
+function badgeSVG(on, i){
+  const c = on ? 'var(--accent-text)' : 'var(--muted)';
+  const glyphs = ['M-8 2l6 6 10-12','M-10 0h20M0 -10v20','M-9 -6h18v12h-18z','M0 -11l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z','M-10 6l10-16 10 16z','M-11 0a11 11 0 1 0 22 0a11 11 0 1 0 -22 0M-11 0h22'];
+  return `<svg viewBox="-26 -26 52 52" aria-hidden="true"><circle r="23" fill="none" stroke="${c}" stroke-width="2" ${on ? '' : 'stroke-dasharray="3 4"'}/><circle r="18" fill="none" stroke="${c}" stroke-width="1" opacity=".6"/><path d="${glyphs[i % glyphs.length]}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function renderStats(){
+  const root = $('#view-stats'); const list = sorted();
+  if (!list.length){ root.innerHTML = `<div class="book-meta"><div><div class="eyebrow">Lifetime</div><h1 class="h1">Your travel stats</h1></div></div>` + emptyCard('No stamps yet', 'Countries, continents, distances and badges show up here as your book fills.'); bindEmpty(root); return; }
+  const st = computeStats(list); const home = homeCity();
+  const nowY = new Date().getFullYear(); const firstY = parts(st.first.date).y;
+  const topCountry = Object.entries(st.countryCounts).sort((a,b) => b[1]-a[1])[0];
+  const topPlace = Object.values(st.placeCounts).sort((a,b) => b.n-a.n)[0];
+  const favKind = Object.entries(st.kindCount).sort((a,b) => b[1]-a[1])[0];
+  const yrs = Object.entries(st.years).sort((a,b) => a[0]-b[0]); const maxY = Math.max(...yrs.map(y => y[1]));
+  const contAll = ['NA','SA','EU','AS','AF','OC','AN'];
+  const contCounts = {}; list.forEach(s => { const c = continentOf(s.cc); if (c) contCounts[c] = (contCounts[c]||0)+1; });
+  const earned = BADGES.map(b => b[2](st));
+  const earths = st.combinedKm / 40075;
+  root.innerHTML = `
+    <div class="book-meta"><div><div class="eyebrow">Lifetime</div><h1 class="h1">Your travel stats</h1></div></div>
+    <div class="stack">
+      <div class="card hero"><div class="eyebrow">Since ${firstY}</div><div class="big" data-count="${st.n}">0</div><p>stamps in your passport, across ${st.countries.size} ${st.countries.size===1?'country':'countries'} and ${st.continents.size} of 7 continents.</p></div>
+      <div class="tiles">
+        <div class="tile" style="--i:0"><div class="num" data-count="${st.countries.size}">0</div><div class="lbl">Countries</div></div>
+        <div class="tile" style="--i:1"><div class="num">${st.continents.size}/7</div><div class="lbl">Continents</div></div>
+        <div class="tile" style="--i:2"><div class="num" data-count="${st.places.size}">0</div><div class="lbl">Different places</div></div>
+        <div class="tile" style="--i:3"><div class="num" data-count="${nowY - firstY + 1}">0</div><div class="lbl">Years stamping</div></div>
+        <div class="tile" style="--i:4"><div class="num" data-count="${Math.round(st.farKm)}" data-suffix=" km">0</div><div class="lbl">Farthest from home</div>${st.farPlace ? `<div class="sub">${esc(st.farPlace.place)}</div>` : ''}</div>
+        <div class="tile" style="--i:5"><div class="num" data-count="${Math.round(st.combinedKm*2)}" data-suffix=" km">0</div><div class="lbl">There and back, combined</div><div class="sub">${earths >= .1 ? `${(earths*2).toFixed(1)}× around the Earth` : 'from ' + esc(home.name)}</div></div>
+      </div>
+      <div class="card"><h3>Favourites</h3>
+        ${topCountry ? `<div class="list-row">${flagHTML(topCountry[0])}<div class="grow"><b>${esc(countryName(topCountry[0]))}</b><small>Most-visited country</small></div><span class="count-pill">${topCountry[1]}</span></div>` : ''}
+        <div class="list-row"><div class="grow"><b>${esc(topPlace.name)}</b><small>Most-stamped place</small></div><span class="count-pill">${topPlace.n}</span></div>
+        <div class="list-row"><div class="grow"><b>${esc((KINDS.find(k => k[0]===favKind[0])||['','Places'])[1])}</b><small>Your favourite kind of place</small></div><span class="count-pill">${favKind[1]}</span></div>
+      </div>
+      <div class="card"><h3>Stamps per year</h3>${yrs.map(([y,n],i) => `<div class="hbar-row"><span>${y}</span><div class="hbar" style="width:${Math.max(6, n/maxY*100)}%;animation-delay:${i*60}ms"></div><b>${n}</b></div>`).join('')}</div>
+      <div class="card"><h3>Continents</h3>${contAll.map(c => `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:14px"><span>${CONT[c]}</span><span class="muted" style="color:var(--muted)">${contCounts[c]||0}</span></div><div class="progress">${contCounts[c] ? `<i style="width:${Math.max(8,(contCounts[c]/st.n)*100)}%"></i>` : ''}</div></div>`).join('')}</div>
+      <div class="card"><h3>Countries</h3>${Object.entries(st.countryCounts).sort((a,b) => b[1]-a[1]).map(([cc,n]) => `<div class="list-row">${flagHTML(cc)}<div class="grow"><b>${esc(countryName(cc))}</b><small>${esc(CONT[continentOf(cc)]||'')}</small></div><span class="count-pill">${n}</span></div>`).join('') || '<p class="help">Add a country to your stamps to see them here.</p>'}</div>
+      <div class="card"><h3>Badges · ${earned.filter(Boolean).length} of ${BADGES.length}</h3><div class="badges">${BADGES.map((b,i) => `<div class="badge ${earned[i] ? '' : 'locked'}" style="--i:${i}">${badgeSVG(earned[i], i)}<b>${b[0]}</b><small>${b[1]}</small></div>`).join('')}</div></div>
+    </div>`;
+  countUp(root);
+}
+
+/* Settings */
+function renderSettings(){
+  const root = $('#view-settings'); const s = state.settings;
+  const last = s.lastBackup ? new Date(s.lastBackup).toLocaleDateString('en-CA', {month:'long', day:'numeric', year:'numeric'}) : null;
+  root.innerHTML = `
+    <div class="book-meta"><div><div class="eyebrow">Settings</div><h1 class="h1">Your passport</h1></div></div>
+    <div class="stack">
+      <div class="card"><h3>Details</h3>
+        <div class="field"><label for="sName">Name on the cover</label><input class="input" id="sName" value="${esc(s.name)}" placeholder="Your name"></div>
+        <div class="field" style="margin-bottom:0"><label for="sHome">Home city (for distances)</label><input class="input" id="sHome" autocomplete="off" value="${esc(s.home)}"><div class="suggest" id="homeSuggest"></div></div>
+      </div>
+      <div class="card"><h3>Style</h3>${themeOptionsHTML()}</div>
+      <div class="card"><h3>Feel</h3>
+        <div class="switch-row"><span>Stamp sound</span><label class="switch"><input type="checkbox" id="sSound" ${s.sound ? 'checked' : ''} aria-label="Stamp sound"><span></span></label></div>
+        <div class="switch-row"><span>Vibration</span><label class="switch"><input type="checkbox" id="sHaptics" ${s.haptics ? 'checked' : ''} aria-label="Vibration"><span></span></label></div>
+      </div>
+      <div class="card"><h3>iCloud backup</h3>
+        <p class="help">Your book lives on this phone. Back it up to iCloud Drive so it's safe if you lose or replace your phone. ${last ? `Last backup: <b>${last}</b>.` : 'No backup yet.'}</p>
+        <button class="btn primary block" id="bkICloud"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.6 1.5A3.5 3.5 0 0 0 7 18z"/><path d="M12 15V10M9.5 12.5L12 10l2.5 2.5"/></svg>Back up to iCloud Drive</button>
+        <p class="help" style="margin:10px 0 12px">Tap <b>Save to Files</b>, then choose <b>iCloud Drive</b>. Saving into the same folder each time keeps your latest copy there. The cloud button at the top of your book does the same thing, and shows a dot when a backup is due.</p>
+        <label class="btn block file-label"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.6 1.5A3.5 3.5 0 0 0 7 18z"/><path d="M12 10v5M9.5 12.5L12 15l2.5-2.5"/></svg>Restore from iCloud Drive<input type="file" id="restoreFile" accept="application/json,.json"></label>
+        <details style="margin-top:12px"><summary class="help" style="cursor:pointer;margin:0">Other ways to back up</summary>
+          <div class="btn-grid" style="margin-top:10px"><button class="btn small" id="bkCopy">Copy backup text</button><button class="btn small" id="bkPasteToggle">Paste a backup</button></div>
+          <div id="pasteBox" hidden style="margin-top:10px"><textarea class="input" id="pasteText" placeholder="Paste backup text here" aria-label="Backup text"></textarea><button class="btn small primary" id="pasteRestore" style="margin-top:8px">Restore from text</button></div>
+        </details>
+      </div>
+      <div class="card"><h3>Sample & reset</h3>
+        <div class="btn-grid"><button class="btn small" id="addSamples">Add sample trips</button><button class="btn small danger" id="eraseAll">Erase everything</button></div>
+      </div>
+      <p class="help" style="text-align:center;color:var(--frame-muted)">Stamped works offline. Location uses a built-in list of ${CITIES.length} places.</p>
+    </div>`;
+  $('#sName').addEventListener('input', e => { state.settings.name = e.target.value; save(); renderBook(); });
+  const home = $('#sHome'), hs = $('#homeSuggest');
+  home.addEventListener('input', () => { const res = searchCities(home.value); hs._res = res; hs.innerHTML = res.map((c,i) => `<button type="button" data-i="${i}"><span>${esc(c.name)}</span><small>${esc(countryName(c.cc))}</small></button>`).join(''); hs.classList.toggle('open', res.length > 0); });
+  home.addEventListener('blur', () => setTimeout(() => { hs.classList.remove('open'); const m = cityByName(home.value); if (m){ state.settings.home = m.name; save(); } else { home.value = state.settings.home; } }, 160));
+  hs.addEventListener('mousedown', e => e.preventDefault());
+  hs.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (!b) return; const c = hs._res[+b.dataset.i]; home.value = c.name; state.settings.home = c.name; save(); hs.classList.remove('open'); toast(`Home set to ${c.name}.`); });
+  bindThemeOptions(root);
+  $('#sSound').addEventListener('change', e => { state.settings.sound = e.target.checked; save(); if (e.target.checked){ unlockAudio(); thunk(.6); } });
+  $('#sHaptics').addEventListener('change', e => { state.settings.haptics = e.target.checked; save(); buzz(20); });
+  $('#bkICloud').addEventListener('click', backupToICloud);
+  $('#restoreFile').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; if (!f) return; try { await restoreBackup(await f.text()); } catch(err){ toast('That file isn\'t a Stamped backup.'); } e.target.value = ''; });
+  $('#bkCopy').addEventListener('click', async () => { const txt = await buildBackup(); try { await navigator.clipboard.writeText(txt); markBackedUp(); toast('Backup copied. Paste it into Notes or an email to keep it safe.'); } catch(e){ $('#pasteBox').hidden = false; $('#pasteText').value = txt; toast('Couldn\'t copy automatically. The backup is in the box below.'); } });
+  $('#bkPasteToggle').addEventListener('click', () => { $('#pasteBox').hidden = !$('#pasteBox').hidden; });
+  $('#pasteRestore').addEventListener('click', async () => { try { await restoreBackup($('#pasteText').value); } catch(e){ toast('That text isn\'t a Stamped backup.'); } });
+  $('#addSamples').addEventListener('click', loadSamples);
+  let armed = false;
+  $('#eraseAll').addEventListener('click', async e => {
+    if (!armed){ armed = true; e.currentTarget.textContent = 'Tap again to erase'; setTimeout(() => { armed = false; const b = $('#eraseAll'); if (b) b.textContent = 'Erase everything'; }, 4000); return; }
+    state.stamps = []; state.settings.stampsAtBackup = 0; await clearPhotos(); save(); page = 0; renderBook(); renderSettings(); toast('Your book is empty again.');
+  });
+}
+
+/* ---------- Backup / iCloud ---------- */
+async function buildBackup(){
+  const photos = {};
+  for (const s of state.stamps){ if (s.hasPhoto){ const p = await getPhoto(s.id); if (p) photos[s.id] = p; } }
+  return JSON.stringify({app:'stamped', version:1, exported:new Date().toISOString(), settings:state.settings, stamps:state.stamps, photos});
+}
+function markBackedUp(){ state.settings.lastBackup = Date.now(); state.settings.stampsAtBackup = state.stamps.length; save(); renderNudge(); if (currentView === 'settings') renderSettings(); }
+async function backupToICloud(){
+  const txt = backupCache || await buildBackup();
+  const name = `Stamped-backup-${todayISO()}.json`;
+  let file = null; try { file = new File([txt], name, {type:'application/json'}); } catch(e){}
+  if (file && navigator.canShare && navigator.canShare({files:[file]})){
+    try { await navigator.share({files:[file], title:'Stamped backup'}); markBackedUp(); toast('Saved. Your book is backed up.'); return; }
+    catch(e){ if (e && e.name === 'AbortError') return; }
+  }
+  if (window.claude && typeof window.claude.use === 'function'){
+    let dl = null; try { dl = await window.claude.use('downloads'); } catch(e){}
+    if (dl){ try { await dl.save({filename:name, data:txt}); markBackedUp(); toast('Backup saved. Move it into iCloud Drive in the Files app.'); } catch(e){ toast('Backup wasn\'t saved. Try "Copy backup text" instead.'); } return; }
+  }
+  try {
+    const url = URL.createObjectURL(new Blob([txt], {type:'application/json'}));
+    const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+    markBackedUp(); toast('Backup file saved. Move it into iCloud Drive in the Files app.');
+  } catch(e){ toast('Saving files isn\'t allowed here. Use "Copy backup text" instead.'); }
+}
+async function restoreBackup(text){
+  const data = JSON.parse(text);
+  if (!data || data.app !== 'stamped' || !Array.isArray(data.stamps)) throw new Error('not a backup');
+  const byId = new Map(state.stamps.map(s => [s.id, s]));
+  let added = 0;
+  for (const s of data.stamps){ if (!s || !s.id || !s.place || !s.date) continue; if (!byId.has(s.id)) added++; byId.set(s.id, s); }
+  state.stamps = [...byId.values()];
+  if (data.settings) state.settings = Object.assign({}, state.settings, {name: data.settings.name ?? state.settings.name, home: data.settings.home || state.settings.home});
+  for (const [id, p] of Object.entries(data.photos || {})) await putPhoto(id, p);
+  state.settings.stampsAtBackup = state.stamps.length; save();
+  renderBook(); refreshOtherViews();
+  toast(added ? `Restored ${added} ${added===1?'stamp':'stamps'}.` : 'Backup restored — everything was already here.');
+}
+
+/* ---------- Share images ---------- */
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const FILTER_DEFS = (document.querySelector('body > svg defs') || {}).innerHTML || '';
+function exportSVG(svg, size){
+  let s = svg.replace('<svg ', `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${size}" height="${size}" `);
+  s = s.replace(/(<svg[^>]*>)/, `$1<defs>${FILTER_DEFS}</defs>`);
+  return s.replace(/<textPath href="(#[^"]+)"/g, '<textPath href="$1" xlink:href="$1"');
+}
+function loadSVGImage(svg, size){ return new Promise((res, rej) => { const img = new Image(); img.onload = () => res(img); img.onerror = rej; img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(exportSVG(svg, size)); }); }
+function rr(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x+r, y); ctx.arcTo(x+w, y, x+w, y+h, r); ctx.arcTo(x+w, y+h, x, y+h, r); ctx.arcTo(x, y+h, x, y, r); ctx.arcTo(x, y, x+w, y, r); ctx.closePath(); }
+function headFont(){ const t = state.settings.theme; return t==='vintage' ? '"DM Serif Display", Georgia, serif' : t==='night' ? '"Space Grotesk", system-ui, sans-serif' : 'Sora, system-ui, sans-serif'; }
+function monoFontCss(){ const t = state.settings.theme; return t==='vintage' ? '"Special Elite", "Courier New", monospace' : t==='night' ? '"DM Mono", Menlo, monospace' : '"Courier Prime", "Courier New", monospace'; }
+const headWeight = () => state.settings.theme === 'vintage' ? '400' : '700';
+async function ensureFonts(){ try { await Promise.all([document.fonts.load(`${headWeight()} 80px ${headFont()}`), document.fonts.load(`400 30px ${monoFontCss()}`), document.fonts.load('500 30px Inter')]); } catch(e){} }
+function fitText(ctx, text, weight, family, max, maxW){ let s = max; for (;;){ ctx.font = `${weight} ${s}px ${family}`; if (ctx.measureText(text).width <= maxW || s <= 24) return s; s -= 2; } }
+function drawDecor(ctx, x, y, w, h){
+  const t = state.settings.theme; ctx.save(); rr(ctx, x, y, w, h, t==='vintage' ? 14 : 40); ctx.clip();
+  ctx.strokeStyle = cssVar('--page-line'); ctx.fillStyle = '#AFC0DE';
+  if (t === 'vintage'){ ctx.lineWidth = 2; for (let yy = y + 70; yy < y + h; yy += 64){ ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke(); } }
+  else if (t === 'night'){ const r = rng(7); ctx.globalAlpha = .45; for (let i=0;i<90;i++){ ctx.beginPath(); ctx.arc(x + r()*w, y + r()*h, r()*2.2 + .6, 0, Math.PI*2); ctx.fill(); } }
+  else { ctx.lineWidth = 2; for (let yy = y + 40; yy < y + h + 40; yy += 72){ ctx.beginPath(); ctx.moveTo(x - 20, yy); for (let xx = x - 20; xx < x + w + 40; xx += 120){ ctx.quadraticCurveTo(xx + 60, yy - 22, xx + 120, yy); } ctx.stroke(); } }
+  ctx.restore();
+}
+function drawBrand(ctx, x, y, color, align){
+  ctx.save(); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 3;
+  const cx = align === 'left' ? x + 26 : x; ctx.beginPath(); ctx.arc(cx, y - 10, 24, 0, Math.PI*2); ctx.stroke();
+  ctx.lineWidth = 3.5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx-11, y-2); ctx.lineTo(cx+11, y-2); ctx.moveTo(cx-8, y-2); ctx.lineTo(cx-8, y-12); ctx.lineTo(cx+8, y-12); ctx.lineTo(cx+8, y-2); ctx.stroke();
+  ctx.font = `${headWeight()} 38px ${headFont()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText('Stamped', cx + 40, y + 2);
+  ctx.restore();
+}
+async function makeStampCard(s){
+  await ensureFonts();
+  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
+  const vint = state.settings.theme === 'vintage';
+  ctx.fillStyle = cssVar('--frame'); ctx.fillRect(0, 0, W, H);
+  rr(ctx, 60, 60, 960, 1090, vint ? 14 : 40); ctx.fillStyle = cssVar('--page'); ctx.fill();
+  drawDecor(ctx, 60, 60, 960, 1090);
+  const {svg} = stampSVG(s, null, {label:false});
+  const img = await loadSVGImage(svg, 760);
+  const rot = +placement(s, 0).rot * .6;
+  ctx.save(); ctx.translate(540, 500); ctx.rotate(rot * Math.PI / 180); ctx.drawImage(img, -370, -370, 740, 740); ctx.restore();
+  ctx.textAlign = 'center'; ctx.fillStyle = cssVar('--ink');
+  fitText(ctx, s.place, headWeight(), headFont(), 92, 860); ctx.fillText(s.place, 540, 1000);
+  ctx.fillStyle = cssVar('--muted'); ctx.font = '500 34px Inter, system-ui, sans-serif';
+  ctx.fillText([countryName(s.cc), fmtLong(s.date)].filter(Boolean).join('   ·   '), 540, 1064);
+  drawBrand(ctx, 90, 1262, cssVar('--eyebrow'), 'left');
+  const idx = sorted().findIndex(x => x.id === s.id) + 1;
+  ctx.textAlign = 'right'; ctx.fillStyle = cssVar('--frame-muted'); ctx.font = `400 30px ${monoFontCss()}`;
+  ctx.fillText(`Stamp ${idx} of ${state.stamps.length}`, 990, 1258);
+  return c;
+}
+async function makeYearCard(year){
+  await ensureFonts();
+  const ys = sorted().filter(s => parts(s.date).y === year); const st = computeStats(ys);
+  const prev = new Set(sorted().filter(s => parts(s.date).y < year).map(s => s.cc).filter(Boolean));
+  const newC = [...st.countries].filter(c => !prev.has(c)).length;
+  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
+  const vint = state.settings.theme === 'vintage';
+  ctx.fillStyle = cssVar('--frame'); ctx.fillRect(0, 0, W, H);
+  ctx.textAlign = 'left'; ctx.fillStyle = cssVar('--eyebrow'); ctx.font = `400 34px ${monoFontCss()}`; ctx.fillText('MY YEAR IN STAMPS', 90, 140);
+  ctx.fillStyle = cssVar('--frame-ink'); ctx.font = `${headWeight()} 200px ${headFont()}`; ctx.fillText(String(year), 80, 330);
+  ctx.fillStyle = cssVar('--frame-muted'); ctx.font = '500 40px Inter, system-ui, sans-serif';
+  ctx.fillText(`${st.n} ${st.n===1?'stamp':'stamps'}  ·  ${st.countries.size} ${st.countries.size===1?'country':'countries'}${newC ? `  ·  ${newC} new` : ''}`, 90, 400);
+  const px = 60, py = 450, pw = 960, ph = 740;
+  rr(ctx, px, py, pw, ph, vint ? 14 : 40); ctx.fillStyle = cssVar('--page'); ctx.fill(); drawDecor(ctx, px, py, pw, ph);
+  const show = ys.slice(0, 9), cols = 3, cell = 300, rows = Math.ceil(show.length / cols);
+  const gx = px + (pw - cols*cell)/2, gy = py + (ph - rows*cell)/2 - (ys.length > 9 ? 16 : 0);
+  const imgs = await Promise.all(show.map(s => loadSVGImage(stampSVG(s, null, {label:false}).svg, 300)));
+  imgs.forEach((img, i) => { const s = show[i], r = rng(seedOf(s)); const cx = gx + (i % cols)*cell + cell/2, cy = gy + Math.floor(i/cols)*cell + cell/2; ctx.save(); ctx.translate(cx, cy); ctx.rotate(((r()-.5)*22) * Math.PI/180); ctx.drawImage(img, -140, -140, 280, 280); ctx.restore(); });
+  if (ys.length > 9){ ctx.textAlign = 'center'; ctx.fillStyle = cssVar('--muted'); ctx.font = `400 30px ${monoFontCss()}`; ctx.fillText(`+ ${ys.length - 9} more`, 540, py + ph - 30); }
+  drawBrand(ctx, 90, 1272, cssVar('--eyebrow'), 'left');
+  if (st.farPlace){ ctx.textAlign = 'right'; ctx.fillStyle = cssVar('--frame-muted'); ctx.font = `400 28px ${monoFontCss()}`; ctx.fillText(`Farthest: ${st.farPlace.place}`, 990, 1268); }
+  return c;
+}
+function openShareSheet(canvas, filename, label){
+  canvas.toBlob(blob => {
+    if (!blob){ toast('Couldn\'t make the image.'); return; }
+    const url = URL.createObjectURL(blob);
+    let file = null; try { file = new File([blob], filename, {type:'image/png'}); } catch(e){}
+    openSheet(`<h2 id="sheetTitle">${esc(label)}</h2><p class="sheet-sub">Share it to Messages or Instagram, or save it to Photos. You can also press and hold the image.</p><img class="share-img" src="${url}" alt="Share image for ${esc(label)}"><div class="actions"><button class="btn" id="shareClose">Close</button><button class="btn primary" id="shareGo">Share image</button></div>`, () => setTimeout(() => URL.revokeObjectURL(url), 1500));
+    $('#shareClose').addEventListener('click', closeSheet);
+    $('#shareGo').addEventListener('click', async () => {
+      if (file && navigator.canShare && navigator.canShare({files:[file]})){ try { await navigator.share({files:[file]}); return; } catch(e){ if (e && e.name === 'AbortError') return; } }
+      if (window.claude && typeof window.claude.use === 'function'){ let dl = null; try { dl = await window.claude.use('downloads'); } catch(e){} if (dl){ try { await dl.save({filename, data:blob}); toast('Image saved.'); } catch(e){ toast('The image wasn\'t saved. Press and hold it instead.'); } return; } }
+      try { const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); toast('Image saved.'); } catch(e){ toast('Press and hold the image to save it.'); }
+    });
+  }, 'image/png');
+}
+
+/* ---------- Samples ---------- */
+function loadSamples(){
+  const rows = [['Montreal','2024-06-14',''],['Quebec City','2024-06-16','Walked the old city walls at sunset.'],['Niagara Falls','2024-08-03',''],['New York','2024-12-07','Christmas windows and way too much walking.'],['Cancún','2025-02-15',''],['Banff','2025-07-09','Lake Louise at sunrise.'],['Vancouver','2025-07-13',''],['Paris','2025-10-04',''],['Pisa','2025-10-08','The obligatory tower-holding photo.'],['Rome','2025-10-10',''],['Lisbon','2026-03-15','Rode the 28 tram twice.'],['Sintra','2026-03-17',''],['Porto','2026-03-19',''],['Halifax','2026-08-21','']];
+  const have = new Set(state.stamps.map(s => norm(s.place) + s.date));
+  let n = 0; rows.forEach(([p,d,note], i) => { if (have.has(norm(p)+d)) return; const c = cityByName(p); if (!c) return; state.stamps.push(stampFromCity(c, d, {note, created: Date.now()+i})); n++; });
+  save(); page = 0; renderBook(); refreshOtherViews();
+  if (sheet.classList.contains('open')) closeSheet();
+  showView('book'); setTimeout(() => goPage(1), 300);
+  toast(n ? `Added ${n} sample trips. Swipe through your book.` : 'Sample trips are already in your book.');
+}
+
+/* ---------- Init ---------- */
+document.documentElement.classList.add('book-mode');
+document.addEventListener('touchmove', e => { if (document.documentElement.classList.contains('book-mode') && !e.target.closest('.sheet')) e.preventDefault(); }, {passive:false});
+scheduleBackupCache();
+document.documentElement.dataset.theme = THEMES[state.settings.theme] ? state.settings.theme : 'classic';
+applyTheme(document.documentElement.dataset.theme, false);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderBook());
+})();
+</script>
+</body>
+</html>
