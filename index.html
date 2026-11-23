@@ -26,7 +26,7 @@ html{background:var(--frame);transition:background-color .6s var(--ease)}
 body{background:var(--frame);color:var(--frame-ink);font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;transition:background-color .6s var(--ease),color .6s var(--ease);overscroll-behavior-y:none}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-.app{max-width:480px;margin:0 auto;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 104px)}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 104px + var(--gap,0px))}
 header.top{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 14px}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--head);font-size:22px;font-weight:700;letter-spacing:-.3px}
 .brand svg{width:30px;height:30px}
@@ -34,7 +34,7 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 .icon-btn:active{transform:scale(.92)}
 .view{display:none}
 html.book-mode,html.book-mode body{height:100%;overflow:hidden;overscroll-behavior:none}
-html.book-mode .app{position:fixed;top:0;bottom:0;left:0;right:0;height:auto;display:flex;flex-direction:column}
+html.book-mode .app{position:fixed;top:0;bottom:calc(var(--gap,0px) * -1);left:0;right:0;height:auto;display:flex;flex-direction:column}
 html.book-mode main{flex:1;min-height:0;display:flex;flex-direction:column}
 html.book-mode #view-book.active{display:flex;flex-direction:column;flex:1;min-height:0}
 html.book-mode .viewport{flex:1;height:auto;min-height:0}
@@ -108,7 +108,7 @@ html[data-theme=night] .btn.danger{color:#FFB4AB;border-color:#6B3A3A}
 .btn.block{width:100%}
 .btn[disabled]{opacity:.5}
 /* Nav */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px 10px calc(env(safe-area-inset-bottom) + 10px);background:var(--frame);border-top:1px solid color-mix(in srgb,var(--frame-ink) 12%,transparent);transition:background-color .6s var(--ease)}
+.tabs{position:fixed;left:0;right:0;bottom:calc(var(--gap,0px) * -1);z-index:20;max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px 10px calc(env(safe-area-inset-bottom) + 10px + var(--gap,0px));background:var(--frame);border-top:1px solid color-mix(in srgb,var(--frame-ink) 12%,transparent);transition:background-color .6s var(--ease)}
 .tabs::after{content:'';position:absolute;left:0;right:0;top:100%;height:240px;background:var(--frame)}
 .tab{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--frame-muted);font-size:11px;font-weight:600;min-height:48px;justify-content:center;transition:color .3s}
 .tab svg{width:24px;height:24px;transition:transform .35s var(--spring)}
@@ -120,7 +120,7 @@ html[data-theme=night] .btn.danger{color:#FFB4AB;border-color:#6B3A3A}
 /* Sheets */
 .backdrop{position:fixed;inset:0;z-index:40;background:rgba(3,8,20,.5);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
 .backdrop.open{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-width:480px;margin:0 auto;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;background:var(--surface);color:var(--ink);border-radius:26px 26px 0 0;padding:10px 20px calc(env(safe-area-inset-bottom) + 24px);transform:translateY(105%);transition:transform .55s var(--ease);box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.sheet{position:fixed;left:0;right:0;bottom:calc(var(--gap,0px) * -1);z-index:50;max-width:480px;margin:0 auto;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;background:var(--surface);color:var(--ink);border-radius:26px 26px 0 0;padding:10px 20px calc(env(safe-area-inset-bottom) + 24px + var(--gap,0px));transform:translateY(105%);transition:transform .55s var(--ease);box-shadow:0 -10px 40px rgba(0,0,0,.25)}
 html[data-theme=vintage] .sheet{border-radius:14px 14px 0 0}
 .sheet.open{transform:none}
 .grabber{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
@@ -136,7 +136,11 @@ html[data-theme=vintage] .sheet h2{font-weight:400}
 .input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
 textarea.input{min-height:76px;resize:vertical}
 .row{display:flex;gap:10px}
-.row>*{flex:1}
+.row>*{flex:1 1 0;min-width:0}
+input[type=date].input{-webkit-appearance:none;appearance:none;display:block;min-width:0;width:100%;height:48px;line-height:22px;text-align:left}
+input[type=date].input::-webkit-date-and-time-value{text-align:left;margin:0}
+input[type=date].input::-webkit-datetime-edit{padding:0}
+select.input{-webkit-appearance:none;appearance:none;height:48px;padding-right:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238892a6' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
 .suggest{position:absolute;top:100%;left:0;right:0;z-index:5;margin-top:4px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);box-shadow:0 12px 30px rgba(0,0,0,.18);overflow:hidden;display:none}
 .suggest.open{display:block;animation:viewIn .25s var(--ease)}
 .suggest button{display:flex;justify-content:space-between;width:100%;min-height:46px;padding:10px 14px;background:none;border:0;border-bottom:1px solid var(--line);text-align:left;color:var(--ink)}
@@ -233,7 +237,7 @@ html[data-theme=vintage] .tile .num{font-weight:400}
 .help{font-size:13.5px;color:var(--muted);line-height:1.5;margin:0 0 12px}
 .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 /* Replay */
-.replay{position:fixed;inset:0;z-index:60;background:var(--frame);color:var(--frame-ink);display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 20px);opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+.replay{position:fixed;top:0;left:0;right:0;bottom:calc(var(--gap,0px) * -1);z-index:60;background:var(--frame);color:var(--frame-ink);display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 20px + var(--gap,0px));opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
 .replay.open{opacity:1;pointer-events:auto}
 .replay-head{text-align:center;margin-bottom:12px}
 .replay-year{font-family:var(--head);font-size:56px;font-weight:700;line-height:1;letter-spacing:-1px}
@@ -247,7 +251,7 @@ html[data-theme=vintage] .tile .num{font-weight:400}
 .replay-actions{display:flex;gap:10px;width:100%;max-width:440px}
 .replay-actions .btn{flex:1}
 /* Welcome */
-.welcome{position:fixed;inset:0;z-index:65;background:var(--frame);color:var(--frame-ink);display:flex;flex-direction:column;max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 16px) 22px calc(env(safe-area-inset-bottom) + 20px);opacity:0;pointer-events:none;transition:opacity .5s var(--ease),background-color .6s var(--ease)}
+.welcome{position:fixed;top:0;left:0;right:0;bottom:calc(var(--gap,0px) * -1);z-index:65;background:var(--frame);color:var(--frame-ink);display:flex;flex-direction:column;max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 16px) 22px calc(env(safe-area-inset-bottom) + 20px + var(--gap,0px));opacity:0;pointer-events:none;transition:opacity .5s var(--ease),background-color .6s var(--ease)}
 .welcome.open{opacity:1;pointer-events:auto}
 .wl-top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
 .wl-dots{display:flex;gap:6px}
@@ -275,6 +279,24 @@ html[data-theme=vintage] .wl-title{font-weight:400}
 .wl-actions{display:flex;gap:10px}
 .wl-actions .btn{flex:1}
 .wl-stack{display:flex;flex-direction:column;gap:10px}
+/* Books */
+.book-switch{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 0;min-height:30px;color:var(--eyebrow)}
+.book-switch svg{transition:transform .3s var(--ease)}
+.book-switch:active svg{transform:translateY(2px)}
+.book-list{display:flex;flex-direction:column;gap:8px}
+.book-row{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface-2);color:var(--ink);text-align:left;transition:transform .2s var(--ease)}
+.book-row:active{transform:scale(.98)}
+.book-row[aria-pressed=true]{border-color:var(--accent)}
+.book-row .grow{flex:1;min-width:0}
+.book-row b{display:block;font-size:15.5px}
+.book-row small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.mini-cover{width:38px;height:50px;border-radius:5px;background:var(--cover);display:grid;place-items:center;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.mini-cover svg{width:26px;height:26px}
+.sub-card{background:var(--surface-2);border-radius:var(--r);padding:14px 16px;margin-top:14px}
+.sub-card .wl-tip .ic{background:var(--surface);font-weight:700}
+.tags{position:absolute;left:10%;top:8%;display:flex;gap:4px;transform:rotate(calc(var(--rot) * -1));pointer-events:none}
+.who{min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:700 12px/24px Inter,system-ui,sans-serif;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.22);display:inline-flex;align-items:center;justify-content:center}
+.who.link{background:var(--ink);color:var(--page)}
 /* Toast */
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 100px);z-index:70;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:14px;font-size:14px;max-width:min(92vw,420px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:all .4s var(--ease);pointer-events:none}
 html[data-theme=night] .toast{background:#F2F5FB;color:#0A1428}
@@ -314,7 +336,7 @@ html[data-theme=night] .toast{background:#F2F5FB;color:#0A1428}
   <main>
     <section class="view active" id="view-book" aria-label="Passport book">
       <div class="book-meta">
-        <div><div class="eyebrow">My passport</div><h1 class="h1" id="bookTitle">Cover</h1></div>
+        <div><button class="book-switch" id="bookSwitch" aria-haspopup="dialog"><span class="eyebrow" id="bookName">My passport</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><h1 class="h1" id="bookTitle">Cover</h1></div>
         <div class="book-count" id="bookCount"></div>
       </div>
       <div class="viewport" id="viewport"><div class="track" id="track"></div></div>
@@ -497,6 +519,16 @@ function loadState(){ try { const raw = localStorage.getItem(KEY); if (raw){ con
 let state = loadState() || {stamps:[], settings:{}};
 state.settings = Object.assign({}, DEFAULTS, state.settings || {});
 let storageOK = true;
+if (!state.settings.uid) state.settings.uid = 'u' + Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
+function initBooks(){
+  if (!Array.isArray(state.books) || !state.books.length) state.books = [{id:'b' + Date.now().toString(36), name:(state.settings.name || '').trim() || 'My passport', shared:false, members:[], created:Date.now()}];
+  const first = state.books[0].id;
+  state.stamps.forEach(s => { if (!s.bookId || !state.books.some(b => b.id === s.bookId)) s.bookId = first; if (!s.uid) s.uid = state.settings.uid; });
+  if (!state.books.some(b => b.id === state.current)) state.current = first;
+}
+initBooks();
+function curBook(){ return state.books.find(b => b.id === state.current) || state.books[0]; }
+function isMine(s){ return !s.uid || s.uid === state.settings.uid; }
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; } catch(e){ storageOK = false; } scheduleBackupCache(); }
 let backupCache = null, cacheTimer = null;
 function scheduleBackupCache(){ backupCache = null; clearTimeout(cacheTimer); cacheTimer = setTimeout(() => { if (typeof buildBackup === 'function') buildBackup().then(t => { backupCache = t; }); }, 250); }
@@ -599,7 +631,7 @@ function stampInfo(s, theme){
   const ink = inkFor(s, theme, rInk);
   return {seed, shape, innerStyle, ink, rShape, rIcon, rFont};
 }
-function revisitIndex(s){ const same = sorted().filter(x => norm(x.place) === norm(s.place)); return same.findIndex(x => x.id === s.id) + 1; }
+function revisitIndex(s){ const same = state.stamps.filter(x => x.bookId === s.bookId && (x.uid||'') === (s.uid||'') && norm(x.place) === norm(s.place)).sort((a,b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.created||0) - (b.created||0)); return same.findIndex(x => x.id === s.id) + 1; }
 function stampSVG(s, theme, opts={}){
   theme = theme || state.settings.theme;
   const info = stampInfo(s, theme);
@@ -657,7 +689,7 @@ function stampSVG(s, theme, opts={}){
 }
 
 /* ---------- Model helpers ---------- */
-function sorted(){ return state.stamps.slice().sort((a,b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.created||0) - (b.created||0)); }
+function sorted(sc){ return (sc === 'all' ? state.stamps : state.stamps.filter(s => s.bookId === state.current)).slice().sort((a,b) => a.date < b.date ? -1 : a.date > b.date ? 1 : (a.created||0) - (b.created||0)); }
 function homeCity(){ return cityByName(state.settings.home) || cityByName('Toronto'); }
 function computeStats(list){
   const home = homeCity();
@@ -677,7 +709,7 @@ function computeStats(list){
   return st;
 }
 function makeId(){ return 's' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-function stampFromCity(c, date, extra={}){ return Object.assign({id:makeId(), place:c.name, cc:c.cc, lat:c.lat, lon:c.lon, kind:c.kind, lm:c.lm, lmKind:c.kind, date, note:'', with:'', hasPhoto:false, created:Date.now()}, extra); }
+function stampFromCity(c, date, extra={}){ return Object.assign({id:makeId(), bookId:state.current, uid:state.settings.uid, updated:Date.now(), place:c.name, cc:c.cc, lat:c.lat, lon:c.lon, kind:c.kind, lm:c.lm, lmKind:c.kind, date, note:'', with:'', hasPhoto:false, created:Date.now()}, extra); }
 
 /* ---------- Book ---------- */
 let page = 0, pageCount = 1, pendingLand = null;
@@ -696,15 +728,15 @@ function emblemSVG(){
   return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2"><circle r="44"/><ellipse rx="18" ry="44"/><path d="M0 -44V44M-44 0H44M-38 -22H38M-38 22H38"/><path d="M-52 -52L-44 -44M52 -52L44 -44" stroke-width="1" opacity=".6"/></g></svg>`;
 }
 function placement(s, slot){ const r = rng(seedOf(s) ^ 0x51ED27); const base = [[29,26],[71,29],[29,72],[71,74]][slot]; const spread = state.settings.theme==='night' ? 14 : 26; return {x:base[0] + (r()-.5)*7, y:base[1] + (r()-.5)*6, rot:((r()-.5)*spread).toFixed(1)}; }
-function stampButton(s, slot, cls=''){ const p = placement(s, slot); const {svg, ink} = stampSVG(s); return `<button class="stamp ${cls}" data-id="${s.id}" style="--x:${p.x}%;--y:${p.y}%;--rot:${p.rot}deg;color:${ink}">${svg}</button>`; }
+function stampButton(s, slot, cls=''){ const p = placement(s, slot); const {svg, ink} = stampSVG(s); return `<button class="stamp ${cls}" data-id="${s.id}" style="--x:${p.x}%;--y:${p.y}%;--rot:${p.rot}deg;color:${ink}">${svg}${stampTags(s)}</button>`; }
 function leafHTML(inner, cls){ return `<div class="leaf"><div class="page ${cls||''}">${inner}<div class="curl"></div><div class="shade"></div></div><div class="back"></div></div>`; }
 function renderBook(opts={}){
   flip = null;
   const list = sorted(); const st = computeStats(list);
   const pages = []; for (let i=0;i<list.length;i+=4) pages.push(list.slice(i,i+4));
   if (!pages.length || pages[pages.length-1].length === 4) pages.push([]);
-  const name = state.settings.name.trim();
-  let html = leafHTML(`<div class="cover-emblem">${emblemSVG()}</div><div class="cover-title">PASSPORT</div><div class="cover-sub">${esc(name || 'Stamped')}</div><div class="cover-meta">${st.n} ${st.n===1?'stamp':'stamps'} · ${st.countries.size} ${st.countries.size===1?'country':'countries'}</div><div class="cover-hint">Swipe to open →</div>`, 'cover');
+  const bk = curBook(); $('#bookName').textContent = bk.name;
+  let html = leafHTML(`<div class="cover-emblem">${emblemSVG()}</div><div class="cover-title">PASSPORT</div><div class="cover-sub">${esc(bk.name)}</div><div class="cover-meta">${st.n} ${st.n===1?'stamp':'stamps'} · ${st.countries.size} ${st.countries.size===1?'country':'countries'}</div>${bk.shared ? `<div class="cover-meta">Shared${bk.members && bk.members.length ? ' with ' + esc(bk.members.map(m => m.name).join(', ')) : ''}</div>` : ''}<div class="cover-hint">Swipe to open →</div>`, 'cover');
   pages.forEach((p, pi) => {
     const last = pi === pages.length-1;
     let inner = decorSVG() + `<div class="page-no">${pi+1}</div>`;
@@ -941,7 +973,7 @@ async function saveDraft(){
   if (!place){ toast('Add a place name first.'); $('#fPlace').focus(); return; }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(draft.date || '')){ toast('Pick a date for this stamp.'); return; }
   const isNew = !draft.id;
-  const s = {id: draft.id || makeId(), place, cc: draft.cc || '', lat: draft.lat, lon: draft.lon, kind: draft.kind || 'city', lm: draft.lm || null, lmKind: draft.lmKind || null, date: draft.date, note: (draft.note||'').trim(), with: (draft.with||'').trim(), hasPhoto: draft.hasPhoto || false, created: draft.created || Date.now()};
+  const s = {id: draft.id || makeId(), place, cc: draft.cc || '', lat: draft.lat, lon: draft.lon, kind: draft.kind || 'city', lm: draft.lm || null, lmKind: draft.lmKind || null, date: draft.date, note: (draft.note||'').trim(), with: (draft.with||'').trim(), hasPhoto: draft.hasPhoto || false, created: draft.created || Date.now(), bookId: draft.bookId || state.current, uid: draft.uid || state.settings.uid, by: draft.by || '', updated: Date.now()};
   if (draft.photoChanged){ if (draft.photo){ await putPhoto(s.id, draft.photo); s.hasPhoto = true; } else { await delPhoto(s.id); s.hasPhoto = false; } }
   if (isNew) state.stamps.push(s); else state.stamps = state.stamps.map(x => x.id === s.id ? s : x);
   save();
@@ -957,13 +989,15 @@ function openDetail(id){
   const s = state.stamps.find(x => x.id === id); if (!s) return;
   unlockAudio();
   const home = homeCity(); const d = km(home, s);
-  const rev = revisitIndex(s), total = state.stamps.filter(x => norm(x.place) === norm(s.place)).length;
+  const rev = revisitIndex(s), total = state.stamps.filter(x => x.bookId === s.bookId && (x.uid||'') === (s.uid||'') && norm(x.place) === norm(s.place)).length; const tw = togetherWith(s);
   const kindLabel = (KINDS.find(k => k[0]===s.kind)||[])[1] || 'Place';
   const facts = [
     [fmtLong(s.date), 'Date'],
     [kindLabel, 'Kind of place'],
     d != null ? [`${fmtNum(d)} km`, `From ${esc(home.name)}`] : null,
     total > 1 ? [`Visit ${rev} of ${total}`, 'Times stamped here'] : null,
+    !isMine(s) ? [esc(s.by || 'A friend'), 'Stamped by'] : null,
+    tw.length ? [esc(tw.join(', ')), 'Also stamped here that week'] : null,
     s.with ? [esc(s.with), 'With'] : null,
     s.cc ? [esc(CONT[continentOf(s.cc)] || ''), 'Continent'] : null
   ].filter(Boolean);
@@ -1003,6 +1037,7 @@ function themeOptionsHTML(){
 }
 function bindThemeOptions(root){ $$('[data-theme-opt]', root).forEach(b => b.addEventListener('click', () => { applyTheme(b.dataset.themeOpt); $$('[data-theme-opt]', root).forEach(x => x.setAttribute('aria-pressed', x === b)); buzz(10); })); }
 $('#cloudBtn').addEventListener('click', backupToICloud);
+$('#bookSwitch').addEventListener('click', () => { unlockAudio(); openBooks(); });
 
 /* ---------- Views ---------- */
 let currentView = 'book';
@@ -1031,7 +1066,7 @@ function bindEmpty(root){ const a = $('[data-go-add]', root); if (a) a.addEventL
 /* Year in review */
 let selYear = null;
 function renderYear(){
-  const root = $('#view-year'); const list = sorted();
+  const root = $('#view-year'); const list = sorted(scopeKey());
   const years = [...new Set(list.map(s => parts(s.date).y))].sort((a,b) => b-a);
   if (!years.length){ root.innerHTML = `<div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your year, in stamps</h1></div></div>` + emptyCard('Nothing here yet', 'Once you have a few stamps, your year comes together here with a replay you can watch.'); bindEmpty(root); return; }
   if (!years.includes(selYear)) selYear = years[0];
@@ -1046,7 +1081,7 @@ function renderYear(){
   const sentence = `${st.n} ${st.n===1?'stamp':'stamps'} across ${st.countries.size} ${st.countries.size===1?'country':'countries'}${newC.length ? `, ${newC.length} of them new to you` : ''}.${st.farPlace ? ` Farthest from home: ${esc(st.farPlace.place)}.` : ''}`;
   root.innerHTML = `
     <div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your year, in stamps</h1></div></div>
-    <div class="year-chips" role="group" aria-label="Choose a year">${years.map(y => `<button class="ychip" data-y="${y}" aria-pressed="${y===selYear}">${y}</button>`).join('')}</div>
+    ${scopeChips()}<div class="year-chips" role="group" aria-label="Choose a year">${years.map(y => `<button class="ychip" data-y="${y}" aria-pressed="${y===selYear}">${y}</button>`).join('')}</div>
     <div class="stack">
       <div class="card hero"><div class="eyebrow">${selYear} in review</div><div class="big" data-count="${st.n}">0</div><p>${sentence}</p><button class="btn primary" id="playReplay"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Replay my year</button> <button class="btn" id="shareYear">Share</button></div>
       <div class="tiles">
@@ -1064,7 +1099,8 @@ function renderYear(){
       </div>
       <div class="card"><h3>Every stamp</h3><div class="minis">${ys.map(s => `<button class="mini" data-id="${s.id}" aria-label="${esc(s.place)}">${stampSVG(s, null, {label:false}).svg}</button>`).join('')}</div></div>
     </div>`;
-  $$('.ychip', root).forEach(b => b.addEventListener('click', () => { selYear = +b.dataset.y; renderYear(); }));
+  $$('.ychip[data-y]', root).forEach(b => b.addEventListener('click', () => { selYear = +b.dataset.y; renderYear(); }));
+  bindScope(root, renderYear);
   $$('.mini', root).forEach(b => b.addEventListener('click', () => openDetail(b.dataset.id)));
   $('#playReplay').addEventListener('click', () => playReplay(selYear));
   $('#shareYear').addEventListener('click', async e => { const btn = e.currentTarget; btn.disabled = true; btn.textContent = 'Making…'; try { const c = await makeYearCard(selYear); openShareSheet(c, `Stamped-${selYear}.png`, `${selYear} in stamps`); } catch(err){ toast('Couldn\'t make the image.'); } btn.disabled = false; btn.textContent = 'Share'; });
@@ -1073,10 +1109,10 @@ function renderYear(){
 let replayTimers = [];
 function playReplay(year){
   unlockAudio();
-  const ys = sorted().filter(s => parts(s.date).y === year);
+  const ys = sorted(scopeKey()).filter(s => parts(s.date).y === year);
   if (!ys.length) return;
   const st = computeStats(ys);
-  const prev = new Set(sorted().filter(s => parts(s.date).y < year).map(s => s.cc).filter(Boolean));
+  const prev = new Set(sorted(scopeKey()).filter(s => parts(s.date).y < year).map(s => s.cc).filter(Boolean));
   const newC = [...st.countries].filter(c => !prev.has(c)).length;
   const R = $('#replay');
   const show = ys.slice(0, 15);
@@ -1133,7 +1169,7 @@ function badgeSVG(on, i){
   return `<svg viewBox="-26 -26 52 52" aria-hidden="true"><circle r="23" fill="none" stroke="${c}" stroke-width="2" ${on ? '' : 'stroke-dasharray="3 4"'}/><circle r="18" fill="none" stroke="${c}" stroke-width="1" opacity=".6"/><path d="${glyphs[i % glyphs.length]}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 function renderStats(){
-  const root = $('#view-stats'); const list = sorted();
+  const root = $('#view-stats'); const list = sorted(scopeKey()); const togetherN = list.filter(s => isMine(s) && togetherWith(s).length).length;
   if (!list.length){ root.innerHTML = `<div class="book-meta"><div><div class="eyebrow">Lifetime</div><h1 class="h1">Your travel stats</h1></div></div>` + emptyCard('No stamps yet', 'Countries, continents, distances and badges show up here as your book fills.'); bindEmpty(root); return; }
   const st = computeStats(list); const home = homeCity();
   const nowY = new Date().getFullYear(); const firstY = parts(st.first.date).y;
@@ -1147,7 +1183,7 @@ function renderStats(){
   const earths = st.combinedKm / 40075;
   root.innerHTML = `
     <div class="book-meta"><div><div class="eyebrow">Lifetime</div><h1 class="h1">Your travel stats</h1></div></div>
-    <div class="stack">
+    ${scopeChips()}<div class="stack">
       <div class="card hero"><div class="eyebrow">Since ${firstY}</div><div class="big" data-count="${st.n}">0</div><p>stamps in your passport, across ${st.countries.size} ${st.countries.size===1?'country':'countries'} and ${st.continents.size} of 7 continents.</p></div>
       <div class="tiles">
         <div class="tile" style="--i:0"><div class="num" data-count="${st.countries.size}">0</div><div class="lbl">Countries</div></div>
@@ -1156,6 +1192,7 @@ function renderStats(){
         <div class="tile" style="--i:3"><div class="num" data-count="${nowY - firstY + 1}">0</div><div class="lbl">Years stamping</div></div>
         <div class="tile" style="--i:4"><div class="num" data-count="${Math.round(st.farKm)}" data-suffix=" km">0</div><div class="lbl">Farthest from home</div>${st.farPlace ? `<div class="sub">${esc(st.farPlace.place)}</div>` : ''}</div>
         <div class="tile" style="--i:5"><div class="num" data-count="${Math.round(st.combinedKm*2)}" data-suffix=" km">0</div><div class="lbl">There and back, combined</div><div class="sub">${earths >= .1 ? `${(earths*2).toFixed(1)}× around the Earth` : 'from ' + esc(home.name)}</div></div>
+        ${togetherN ? `<div class="tile" style="--i:6"><div class="num" data-count="${togetherN}">0</div><div class="lbl">Trips linked with friends</div></div>` : ''}
       </div>
       <div class="card"><h3>Favourites</h3>
         ${topCountry ? `<div class="list-row">${flagHTML(topCountry[0])}<div class="grow"><b>${esc(countryName(topCountry[0]))}</b><small>Most-visited country</small></div><span class="count-pill">${topCountry[1]}</span></div>` : ''}
@@ -1167,6 +1204,7 @@ function renderStats(){
       <div class="card"><h3>Countries</h3>${Object.entries(st.countryCounts).sort((a,b) => b[1]-a[1]).map(([cc,n]) => `<div class="list-row">${flagHTML(cc)}<div class="grow"><b>${esc(countryName(cc))}</b><small>${esc(CONT[continentOf(cc)]||'')}</small></div><span class="count-pill">${n}</span></div>`).join('') || '<p class="help">Add a country to your stamps to see them here.</p>'}</div>
       <div class="card"><h3>Badges · ${earned.filter(Boolean).length} of ${BADGES.length}</h3><div class="badges">${BADGES.map((b,i) => `<div class="badge ${earned[i] ? '' : 'locked'}" style="--i:${i}">${badgeSVG(earned[i], i)}<b>${b[0]}</b><small>${b[1]}</small></div>`).join('')}</div></div>
     </div>`;
+  bindScope(root, renderStats);
   countUp(root);
 }
 
@@ -1178,9 +1216,10 @@ function renderSettings(){
     <div class="book-meta"><div><div class="eyebrow">Settings</div><h1 class="h1">Your passport</h1></div></div>
     <div class="stack">
       <div class="card"><h3>Details</h3>
-        <div class="field"><label for="sName">Name on the cover</label><input class="input" id="sName" value="${esc(s.name)}" placeholder="Your name"></div>
+        <div class="field"><label for="sName">Your name (shown on shared passports)</label><input class="input" id="sName" value="${esc(s.name)}" placeholder="Your name"></div>
         <div class="field" style="margin-bottom:0"><label for="sHome">Home city (for distances)</label><input class="input" id="sHome" autocomplete="off" value="${esc(s.home)}"><div class="suggest" id="homeSuggest"></div></div>
       </div>
+      <div class="card"><h3>Books</h3><p class="help">You have ${state.books.length} ${state.books.length===1?'book':'books'}. You can also tap the book name above your passport.</p><button class="btn block" id="manageBooks">Manage books & sharing</button></div>
       <div class="card"><h3>Style</h3>${themeOptionsHTML()}</div>
       <div class="card"><h3>Feel</h3>
         <div class="switch-row"><span>Stamp sound</span><label class="switch"><input type="checkbox" id="sSound" ${s.sound ? 'checked' : ''} aria-label="Stamp sound"><span></span></label></div>
@@ -1201,7 +1240,7 @@ function renderSettings(){
       </div>
       <p class="help" style="text-align:center;color:var(--frame-muted)">Stamped works offline. Location uses a built-in list of ${CITIES.length} places.</p>
     </div>`;
-  $('#sName').addEventListener('input', e => { state.settings.name = e.target.value; save(); renderBook(); });
+  $('#sName').addEventListener('input', e => { state.settings.name = e.target.value; save(); });
   const home = $('#sHome'), hs = $('#homeSuggest');
   home.addEventListener('input', () => { const res = searchCities(home.value); hs._res = res; hs.innerHTML = res.map((c,i) => `<button type="button" data-i="${i}"><span>${esc(c.name)}</span><small>${esc(countryName(c.cc))}</small></button>`).join(''); hs.classList.toggle('open', res.length > 0); });
   home.addEventListener('blur', () => setTimeout(() => { hs.classList.remove('open'); const m = cityByName(home.value); if (m){ state.settings.home = m.name; save(); } else { home.value = state.settings.home; } }, 160));
@@ -1217,10 +1256,11 @@ function renderSettings(){
   $('#pasteRestore').addEventListener('click', async () => { try { await restoreBackup($('#pasteText').value); } catch(e){ toast('That text isn\'t a Stamped backup.'); } });
   $('#addSamples').addEventListener('click', loadSamples);
   $('#replayTour').addEventListener('click', showWelcome);
+  $('#manageBooks').addEventListener('click', openBooks);
   let armed = false;
   $('#eraseAll').addEventListener('click', async e => {
     if (!armed){ armed = true; e.currentTarget.textContent = 'Tap again to erase'; setTimeout(() => { armed = false; const b = $('#eraseAll'); if (b) b.textContent = 'Erase everything'; }, 4000); return; }
-    state.stamps = []; state.settings.stampsAtBackup = 0; await clearPhotos(); save(); page = 0; renderBook(); renderSettings(); toast('Your book is empty again.');
+    state.stamps = []; state.books = []; initBooks(); state.settings.stampsAtBackup = 0; await clearPhotos(); save(); page = 0; renderBook(); renderSettings(); toast('Your book is empty again.');
   });
 }
 
@@ -1228,7 +1268,7 @@ function renderSettings(){
 async function buildBackup(){
   const photos = {};
   for (const s of state.stamps){ if (s.hasPhoto){ const p = await getPhoto(s.id); if (p) photos[s.id] = p; } }
-  return JSON.stringify({app:'stamped', version:1, exported:new Date().toISOString(), settings:state.settings, stamps:state.stamps, photos});
+  return JSON.stringify({app:'stamped', version:2, exported:new Date().toISOString(), settings:state.settings, books:state.books, current:state.current, stamps:state.stamps, photos});
 }
 function markBackedUp(){ state.settings.lastBackup = Date.now(); state.settings.stampsAtBackup = state.stamps.length; save(); renderNudge(); if (currentView === 'settings') renderSettings(); }
 async function backupToICloud(){
@@ -1256,6 +1296,8 @@ async function restoreBackup(text){
   let added = 0;
   for (const s of data.stamps){ if (!s || !s.id || !s.place || !s.date) continue; if (!byId.has(s.id)) added++; byId.set(s.id, s); }
   state.stamps = [...byId.values()];
+  if (Array.isArray(data.books)) data.books.forEach(b => { if (b && b.id && !state.books.some(x => x.id === b.id)) state.books.push(b); });
+  initBooks();
   if (data.settings) state.settings = Object.assign({}, state.settings, {name: data.settings.name ?? state.settings.name, home: data.settings.home || state.settings.home});
   for (const [id, p] of Object.entries(data.photos || {})) await putPhoto(id, p);
   state.settings.stampsAtBackup = state.stamps.length; save();
@@ -1311,13 +1353,13 @@ async function makeStampCard(s){
   drawBrand(ctx, 90, 1262, cssVar('--eyebrow'), 'left');
   const idx = sorted().findIndex(x => x.id === s.id) + 1;
   ctx.textAlign = 'right'; ctx.fillStyle = cssVar('--frame-muted'); ctx.font = `400 30px ${monoFontCss()}`;
-  ctx.fillText(`Stamp ${idx} of ${state.stamps.length}`, 990, 1258);
+  ctx.fillText(`Stamp ${idx} of ${sorted().length}`, 990, 1258);
   return c;
 }
 async function makeYearCard(year){
   await ensureFonts();
-  const ys = sorted().filter(s => parts(s.date).y === year); const st = computeStats(ys);
-  const prev = new Set(sorted().filter(s => parts(s.date).y < year).map(s => s.cc).filter(Boolean));
+  const ys = sorted(scopeKey()).filter(s => parts(s.date).y === year); const st = computeStats(ys);
+  const prev = new Set(sorted(scopeKey()).filter(s => parts(s.date).y < year).map(s => s.cc).filter(Boolean));
   const newC = [...st.countries].filter(c => !prev.has(c)).length;
   const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
   const vint = state.settings.theme === 'vintage';
@@ -1350,6 +1392,145 @@ function openShareSheet(canvas, filename, label){
       try { const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); toast('Image saved.'); } catch(e){ toast('Press and hold the image to save it.'); }
     });
   }, 'image/png');
+}
+
+/* ---------- Books & shared passports ---------- */
+let scope = 'book';
+const scopeKey = () => state.books.length > 1 ? scope : 'book';
+function scopeChips(){
+  if (state.books.length < 2) return '';
+  return `<div class="year-chips" role="group" aria-label="Show stats for"><button class="ychip" data-scope="book" aria-pressed="${scope==='book'}">${esc(curBook().name)}</button><button class="ychip" data-scope="all" aria-pressed="${scope==='all'}">All books</button></div>`;
+}
+function bindScope(root, rerender){ $$('[data-scope]', root).forEach(b => b.addEventListener('click', () => { scope = b.dataset.scope; rerender(); })); }
+function togetherWith(s){
+  const d0 = Date.parse(s.date), names = new Set();
+  for (const x of state.stamps){
+    if (x.id === s.id || x.bookId !== s.bookId || (x.uid||'') === (s.uid||'')) continue;
+    if (norm(x.place) !== norm(s.place)) continue;
+    if (Math.abs(Date.parse(x.date) - d0) <= 7*864e5) names.add(isMine(x) ? 'You' : (x.by || 'A friend'));
+  }
+  return [...names];
+}
+function stampTags(s){
+  const t = [];
+  if (!isMine(s)) t.push(`<span class="who">${esc(((s.by||'?').trim().charAt(0) || '?').toUpperCase())}</span>`);
+  if (togetherWith(s).length) t.push(`<span class="who link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg></span>`);
+  return t.length ? `<span class="tags" aria-hidden="true">${t.join('')}</span>` : '';
+}
+const bookCount = id => state.stamps.filter(s => s.bookId === id).length;
+function bookSub(b){ const n = bookCount(b.id); return `${n} ${n===1?'stamp':'stamps'}${b.shared ? ` · Shared${b.members && b.members.length ? ' with ' + b.members.map(m => m.name).join(', ') : ''}` : ''}`; }
+function switchBook(id){
+  if (!state.books.some(b => b.id === id)) return;
+  state.current = id; page = 0; save(); closeSheet(); showView('book'); renderBook({fade:true}); refreshOtherViews(); buzz(10);
+}
+function openBooks(){
+  const cur = curBook();
+  const rows = state.books.map(b => `<button class="book-row" data-book="${b.id}" aria-pressed="${b.id===state.current}"><span class="mini-cover" aria-hidden="true"><svg viewBox="-60 -60 120 120"><circle r="36" fill="none" stroke="var(--cover-ink)" stroke-width="5"/><path d="M-36 0H36M0 -36V36" stroke="var(--cover-ink)" stroke-width="4"/></svg></span><span class="grow"><b>${esc(b.name)}</b><small>${esc(bookSub(b))}</small></span>${b.id===state.current ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-text)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Open"><path d="M5 12l5 5 9-10"/></svg>' : ''}</button>`).join('');
+  openSheet(`<h2 id="sheetTitle">Your books</h2><p class="sheet-sub">Keep separate passports for different trips, people or years.</p>
+    <div class="book-list">${rows}</div>
+    <div class="btn-grid" style="margin-top:14px"><button class="btn small" id="newBook">New book</button><button class="btn small" id="joinBook">Join a shared passport</button></div>
+    <div class="sub-card"><div class="label" style="margin-bottom:10px">This book · ${esc(cur.name)}</div>
+      <button class="btn primary block" id="shareBook">${cur.shared ? 'Sync with friends' : 'Share with friends'}</button>
+      <div class="btn-grid" style="margin-top:10px"><button class="btn small" id="editBook">Rename</button>${state.books.length > 1 ? '<button class="btn small danger" id="delBook">Delete book</button>' : '<span></span>'}</div>
+    </div>`);
+  $$('[data-book]', sheet).forEach(b => b.addEventListener('click', () => switchBook(b.dataset.book)));
+  $('#newBook').addEventListener('click', () => openBookForm(null));
+  $('#joinBook').addEventListener('click', openJoin);
+  $('#shareBook').addEventListener('click', openShareBook);
+  $('#editBook').addEventListener('click', () => openBookForm(cur));
+  const del = $('#delBook');
+  if (del){ let armed = false; del.addEventListener('click', () => {
+    if (!armed){ armed = true; del.textContent = 'Tap again: deletes its stamps'; return; }
+    const id = state.current; state.stamps.filter(s => s.bookId === id).forEach(s => delPhoto(s.id));
+    state.stamps = state.stamps.filter(s => s.bookId !== id); state.books = state.books.filter(b => b.id !== id);
+    state.current = state.books[0].id; page = 0; save(); closeSheet(); renderBook({fade:true}); refreshOtherViews(); toast('Book deleted.');
+  }); }
+}
+function openBookForm(b){
+  openSheet(`<h2 id="sheetTitle">${b ? 'Rename book' : 'New book'}</h2><p class="sheet-sub">${b ? 'This name goes on the cover.' : 'Start a fresh passport for a trip, a person or a year.'}</p>
+    <div class="field"><label for="bkName">Book name</label><input class="input" id="bkName" value="${esc(b ? b.name : '')}" placeholder="e.g. Europe 2027, Family trips"></div>
+    <div class="actions"><button class="btn" id="bkCancel">Cancel</button><button class="btn primary" id="bkSave">${b ? 'Save' : 'Create book'}</button></div>`);
+  $('#bkCancel').addEventListener('click', closeSheet);
+  $('#bkSave').addEventListener('click', () => {
+    const n = $('#bkName').value.trim(); if (!n){ toast('Give your book a name.'); return; }
+    if (b) b.name = n; else { const nb = {id:'b' + Date.now().toString(36) + Math.random().toString(36).slice(2,6), name:n, shared:false, members:[], created:Date.now()}; state.books.push(nb); state.current = nb.id; page = 0; }
+    save(); closeSheet(); showView('book'); renderBook({fade:true}); refreshOtherViews(); toast(b ? 'Renamed.' : `Started "${n}".`);
+  });
+}
+async function buildBookPackage(b, withPhotos){
+  const me = state.settings.uid, myName = (state.settings.name || '').trim() || 'A friend';
+  const stamps = state.stamps.filter(s => s.bookId === b.id).map(s => Object.assign({}, s, {by: s.uid === me ? myName : s.by, hasPhoto: withPhotos ? !!s.hasPhoto : false}));
+  const photos = {};
+  if (withPhotos){ for (const s of stamps){ if (s.hasPhoto){ const p = await getPhoto(s.id); if (p) photos[s.id] = p; else s.hasPhoto = false; } } }
+  return JSON.stringify({app:'stamped', kind:'book', version:1, sent:new Date().toISOString(), from:{uid:me, name:myName}, book:{id:b.id, name:b.name, members:b.members || []}, stamps, photos});
+}
+async function sendTextFile(txt, name, title){
+  let file = null; try { file = new File([txt], name, {type:'application/json'}); } catch(e){}
+  if (file && navigator.canShare && navigator.canShare({files:[file]})){
+    try { await navigator.share({files:[file], title}); return true; } catch(e){ if (e && e.name === 'AbortError') return false; }
+  }
+  if (window.claude && typeof window.claude.use === 'function'){
+    let dl = null; try { dl = await window.claude.use('downloads'); } catch(e){}
+    if (dl){ try { await dl.save({filename:name, data:txt}); return true; } catch(e){ toast('The file wasn\'t saved.'); return false; } }
+  }
+  try { const url = URL.createObjectURL(new Blob([txt], {type:'application/json'})); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000); return true; }
+  catch(e){ toast('Sending files isn\'t allowed here. Use "Copy as text" instead.'); return false; }
+}
+function openShareBook(){
+  const b = curBook(); let pkg = null, withPhotos = false, ver = 0;
+  if (!(state.settings.name || '').trim()){
+    openSheet(`<h2 id="sheetTitle">First, your name</h2><p class="sheet-sub">Friends see this on the trips you add to a shared passport.</p><div class="field"><label for="meName">Your name</label><input class="input" id="meName" placeholder="e.g. Liam" autocomplete="given-name"></div><button class="btn primary block" id="meSave">Continue</button>`);
+    $('#meSave').addEventListener('click', () => { const n = $('#meName').value.trim(); if (!n){ toast('Add your name first.'); return; } state.settings.name = n; save(); openShareBook(); });
+    return;
+  }
+  openSheet(`<h2 id="sheetTitle">${b.shared ? 'Sync' : 'Share'} "${esc(b.name)}"</h2>
+    <p class="sheet-sub">No accounts needed. Friends link up by swapping a passport file.</p>
+    <div class="sub-card" style="margin-top:0">
+      <div class="wl-tip" style="--i:0"><div class="ic">1</div><div><b>Send it</b><span>By Messages or AirDrop, or save it to a shared iCloud folder.</span></div></div>
+      <div class="wl-tip" style="--i:1"><div class="ic">2</div><div><b>They join</b><span>In Stamped, they tap the book name, then <b>Join a shared passport</b>, and choose the file.</span></div></div>
+      <div class="wl-tip" style="--i:2"><div class="ic">3</div><div><b>Sync any time</b><span>Either of you sends it again. New trips merge in and nothing doubles up. Trips you both stamped within a week get linked.</span></div></div>
+    </div>
+    <div class="switch-row" style="margin:6px 0 10px"><span>Include photos <small style="color:var(--muted)">(bigger file)</small></span><label class="switch"><input type="checkbox" id="pkgPhotos" aria-label="Include photos"><span></span></label></div>
+    <button class="btn primary block" id="sendPkg" disabled>Preparing…</button>
+    <button class="btn ghost block small" id="copyPkg" style="margin-top:8px">Copy as text instead</button>`);
+  const prep = async () => { const v = ++ver; const btn = $('#sendPkg'); if (btn){ btn.disabled = true; btn.textContent = 'Preparing…'; } const t = await buildBookPackage(b, withPhotos); if (v !== ver) return; pkg = t; const bb = $('#sendPkg'); if (bb){ bb.disabled = false; bb.textContent = 'Send passport'; } };
+  prep();
+  $('#pkgPhotos').addEventListener('change', e => { withPhotos = e.target.checked; prep(); });
+  const markShared = () => { b.shared = true; save(); renderBook(); };
+  $('#sendPkg').addEventListener('click', async () => { if (!pkg) return; const ok = await sendTextFile(pkg, `${b.name.replace(/[^a-z0-9]+/gi,'-') || 'Passport'}.stamped.json`, 'Stamped passport'); if (ok){ markShared(); toast('Sent. They join by choosing the file in Stamped.'); } });
+  $('#copyPkg').addEventListener('click', async () => { if (!pkg) return; try { await navigator.clipboard.writeText(pkg); markShared(); toast('Copied. Paste it to your friend in a message.'); } catch(e){ toast('Couldn\'t copy here.'); } });
+}
+function openJoin(){
+  openSheet(`<h2 id="sheetTitle">Join a shared passport</h2><p class="sheet-sub">Choose the passport file a friend sent you. Already in that book? Their new trips merge in.</p>
+    <label class="btn primary block file-label">Choose passport file<input type="file" id="joinFile" accept="application/json,.json,text/plain"></label>
+    <details style="margin-top:14px"><summary class="help" style="cursor:pointer;margin:0">They sent it as text?</summary><textarea class="input" id="joinText" style="margin-top:10px" placeholder="Paste it here" aria-label="Passport text"></textarea><button class="btn small primary" id="joinPaste" style="margin-top:8px">Join</button></details>`);
+  $('#joinFile').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; if (!f) return; try { await importBook(await f.text()); } catch(err){ toast('That file isn\'t a Stamped passport.'); } e.target.value = ''; });
+  $('#joinPaste').addEventListener('click', async () => { try { await importBook($('#joinText').value); } catch(err){ toast('That text isn\'t a Stamped passport.'); } });
+}
+async function importBook(text){
+  const pkg = JSON.parse(text);
+  if (pkg && pkg.app === 'stamped' && pkg.kind !== 'book' && Array.isArray(pkg.stamps)){ closeSheet(); await restoreBackup(text); return; }
+  if (!pkg || pkg.app !== 'stamped' || pkg.kind !== 'book' || !pkg.book || !pkg.book.id || !Array.isArray(pkg.stamps)) throw new Error('not a passport');
+  const me = state.settings.uid;
+  let b = state.books.find(x => x.id === pkg.book.id); const isNew = !b;
+  if (!b){ b = {id:pkg.book.id, name:pkg.book.name || 'Shared passport', shared:true, members:[], created:Date.now()}; state.books.push(b); }
+  b.shared = true; b.members = b.members || [];
+  const addMember = m => { if (!m || !m.uid || m.uid === me) return; const ex = b.members.find(x => x.uid === m.uid); if (ex) ex.name = m.name || ex.name; else b.members.push({uid:m.uid, name:m.name || 'A friend'}); };
+  addMember(pkg.from); (pkg.book.members || []).forEach(addMember);
+  const byId = new Map(state.stamps.map(s => [s.id, s])); let added = 0, updated = 0;
+  for (const s of pkg.stamps){
+    if (!s || !s.id || !s.place || !/^\d{4}-\d{2}-\d{2}$/.test(s.date || '')) continue;
+    const ex = byId.get(s.id);
+    if (ex && isMine(ex)) continue;
+    if (!ex && s.uid === me) continue;
+    const ns = Object.assign({}, s, {bookId:b.id, hasPhoto: !!(pkg.photos && pkg.photos[s.id]) || !!(ex && ex.hasPhoto)});
+    if (!ex){ added++; byId.set(s.id, ns); } else if ((s.updated||0) > (ex.updated||0)){ updated++; byId.set(s.id, ns); }
+  }
+  state.stamps = [...byId.values()];
+  for (const [id, p] of Object.entries(pkg.photos || {})) if (byId.has(id)) await putPhoto(id, p);
+  state.current = b.id; page = 0; save(); closeSheet(); showView('book'); renderBook({fade:true}); refreshOtherViews();
+  const who = (pkg.from && pkg.from.name) || 'your friend';
+  toast(isNew ? `Joined "${b.name}" with ${added} ${added===1?'trip':'trips'} from ${who}.` : `Synced with ${who}: ${added} new, ${updated} updated.`, 3600);
 }
 
 /* ---------- Welcome ---------- */
@@ -1388,9 +1569,10 @@ function renderWelcome(dir){
     actions = `<button class="btn primary" data-wl="next">Get started</button>`;
   } else if (wlStep === 1){
     body = `<div class="eyebrow">Step 1 of 3</div><h1 class="wl-title" id="wlTitle">Make it yours</h1>
-      <p class="wl-text">Your name goes on the cover. Your home city is used to work out how far you've travelled.</p>
+      <p class="wl-text">Name your passport, add your name for sharing with friends, and pick your home city for distances.</p>
       <div class="wl-card">
-        <div class="field"><label for="wlName">Name on the cover</label><input class="input" id="wlName" value="${esc(s.name)}" placeholder="e.g. Liam & Megan" autocomplete="name"></div>
+        <div class="field"><label for="wlBook">Name on the cover</label><input class="input" id="wlBook" value="${esc(curBook().name)}" placeholder="e.g. Liam & Megan"></div>
+        <div class="field"><label for="wlName">Your name</label><input class="input" id="wlName" value="${esc(s.name)}" placeholder="Shown to friends on shared passports" autocomplete="given-name"></div>
         <div class="field" style="margin-bottom:0"><label for="wlHome">Home city</label><input class="input" id="wlHome" autocomplete="off" value="${esc(s.home)}"><div class="suggest" id="wlHomeSug"></div></div>
       </div>`;
     actions = `<button class="btn ghost" data-wl="back">Back</button><button class="btn primary" data-wl="next">Next</button>`;
@@ -1421,6 +1603,7 @@ function renderWelcome(dir){
   if (wlStep === 0 && dir < 0) setTimeout(() => { thunk(.7); buzz(18); }, 400);
   if (wlStep === 1){
     $('#wlName').addEventListener('input', e => { state.settings.name = e.target.value; save(); });
+    $('#wlBook').addEventListener('input', e => { const v = e.target.value.trim(); if (v){ curBook().name = v; save(); } });
     bindCityInput($('#wlHome'), $('#wlHomeSug'), c => { state.settings.home = c.name; save(); });
   }
   if (wlStep === 2) bindThemeOptions(W);
@@ -1437,7 +1620,7 @@ function renderWelcome(dir){
 /* ---------- Samples ---------- */
 function loadSamples(){
   const rows = [['Montreal','2024-06-14',''],['Quebec City','2024-06-16','Walked the old city walls at sunset.'],['Niagara Falls','2024-08-03',''],['New York','2024-12-07','Christmas windows and way too much walking.'],['Cancún','2025-02-15',''],['Banff','2025-07-09','Lake Louise at sunrise.'],['Vancouver','2025-07-13',''],['Paris','2025-10-04',''],['Pisa','2025-10-08','The obligatory tower-holding photo.'],['Rome','2025-10-10',''],['Lisbon','2026-03-15','Rode the 28 tram twice.'],['Sintra','2026-03-17',''],['Porto','2026-03-19',''],['Halifax','2026-08-21','']];
-  const have = new Set(state.stamps.map(s => norm(s.place) + s.date));
+  const have = new Set(sorted().map(s => norm(s.place) + s.date));
   let n = 0; rows.forEach(([p,d,note], i) => { if (have.has(norm(p)+d)) return; const c = cityByName(p); if (!c) return; state.stamps.push(stampFromCity(c, d, {note, created: Date.now()+i})); n++; });
   save(); page = 0; renderBook(); refreshOtherViews();
   if (sheet.classList.contains('open')) closeSheet();
@@ -1446,6 +1629,17 @@ function loadSamples(){
 }
 
 /* ---------- Init ---------- */
+function measureGap(){
+  let g = 0;
+  try {
+    const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+    if (standalone){ const portrait = window.innerHeight >= window.innerWidth; const full = portrait ? Math.max(screen.height, screen.width) : Math.min(screen.height, screen.width); const diff = full - window.innerHeight; if (diff > 0 && diff < 120) g = diff; }
+  } catch(e){}
+  document.documentElement.style.setProperty('--gap', g + 'px');
+}
+measureGap();
+window.addEventListener('resize', () => setTimeout(measureGap, 60));
+window.addEventListener('orientationchange', () => setTimeout(measureGap, 300));
 document.documentElement.classList.add('book-mode');
 document.addEventListener('touchmove', e => { if (document.documentElement.classList.contains('book-mode') && !e.target.closest('.sheet, .welcome')) e.preventDefault(); }, {passive:false});
 scheduleBackupCache();
