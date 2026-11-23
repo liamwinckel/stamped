@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="classic">
+<html lang="en" data-theme="classic" class="booting">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -33,6 +33,8 @@ header.top{display:flex;align-items:center;justify-content:space-between;padding
 .icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb,var(--frame-ink) 28%,transparent);background:transparent;display:grid;place-items:center;transition:transform .2s var(--ease),background .3s}
 .icon-btn:active{transform:scale(.92)}
 .view{display:none}
+html.booting .app,html.booting .tabs{opacity:0}
+.app{transition:opacity .35s ease}
 html.book-mode body{min-height:calc(100dvh + 1px);overscroll-behavior:none}
 html.book-mode .app{height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 html.book-mode main{flex:1;min-height:0;display:flex;flex-direction:column}
@@ -112,7 +114,7 @@ html[data-theme=night] .btn.danger{color:#FFB4AB;border-color:#6B3A3A}
 .btn.block{width:100%}
 .btn[disabled]{opacity:.5}
 /* Nav */
-.tabs{position:fixed;left:0;right:0;bottom:calc(var(--gap,0px) * -1);z-index:20;max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px 10px calc(env(safe-area-inset-bottom) + 10px + var(--gap,0px));background:var(--frame);border-top:1px solid color-mix(in srgb,var(--frame-ink) 12%,transparent);transition:background-color .6s var(--ease)}
+.tabs{position:fixed;left:0;right:0;bottom:calc(var(--gap,0px) * -1);z-index:20;max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px 10px calc(env(safe-area-inset-bottom) + 10px + var(--gap,0px));background:var(--frame);border-top:1px solid color-mix(in srgb,var(--frame-ink) 12%,transparent);transition:background-color .6s var(--ease),opacity .35s ease}
 .tabs::after{content:'';position:absolute;left:0;right:0;top:100%;height:240px;background:var(--frame)}
 .tab{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--frame-muted);font-size:11px;font-weight:600;min-height:48px;justify-content:center;transition:color .3s}
 .tab svg{width:24px;height:24px;transition:transform .35s var(--spring)}
@@ -343,6 +345,18 @@ html[data-theme=vintage] .wl-title{font-weight:400}
 .tl-item b{display:block;font-size:15px}
 .tl-item small{display:block;color:var(--muted);font-size:12.5px;margin-top:1px}
 .tl-note{display:block;font-size:13px;margin-top:3px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Arrange + people */
+.book-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.arr-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--frame-ink) 30%,transparent);background:transparent;color:var(--frame-ink);font-size:12.5px;font-weight:600;max-width:170px}
+.arr-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arr-btn.on{background:var(--eyebrow);color:var(--frame);border-color:transparent}
+.page-label{position:absolute;top:12px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);pointer-events:none;z-index:1}
+.people{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:48px;padding:6px 8px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface-2)}
+.people input{flex:1;min-width:110px;border:0;background:transparent;outline:none;font-size:16px;color:var(--ink);padding:6px 4px}
+.pchip{display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:0 8px 0 12px;border-radius:999px;border:0;background:var(--ink);color:var(--surface);font-size:14px;font-weight:600}
+.pchip span{opacity:.7;font-size:16px;line-height:1}
+.people-quick{margin-top:8px}
+.people-quick .chip{min-height:34px;font-size:13px}
 /* Toast */
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 100px);z-index:70;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:14px;font-size:14px;max-width:min(92vw,420px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:all .4s var(--ease);pointer-events:none}
 html[data-theme=night] .toast{background:#F2F5FB;color:#0A1428}
@@ -383,7 +397,7 @@ html[data-theme=night] .toast{background:#F2F5FB;color:#0A1428}
     <section class="view active" id="view-book" aria-label="Passport book">
       <div class="book-meta">
         <div><button class="book-switch" id="bookSwitch" aria-haspopup="dialog"><span class="eyebrow" id="bookName">My passport</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><h1 class="h1" id="bookTitle">Cover</h1></div>
-        <div class="book-count" id="bookCount"></div>
+        <div class="book-side"><div class="book-count" id="bookCount"></div><button class="arr-btn" id="arrangeBtn" aria-label="Arrange this book"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg><span id="arrangeLbl">By date</span></button></div>
       </div>
       <div class="viewport" id="viewport"><div class="track" id="track"></div></div>
       <div class="pager">
@@ -441,7 +455,26 @@ const COUNTRIES = {
   AE:['United Arab Emirates','AS','#00732F','#FFFFFF','#FF0000'],
   AU:['Australia','OC','#00008B','#FFFFFF','#FF0000'], NZ:['New Zealand','OC','#00247D','#FFFFFF','#CC142B'],
   EG:['Egypt','AF','#CE1126','#FFFFFF','#000000'], MA:['Morocco','AF','#C1272D','#006233'], ZA:['South Africa','AF','#007A4D','#FFB612','#DE3831'],
-  KE:['Kenya','AF','#000000','#BB0000','#006600']
+  KE:['Kenya','AF','#000000','#BB0000','#006600'],
+  LU:['Luxembourg','EU','#ED2939','#FFFFFF','#00A1DE'], MC:['Monaco','EU','#CE1126','#FFFFFF'], MT:['Malta','EU','#FFFFFF','#CF142B'], CY:['Cyprus','EU','#D57800','#FFFFFF'],
+  SI:['Slovenia','EU','#FFFFFF','#0000FF','#FF0000'], SK:['Slovakia','EU','#FFFFFF','#0B4EA2','#EE1C25'], RO:['Romania','EU','#002B7F','#FCD116','#CE1126'], BG:['Bulgaria','EU','#FFFFFF','#00966E','#D62612'],
+  RS:['Serbia','EU','#C6363C','#0C4076','#FFFFFF'], ME:['Montenegro','EU','#C40308','#D4AF3A'], AL:['Albania','EU','#E41E20','#000000'], BA:['Bosnia and Herzegovina','EU','#002395','#FECB00','#FFFFFF'],
+  MK:['North Macedonia','EU','#CE2028','#F9D616'], EE:['Estonia','EU','#0072CE','#000000','#FFFFFF'], LV:['Latvia','EU','#9E3039','#FFFFFF'], LT:['Lithuania','EU','#FDB913','#006A44','#C1272D'],
+  UA:['Ukraine','EU','#0057B7','#FFD700'], RU:['Russia','EU','#FFFFFF','#0039A6','#D52B1E'], GE:['Georgia','AS','#FFFFFF','#FF0000'], AM:['Armenia','AS','#D90012','#0033A0','#F2A800'],
+  IL:['Israel','AS','#FFFFFF','#0038B8'], JO:['Jordan','AS','#000000','#FFFFFF','#007A3D'], LB:['Lebanon','AS','#ED1C24','#FFFFFF','#00A651'], QA:['Qatar','AS','#8A1538','#FFFFFF'],
+  SA:['Saudi Arabia','AS','#006C35','#FFFFFF'], OM:['Oman','AS','#DB161B','#FFFFFF','#008000'], BH:['Bahrain','AS','#CE1126','#FFFFFF'], KW:['Kuwait','AS','#007A3D','#FFFFFF','#CE1126'],
+  NP:['Nepal','AS','#DC143C','#003893'], LK:['Sri Lanka','AS','#FFBE29','#8D153A','#00534E'], MV:['Maldives','AS','#D21034','#007E3A'], BT:['Bhutan','AS','#FFD520','#FF4E12'],
+  BD:['Bangladesh','AS','#006A4E','#F42A41'], KH:['Cambodia','AS','#032EA1','#E00025','#FFFFFF'], LA:['Laos','AS','#CE1126','#002868','#FFFFFF'], MM:['Myanmar','AS','#FECB00','#34B233','#EA2839'],
+  MN:['Mongolia','AS','#C4272F','#015197','#F9CF02'], MO:['Macau','AS','#00785E','#FFFFFF','#FBD116'], FJ:['Fiji','OC','#68BFE5','#FFFFFF','#CE1126'], PF:['French Polynesia','OC','#CE1126','#FFFFFF'],
+  TZ:['Tanzania','AF','#1EB53A','#FCD116','#00A3DD'], UG:['Uganda','AF','#000000','#FCDC04','#D90000'], RW:['Rwanda','AF','#20603D','#FAD201','#00A1DE'], ET:['Ethiopia','AF','#078930','#FCDD09','#DA121A'],
+  GH:['Ghana','AF','#CE1126','#FCD116','#006B3F'], NG:['Nigeria','AF','#008751','#FFFFFF'], SN:['Senegal','AF','#00853F','#FDEF42','#E31B23'], TN:['Tunisia','AF','#E70013','#FFFFFF'],
+  NA:['Namibia','AF','#003580','#D21034','#009543'], BW:['Botswana','AF','#75AADB','#FFFFFF','#000000'], ZW:['Zimbabwe','AF','#006400','#FFD200','#D40000'], MU:['Mauritius','AF','#EA2839','#1A206D','#FFD500'],
+  SC:['Seychelles','AF','#003F87','#FCD856','#D62828'], MG:['Madagascar','AF','#FFFFFF','#FC3D32','#007E3A'],
+  EC:['Ecuador','SA','#FFD100','#0072CE','#EF3340'], BO:['Bolivia','SA','#D52B1E','#F9E300','#007934'], UY:['Uruguay','SA','#FFFFFF','#0038A8','#FCD116'], PY:['Paraguay','SA','#D52B1E','#FFFFFF','#0038A8'],
+  PA:['Panama','NA','#FFFFFF','#DA121A','#072357'], BZ:['Belize','NA','#003F87','#CE1126','#FFFFFF'], GT:['Guatemala','NA','#4997D0','#FFFFFF'], HN:['Honduras','NA','#0073CF','#FFFFFF'],
+  TT:['Trinidad and Tobago','NA','#DA1A35','#000000','#FFFFFF'], LC:['Saint Lucia','NA','#66CCFF','#FCD116','#000000'], AG:['Antigua and Barbuda','NA','#CE1126','#000000','#0072C6'],
+  KY:['Cayman Islands','NA','#012169','#C8102E','#FFFFFF'], TC:['Turks and Caicos','NA','#012169','#C8102E','#FFFFFF'], BM:['Bermuda','NA','#C8102E','#012169','#FFFFFF'], CW:['Curaçao','NA','#002B7F','#F9E814','#FFFFFF'],
+  VI:['US Virgin Islands','NA','#FFFFFF','#FCD116','#002868'], GD:['Grenada','NA','#CE1126','#FCD116','#007A5E'], GL:['Greenland','NA','#FFFFFF','#D00C33'], AQ:['Antarctica','AN','#3A7DCE','#FFFFFF']
 };
 const CONT = {NA:'North America',SA:'South America',EU:'Europe',AS:'Asia',AF:'Africa',OC:'Oceania',AN:'Antarctica'};
 // [name, country, lat, lon, kind, landmark]
@@ -484,7 +517,84 @@ const CITY_ROWS = [
  ['Dubai','AE',25.20,55.27,'c','burj'],['Delhi','IN',28.61,77.21,'c'],['Agra','IN',27.18,78.01,'c','taj'],['Mumbai','IN',19.08,72.88,'c'],
  ['Sydney','AU',-33.87,151.21,'c','opera'],['Melbourne','AU',-37.81,144.96,'c'],['Cairns','AU',-16.92,145.77,'b'],['Auckland','NZ',-36.85,174.76,'c'],
  ['Queenstown','NZ',-45.03,168.66,'m'],['Cairo','EG',30.04,31.24,'c','pyramids'],['Marrakech','MA',31.63,-7.99,'c','mosque'],['Cape Town','ZA',-33.92,18.42,'m'],
- ['Nairobi','KE',-1.29,36.82,'r']
+ ['Nairobi','KE',-1.29,36.82,'r'],
+ ['Niagara-on-the-Lake','CA',43.25,-79.07,'r'],['Stratford','CA',43.37,-80.98,'c'],['Gatineau','CA',45.48,-75.70,'c'],['Wasaga Beach','CA',44.52,-80.02,'b'],['Sauble Beach','CA',44.63,-81.27,'b'],['Grand Bend','CA',43.31,-81.76,'b'],
+ ['Barrie','CA',44.39,-79.69,'l'],['Kitchener-Waterloo','CA',43.45,-80.49,'c'],['Guelph','CA',43.55,-80.25,'c'],['Windsor','CA',42.31,-83.04,'c'],['Sudbury','CA',46.49,-80.99,'l'],['Thunder Bay','CA',48.38,-89.25,'l'],
+ ['Sault Ste. Marie','CA',46.52,-84.35,'l'],['Manitoulin Island','CA',45.78,-82.20,'i'],['Thousand Islands','CA',44.33,-76.17,'i'],['Haliburton','CA',45.05,-78.51,'l'],['Peterborough','CA',44.30,-78.32,'l'],['Bracebridge','CA',45.04,-79.31,'l'],
+ ['Huntsville','CA',45.33,-79.22,'l'],['Blue Mountain','CA',44.50,-80.32,'m'],['Tadoussac','CA',48.15,-69.72,'b'],['Baie-Saint-Paul','CA',47.44,-70.50,'r'],['Percé','CA',48.52,-64.21,'b'],['Magog','CA',45.27,-72.15,'l'],
+ ['Sherbrooke','CA',45.40,-71.89,'c'],['Trois-Rivières','CA',46.35,-72.55,'c'],['Lunenburg','CA',44.38,-64.31,'b','lighthouse'],['Cape Breton','CA',46.10,-60.75,'i'],['Wolfville','CA',45.09,-64.36,'r'],['Saint John','CA',45.27,-66.06,'c'],
+ ['St. Andrews','CA',45.07,-67.05,'b'],['Fundy National Park','CA',45.60,-65.03,'f'],['Cavendish','CA',46.49,-63.38,'b','lighthouse'],['Summerside','CA',46.39,-63.79,'i'],['Gros Morne','CA',49.60,-57.78,'m'],['Twillingate','CA',49.65,-54.76,'b','lighthouse'],
+ ['Canmore','CA',51.09,-115.36,'m'],['Lake Louise','CA',51.43,-116.18,'l'],['Revelstoke','CA',51.00,-118.20,'m'],['Nelson','CA',49.49,-117.29,'m'],['Penticton','CA',49.49,-119.59,'l'],['Osoyoos','CA',49.03,-119.47,'l'],
+ ['Kamloops','CA',50.67,-120.33,'r'],['Squamish','CA',49.70,-123.16,'m'],['Ucluelet','CA',48.94,-125.55,'b','lighthouse'],['Nanaimo','CA',49.17,-123.94,'b'],['Salt Spring Island','CA',48.82,-123.51,'i'],['Haida Gwaii','CA',53.25,-132.07,'i'],
+ ['Drumheller','CA',51.46,-112.71,'r'],['Waterton','CA',49.05,-113.91,'m'],['Churchill','CA',58.77,-94.17,'r'],['Dawson City','CA',64.06,-139.43,'r'],['Iqaluit','CA',63.75,-68.52,'r'],['Prince George','CA',53.92,-122.75,'f'],
+ ['Niagara Falls, NY','US',43.09,-79.06,'l','falls'],['Atlanta','US',33.75,-84.39,'c'],['Dallas','US',32.78,-96.80,'c'],['Houston','US',29.76,-95.37,'c'],['San Antonio','US',29.42,-98.49,'c'],['Salt Lake City','US',40.76,-111.89,'m'],
+ ['Minneapolis','US',44.98,-93.27,'l'],['Pittsburgh','US',40.44,-80.00,'c'],['Cleveland','US',41.50,-81.69,'c'],['Columbus','US',39.96,-83.00,'c'],['Indianapolis','US',39.77,-86.16,'c'],['Kansas City','US',39.10,-94.58,'c'],
+ ['St. Louis','US',38.63,-90.20,'c'],['Charlotte','US',35.23,-80.84,'c'],['Charleston','US',32.78,-79.93,'c'],['Savannah','US',32.08,-81.09,'c'],['Key West','US',24.56,-81.78,'i','lighthouse'],['Tampa','US',27.95,-82.46,'b'],
+ ['Fort Lauderdale','US',26.12,-80.14,'b'],['Sedona','US',34.87,-111.76,'m'],['Santa Fe','US',35.69,-105.94,'c'],['Albuquerque','US',35.08,-106.65,'c'],['Anchorage','US',61.22,-149.90,'m'],['Napa Valley','US',38.30,-122.29,'r'],
+ ['Palm Springs','US',33.83,-116.55,'r'],['Lake Tahoe','US',39.10,-120.03,'l'],['Aspen','US',39.19,-106.82,'m'],['Vail','US',39.64,-106.37,'m'],['Park City','US',40.65,-111.50,'m'],['Jackson Hole','US',43.48,-110.76,'m'],
+ ['Burlington','US',44.48,-73.21,'l'],['Portland, Maine','US',43.66,-70.26,'b','lighthouse'],['Bar Harbor','US',44.39,-68.20,'b'],['Cape Cod','US',41.67,-70.30,'b','lighthouse'],["Martha's Vineyard",'US',41.39,-70.61,'i'],['Atlantic City','US',39.36,-74.42,'b'],
+ ['Scottsdale','US',33.49,-111.93,'r'],['San Jose, California','US',37.34,-121.89,'c'],['Santa Barbara','US',34.42,-119.70,'b'],['Big Sur','US',36.27,-121.81,'b'],['Monterey','US',36.60,-121.89,'b'],['Milwaukee','US',43.04,-87.91,'l'],
+ ['Memphis','US',35.15,-90.05,'c'],['Louisville','US',38.25,-85.76,'c'],['Baltimore','US',39.29,-76.61,'c'],['Richmond','US',37.54,-77.44,'c'],['Virginia Beach','US',36.85,-75.98,'b'],['Hilton Head','US',32.22,-80.75,'b'],
+ ['Outer Banks','US',35.56,-75.47,'b','lighthouse'],['Gatlinburg','US',35.71,-83.51,'m'],['Lake Placid','US',44.28,-73.98,'l'],['Kauai','US',22.07,-159.50,'i'],['Kona','US',19.64,-155.99,'i'],['Sacramento','US',38.58,-121.49,'c'],
+ ['Grand Canyon','US',36.06,-112.14,'m'],['Yellowstone','US',44.43,-110.59,'f'],['Yosemite','US',37.87,-119.54,'m'],['Zion','US',37.30,-113.03,'m'],['Glacier National Park','US',48.70,-113.72,'m'],['Moab','US',38.57,-109.55,'m'],
+ ['Bryce Canyon','US',37.59,-112.19,'m'],['Everglades','US',25.29,-80.90,'f'],['Boulder','US',40.01,-105.27,'m'],['Asheville','US',35.60,-82.55,'m'],
+ ['Guadalajara','MX',20.67,-103.35,'c'],['Oaxaca','MX',17.07,-96.73,'c'],['San Miguel de Allende','MX',20.91,-100.74,'c'],['Mazatlán','MX',23.25,-106.41,'b'],['Cozumel','MX',20.42,-86.92,'i'],['Isla Mujeres','MX',21.23,-86.73,'i'],
+ ['Huatulco','MX',15.77,-96.13,'b'],['Ixtapa','MX',17.66,-101.60,'b'],['Acapulco','MX',16.85,-99.82,'b'],['Mérida','MX',20.97,-89.62,'c'],['Chichén Itzá','MX',20.68,-88.57,'f','temple'],['Puerto Morelos','MX',20.85,-86.88,'b'],
+ ['Sayulita','MX',20.87,-105.44,'b'],['Monterrey','MX',25.69,-100.32,'m'],['Ocho Rios','JM',18.41,-77.10,'b'],['Negril','JM',18.27,-78.35,'b'],['Kingston, Jamaica','JM',17.97,-76.79,'c'],['Holguín','CU',20.89,-76.26,'b'],
+ ['Cayo Coco','CU',22.51,-78.39,'i'],['Trinidad, Cuba','CU',21.80,-79.98,'c'],['Cienfuegos','CU',22.15,-80.44,'c'],['Santo Domingo','DO',18.49,-69.93,'c'],['Puerto Plata','DO',19.79,-70.69,'b'],['La Romana','DO',18.43,-68.97,'b'],
+ ['Samaná','DO',19.21,-69.33,'b'],['Castries','LC',14.01,-60.99,'i'],["St. John's, Antigua",'AG',17.12,-61.85,'i'],['Grand Cayman','KY',19.30,-81.38,'i'],['Providenciales','TC',21.77,-72.27,'i'],['Hamilton, Bermuda','BM',32.29,-64.78,'i'],
+ ['Willemstad','CW',12.11,-68.93,'i'],['St. Thomas','VI',18.34,-64.93,'i'],["St. George's",'GD',12.06,-61.75,'i'],['Port of Spain','TT',10.65,-61.51,'c'],['Belize City','BZ',17.50,-88.20,'b'],['Ambergris Caye','BZ',17.92,-87.96,'i'],
+ ['Antigua Guatemala','GT',14.56,-90.73,'m'],['Tikal','GT',17.22,-89.62,'f','temple'],['Roatán','HN',16.32,-86.54,'i'],['Panama City','PA',8.98,-79.52,'c'],['Tamarindo','CR',10.30,-85.84,'b'],['La Fortuna','CR',10.47,-84.64,'m'],
+ ['Manuel Antonio','CR',9.39,-84.14,'b'],['Quito','EC',-0.18,-78.47,'m'],['Galápagos','EC',-0.74,-90.31,'i'],['Guayaquil','EC',-2.17,-79.92,'c'],['La Paz','BO',-16.49,-68.12,'m'],['Uyuni','BO',-20.46,-66.83,'r'],
+ ['Montevideo','UY',-34.90,-56.16,'c'],['Punta del Este','UY',-34.96,-54.94,'b'],['Asunción','PY',-25.26,-57.58,'c'],['Medellín','CO',6.24,-75.58,'m'],['Cali','CO',3.45,-76.53,'c'],['Machu Picchu','PE',-13.16,-72.55,'m','temple'],
+ ['Arequipa','PE',-16.41,-71.54,'m'],['Valparaíso','CL',-33.05,-71.62,'b'],['Torres del Paine','CL',-50.94,-73.41,'m'],['Easter Island','CL',-27.11,-109.35,'i'],['Mendoza','AR',-32.89,-68.84,'r'],['Bariloche','AR',-41.13,-71.31,'l'],
+ ['Ushuaia','AR',-54.80,-68.30,'m','lighthouse'],['Iguazú Falls','AR',-25.69,-54.44,'f','falls'],['Córdoba, Argentina','AR',-31.42,-64.18,'c'],['São Paulo','BR',-23.55,-46.63,'c'],['Salvador','BR',-12.97,-38.50,'b'],['Florianópolis','BR',-27.60,-48.55,'i'],
+ ['Brasília','BR',-15.79,-47.88,'c'],['Manaus','BR',-3.12,-60.02,'f'],
+ ['Liverpool','GB',53.41,-2.98,'c'],['Manchester','GB',53.48,-2.24,'c'],['Bath','GB',51.38,-2.36,'c'],['Oxford','GB',51.75,-1.26,'c'],['Cambridge','GB',52.21,0.12,'c'],['York','GB',53.96,-1.08,'c'],
+ ['Bristol','GB',51.45,-2.59,'c'],['Brighton','GB',50.82,-0.14,'b'],['Glasgow','GB',55.86,-4.25,'c'],['Isle of Skye','GB',57.27,-6.21,'i'],['Inverness','GB',57.48,-4.22,'l','castle'],['Cardiff','GB',51.48,-3.18,'c','castle'],
+ ['Belfast','GB',54.60,-5.93,'c'],['Cornwall','GB',50.27,-5.05,'b'],['Lake District','GB',54.46,-3.09,'l'],['Cork','IE',51.90,-8.47,'c'],['Galway','IE',53.27,-9.06,'b'],['Killarney','IE',52.06,-9.51,'l'],
+ ['Cliffs of Moher','IE',52.97,-9.43,'b'],['Lyon','FR',45.76,4.84,'c'],['Bordeaux','FR',44.84,-0.58,'r'],['Marseille','FR',43.30,5.37,'b'],['Cannes','FR',43.55,7.01,'b'],['Strasbourg','FR',48.57,7.75,'c'],
+ ['Mont-Saint-Michel','FR',48.64,-1.51,'i','castle'],['Chamonix','FR',45.92,6.87,'m'],['Avignon','FR',43.95,4.81,'c'],['Bayeux','FR',49.28,-0.70,'r'],['Versailles','FR',48.80,2.13,'c','castle'],['Monaco','MC',43.74,7.42,'b'],
+ ['Naples','IT',40.85,14.27,'c'],['Pompeii','IT',40.75,14.49,'r','temple'],['Capri','IT',40.55,14.24,'i'],['Positano','IT',40.63,14.48,'b'],['Cinque Terre','IT',44.13,9.71,'b'],['Lake Como','IT',45.99,9.26,'l'],
+ ['Verona','IT',45.44,10.99,'c','colosseum'],['Bologna','IT',44.49,11.34,'c'],['Siena','IT',43.32,11.33,'c'],['Palermo','IT',38.12,13.36,'c'],['Turin','IT',45.07,7.69,'c'],['Sorrento','IT',40.63,14.38,'b'],
+ ['Dolomites','IT',46.54,12.14,'m'],['Tuscany','IT',43.47,11.25,'r'],['Valencia','ES',39.47,-0.38,'c'],['Granada','ES',37.18,-3.60,'c','castle'],['Málaga','ES',36.72,-4.42,'b'],['Ibiza','ES',38.91,1.43,'i'],
+ ['Mallorca','ES',39.57,2.65,'i'],['Bilbao','ES',43.26,-2.93,'c'],['San Sebastián','ES',43.32,-1.98,'b'],['Tenerife','ES',28.29,-16.63,'i'],['Lanzarote','ES',29.05,-13.59,'i'],['Toledo','ES',39.86,-4.02,'c'],
+ ['Córdoba','ES',37.89,-4.78,'c','mosque'],['Faro','PT',37.02,-7.93,'b'],['Lagos, Portugal','PT',37.10,-8.67,'b'],['Madeira','PT',32.65,-16.91,'i'],['Azores','PT',37.74,-25.67,'i'],['Évora','PT',38.57,-7.91,'c'],
+ ['Rotterdam','NL',51.92,4.48,'c','windmill'],['The Hague','NL',52.08,4.30,'c'],['Utrecht','NL',52.09,5.12,'c'],['Bruges','BE',51.21,3.22,'c'],['Ghent','BE',51.05,3.72,'c','castle'],['Antwerp','BE',51.22,4.40,'c'],
+ ['Luxembourg','LU',49.61,6.13,'c','castle'],['Hamburg','DE',53.55,9.99,'c'],['Frankfurt','DE',50.11,8.68,'c'],['Cologne','DE',50.94,6.96,'c','sagrada'],['Dresden','DE',51.05,13.74,'c'],['Heidelberg','DE',49.40,8.67,'c','castle'],
+ ['Neuschwanstein','DE',47.56,10.75,'m','castle'],['Black Forest','DE',48.00,8.20,'f'],['Salzburg','AT',47.81,13.04,'c','castle'],['Innsbruck','AT',47.27,11.40,'m'],['Hallstatt','AT',47.56,13.65,'l'],['Lucerne','CH',47.05,8.31,'l'],
+ ['Interlaken','CH',46.69,7.86,'m'],['Bern','CH',46.95,7.45,'c'],['St. Moritz','CH',46.50,9.84,'m'],['Brno','CZ',49.20,16.61,'c'],['Český Krumlov','CZ',48.81,14.32,'c','castle'],['Bratislava','SK',48.15,17.11,'c','castle'],
+ ['Ljubljana','SI',46.06,14.51,'c'],['Lake Bled','SI',46.36,14.09,'l','castle'],['Zagreb','HR',45.81,15.98,'c'],['Plitvice Lakes','HR',44.87,15.62,'f','falls'],['Hvar','HR',43.17,16.44,'i'],['Kotor','ME',42.42,18.77,'b'],
+ ['Sarajevo','BA',43.86,18.41,'c'],['Mostar','BA',43.34,17.81,'c'],['Belgrade','RS',44.79,20.45,'c'],['Bucharest','RO',44.43,26.10,'c'],['Brașov','RO',45.65,25.61,'m','castle'],['Sofia','BG',42.70,23.32,'c'],
+ ['Ohrid','MK',41.12,20.80,'l'],['Tirana','AL',41.33,19.82,'c'],['Tallinn','EE',59.44,24.75,'c','castle'],['Riga','LV',56.95,24.11,'c'],['Vilnius','LT',54.69,25.28,'c'],['Warsaw','PL',52.23,21.01,'c'],
+ ['Gdańsk','PL',54.35,18.65,'b'],['Wrocław','PL',51.11,17.04,'c'],['Kyiv','UA',50.45,30.52,'c','dome'],['Lviv','UA',49.84,24.03,'c'],['Moscow','RU',55.76,37.62,'c','dome'],['St. Petersburg','RU',59.93,30.34,'c','dome'],
+ ['Mykonos','GR',37.45,25.33,'i','windmill'],['Crete','GR',35.34,25.13,'i'],['Rhodes','GR',36.43,28.22,'i'],['Corfu','GR',39.62,19.92,'i'],['Thessaloniki','GR',40.64,22.94,'c'],['Meteora','GR',39.72,21.63,'m'],
+ ['Valletta','MT',35.90,14.51,'b'],['Paphos','CY',34.77,32.42,'b'],['Cappadocia','TR',38.64,34.83,'r'],['Antalya','TR',36.90,30.70,'b'],['Bodrum','TR',37.03,27.43,'b'],['Ephesus','TR',37.94,27.34,'r','temple'],
+ ['Aarhus','DK',56.16,10.20,'c'],['Gothenburg','SE',57.71,11.97,'b'],['Malmö','SE',55.60,13.00,'c'],['Tromsø','NO',69.65,18.96,'m'],['Lofoten','NO',68.21,13.61,'i'],['Stavanger','NO',58.97,5.73,'m'],
+ ['Rovaniemi','FI',66.50,25.73,'f'],['Akureyri','IS',65.68,-18.09,'m'],['Blue Lagoon','IS',63.88,-22.45,'l'],['Vík','IS',63.42,-19.01,'b'],['Nuuk','GL',64.18,-51.72,'m'],['Tbilisi','GE',41.72,44.79,'c'],
+ ['Yerevan','AM',40.18,44.51,'m'],
+ ['Jerusalem','IL',31.78,35.22,'c','dome'],['Tel Aviv','IL',32.09,34.78,'b'],['Petra','JO',30.33,35.44,'m','temple'],['Amman','JO',31.95,35.93,'c'],['Dead Sea','JO',31.56,35.47,'l'],['Wadi Rum','JO',29.58,35.42,'r'],
+ ['Beirut','LB',33.89,35.50,'c'],['Doha','QA',25.29,51.53,'c'],['Abu Dhabi','AE',24.45,54.38,'c','mosque'],['Muscat','OM',23.59,58.41,'c','mosque'],['Riyadh','SA',24.71,46.68,'c'],['AlUla','SA',26.62,37.92,'r'],
+ ['Manama','BH',26.23,50.59,'c'],['Kuwait City','KW',29.38,47.99,'c'],
+ ['Sapporo','JP',43.06,141.35,'c'],['Hiroshima','JP',34.39,132.46,'c'],['Nara','JP',34.69,135.80,'c','pagoda'],['Okinawa','JP',26.21,127.68,'i'],['Hakone','JP',35.23,139.11,'m','fuji'],['Nagoya','JP',35.18,136.91,'c'],
+ ['Busan','KR',35.18,129.08,'b'],['Jeju','KR',33.50,126.53,'i'],["Xi'an",'CN',34.34,108.94,'c','pagoda'],['Chengdu','CN',30.57,104.07,'c'],['Guilin','CN',25.27,110.29,'m'],['Great Wall','CN',40.43,116.57,'m','castle'],
+ ['Hangzhou','CN',30.27,120.16,'l','pagoda'],['Macau','MO',22.20,113.54,'c'],['Kaohsiung','TW',22.63,120.30,'c'],['Chiang Mai','TH',18.79,98.98,'m','pagoda'],['Krabi','TH',8.09,98.91,'b'],['Koh Samui','TH',9.51,100.01,'i'],
+ ['Pattaya','TH',12.93,100.88,'b'],['Da Nang','VN',16.05,108.20,'b'],['Hoi An','VN',15.88,108.33,'c'],['Ha Long Bay','VN',20.91,107.18,'i'],['Siem Reap','KH',13.36,103.86,'f','temple'],['Phnom Penh','KH',11.56,104.93,'c'],
+ ['Luang Prabang','LA',19.89,102.13,'m','pagoda'],['Yangon','MM',16.84,96.17,'c','pagoda'],['Bagan','MM',21.17,94.86,'r','pagoda'],['Ubud','ID',-8.51,115.26,'f'],['Jakarta','ID',-6.21,106.85,'c'],['Yogyakarta','ID',-7.80,110.36,'c','temple'],
+ ['Lombok','ID',-8.65,116.32,'i'],['Penang','MY',5.41,100.33,'i'],['Langkawi','MY',6.35,99.80,'i'],['Boracay','PH',11.97,121.92,'i'],['El Nido','PH',11.18,119.39,'i'],['Cebu','PH',10.32,123.89,'i'],
+ ['Kathmandu','NP',27.72,85.32,'m','pagoda'],['Pokhara','NP',28.21,83.99,'m'],['Everest Base Camp','NP',28.00,86.85,'m'],['Colombo','LK',6.93,79.86,'c'],['Kandy','LK',7.29,80.63,'m'],['Galle','LK',6.03,80.22,'b','lighthouse'],
+ ['Malé','MV',4.18,73.51,'i'],['Thimphu','BT',27.47,89.64,'m'],['Jaipur','IN',26.91,75.79,'c','castle'],['Goa','IN',15.50,73.83,'b'],['Varanasi','IN',25.32,82.97,'c'],['Udaipur','IN',24.59,73.71,'l'],
+ ['Kochi','IN',9.93,76.27,'b'],['Bengaluru','IN',12.97,77.59,'c'],['Kolkata','IN',22.57,88.36,'c'],['Chennai','IN',13.08,80.27,'b'],['Dhaka','BD',23.81,90.41,'c'],['Ulaanbaatar','MN',47.89,106.91,'r'],
+ ['Brisbane','AU',-27.47,153.03,'c'],['Gold Coast','AU',-28.02,153.40,'b'],['Perth','AU',-31.95,115.86,'b'],['Adelaide','AU',-34.93,138.60,'c'],['Hobart','AU',-42.88,147.33,'m'],['Darwin','AU',-12.46,130.84,'b'],
+ ['Uluru','AU',-25.34,131.04,'m'],['Byron Bay','AU',-28.64,153.61,'b','lighthouse'],['Airlie Beach','AU',-20.27,148.72,'b'],['Great Ocean Road','AU',-38.68,143.39,'b'],['Canberra','AU',-35.28,149.13,'c'],['Wellington','NZ',-41.29,174.78,'c'],
+ ['Christchurch','NZ',-43.53,172.64,'c'],['Rotorua','NZ',-38.14,176.25,'l'],['Milford Sound','NZ',-44.67,167.93,'m'],['Bay of Islands','NZ',-35.22,174.10,'i'],['Wanaka','NZ',-44.70,169.13,'l'],['Nadi','FJ',-17.80,177.42,'i'],
+ ['Bora Bora','PF',-16.50,-151.74,'i'],['Tahiti','PF',-17.54,-149.57,'i'],
+ ['Luxor','EG',25.69,32.64,'r','temple'],['Aswan','EG',24.09,32.90,'r'],['Sharm El Sheikh','EG',27.92,34.33,'b'],['Hurghada','EG',27.26,33.81,'b'],['Fes','MA',34.03,-5.00,'c','mosque'],['Chefchaouen','MA',35.17,-5.27,'m'],
+ ['Casablanca','MA',33.57,-7.59,'c','mosque'],['Essaouira','MA',31.51,-9.77,'b'],['Tunis','TN',36.81,10.18,'c'],['Johannesburg','ZA',-26.20,28.05,'c'],['Durban','ZA',-29.86,31.02,'b'],['Kruger National Park','ZA',-24.01,31.49,'r'],
+ ['Knysna','ZA',-34.04,23.05,'l'],['Stellenbosch','ZA',-33.93,18.86,'r'],['Victoria Falls','ZW',-17.92,25.86,'f','falls'],['Okavango Delta','BW',-19.29,22.90,'r'],['Windhoek','NA',-22.56,17.08,'c'],['Sossusvlei','NA',-24.73,15.29,'r'],
+ ['Zanzibar','TZ',-6.17,39.20,'i'],['Serengeti','TZ',-2.33,34.83,'r'],['Kilimanjaro','TZ',-3.07,37.36,'m'],['Masai Mara','KE',-1.41,35.01,'r'],['Mombasa','KE',-4.04,39.67,'b'],['Kigali','RW',-1.95,30.06,'m'],
+ ['Kampala','UG',0.35,32.58,'l'],['Addis Ababa','ET',9.03,38.74,'m'],['Accra','GH',5.60,-0.19,'b'],['Lagos','NG',6.52,3.38,'c'],['Dakar','SN',14.72,-17.47,'b'],['Port Louis','MU',-20.16,57.50,'i'],
+ ['Mahé','SC',-4.68,55.49,'i'],['Antananarivo','MG',-18.88,47.51,'m'],['Antarctica','AQ',-64.82,-63.50,'m']
 ];
 const KIND_CODE = {c:'city',b:'beach',m:'mountain',l:'lake',f:'forest',i:'island',r:'countryside'};
 const CITIES = CITY_ROWS.map(([name,cc,lat,lon,k,lm]) => ({name,cc,lat,lon,kind:KIND_CODE[k]||'city',lm:lm||null}));
@@ -773,18 +883,20 @@ function leafHTML(inner, cls){ return `<div class="leaf"><div class="page ${cls|
 function renderBook(opts={}){
   flip = null;
   const list = sorted(); const st = computeStats(list);
-  const pages = []; for (let i=0;i<list.length;i+=4) pages.push(list.slice(i,i+4));
-  if (!pages.length || pages[pages.length-1].length === 4) pages.push([]);
+  const pages = [], labels = [], arrG = arrangement();
+  for (const g of arrangedGroups()){ for (let i=0;i<g.stamps.length;i+=4){ pages.push(g.stamps.slice(i,i+4)); labels.push(g.label); } }
+  const plainDate = arrG.group === 'date' && arrG.order === 'asc' && !arrG.only;
+  if (!pages.length || (plainDate && pages[pages.length-1].length === 4)){ pages.push([]); labels.push(''); }
   const bk = curBook(); $('#bookName').textContent = bk.name;
   let html = leafHTML(`<div class="cover-emblem" role="button" aria-label="Change cover logo">${coverEmblemHTML(bk)}</div><div class="cover-title">PASSPORT</div><div class="cover-sub">${esc(bk.name)}</div><div class="cover-meta">${st.n} ${st.n===1?'stamp':'stamps'} · ${st.countries.size} ${st.countries.size===1?'country':'countries'}</div>${bk.shared ? `<div class="cover-meta">Shared${bk.members && bk.members.length ? ' with ' + esc(bk.members.map(m => m.name).join(', ')) : ''}</div>` : ''}<div class="cover-hint">Swipe to open →</div>`, 'cover');
   pages.forEach((p, pi) => {
     const last = pi === pages.length-1;
-    let inner = decorSVG() + `<div class="page-no">${pi+1}</div>`;
-    if (!list.length){
-      inner += `<div class="empty-state"><svg width="84" height="84" viewBox="-50 -50 100 100" aria-hidden="true"><circle r="44" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 6"/><path d="M-16 12h32M-12 12v-14h24v14M-6 -2v-10h12v10" fill="none" stroke="var(--muted)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Your first page is waiting</h2><p>Add a stamp for a trip you're on, or one from years ago.</p><button class="btn primary" data-act="add">Add your first stamp</button><button class="btn ghost small" data-act="sample">Or load sample trips</button></div>`;
+    let inner = decorSVG() + `<div class="page-no">${pi+1}</div>` + (labels[pi] ? `<div class="page-label">${esc(labels[pi])}</div>` : '');
+    if (!list.length || !p.length && !plainDate){
+      if (list.length) inner += `<div class="empty-state"><h2>Nothing to show</h2><p>No stamps match this arrangement.</p><button class="btn" data-act="arrange">Change arrangement</button></div>`; else inner += `<div class="empty-state"><svg width="84" height="84" viewBox="-50 -50 100 100" aria-hidden="true"><circle r="44" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 6"/><path d="M-16 12h32M-12 12v-14h24v14M-6 -2v-10h12v10" fill="none" stroke="var(--muted)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Your first page is waiting</h2><p>Add a stamp for a trip you're on, or one from years ago.</p><button class="btn primary" data-act="add">Add your first stamp</button><button class="btn ghost small" data-act="sample">Or load sample trips</button></div>`;
     } else {
       p.forEach((s, i) => { inner += stampButton(s, i, opts.fade ? 'fade' : ''); });
-      if (last && p.length < 4){ const pos = [[29,26],[71,29],[29,72],[71,74]][p.length]; inner += `<button class="slot-empty" data-act="add" style="--x:${pos[0]}%;--y:${pos[1]}%">Next stamp goes here</button>`; }
+      if (last && plainDate && p.length < 4){ const pos = [[29,26],[71,29],[29,72],[71,74]][p.length]; inner += `<button class="slot-empty" data-act="add" style="--x:${pos[0]}%;--y:${pos[1]}%">Next stamp goes here</button>`; }
     }
     html += leafHTML(inner, '');
   });
@@ -792,6 +904,7 @@ function renderBook(opts={}){
   pageCount = pages.length + 1;
   page = Math.min(page, pageCount-1);
   $('#bookCount').innerHTML = `${st.n} ${st.n===1?'stamp':'stamps'}<br>${st.countries.size} ${st.countries.size===1?'country':'countries'}`;
+  const arr = arrangement(); $('#arrangeLbl').textContent = arrangeLabel(); $('#arrangeBtn').classList.toggle('on', arr.group !== 'date' || !!arr.only || arr.order === 'desc'); $('#arrangeBtn').hidden = !list.length;
   layoutLeaves(); renderDots(); renderNudge();
 }
 function renderDots(){
@@ -898,12 +1011,13 @@ viewport.addEventListener('click', e => {
   if (e.target.closest('.cover-emblem')) return openCoverPicker();
   const a = e.target.closest('[data-act]'); if (a) handleAct(a.dataset.act);
 });
-function handleAct(act){ if (act === 'add') openEditor(); else if (act === 'sample') loadSamples(); }
+function handleAct(act){ if (act === 'add') openEditor(); else if (act === 'sample') loadSamples(); else if (act === 'arrange') openArrange(); }
 function landStamp(id){
-  const list = sorted(); const idx = list.findIndex(s => s.id === id); if (idx < 0) return;
-  const target = Math.floor(idx/4) + 1;
+  if (!sorted().some(s => s.id === id)) return;
   renderBook();
-  const el = track.querySelector(`.stamp[data-id="${id}"]`);
+  let el = track.querySelector(`.stamp[data-id="${id}"]`);
+  if (!el && arrangement().only){ state.settings.arrange = Object.assign(arrangement(), {only:''}); save(); renderBook(); el = track.querySelector(`.stamp[data-id="${id}"]`); }
+  const target = el ? [...track.children].indexOf(el.closest('.leaf')) : page;
   const go = () => {
     if (el){ el.style.visibility = ''; el.classList.remove('landing'); void el.offsetWidth; el.classList.add('landing'); const pg = el.closest('.page'); pg.classList.remove('thunk'); void pg.offsetWidth; pg.classList.add('thunk'); }
     setTimeout(() => { thunk(); buzz(22); }, 400);
@@ -935,6 +1049,8 @@ function openEditor(existing){
   unlockAudio();
   const s = existing;
   draft = s ? Object.assign({}, s, {photo:null, photoChanged:false, kindTouched:true}) : {place:'', cc:'', lat:null, lon:null, kind:'city', lm:null, lmKind:null, date:todayISO(), note:'', with:'', photo:null, photoChanged:false, kindTouched:false, hasPhoto:false};
+  draft.people = s ? peopleOf(s).slice() : [];
+  draft.books = new Set(s ? tripCopies(s).map(x => x.bookId) : [state.current]);
   const countryOpts = Object.entries(COUNTRIES).sort((a,b) => a[1][0].localeCompare(b[1][0])).map(([cc,c]) => `<option value="${cc}">${esc(c[0])}</option>`).join('');
   openSheet(`
     <h2 id="sheetTitle">${s ? 'Edit stamp' : 'New stamp'}</h2>
@@ -947,7 +1063,8 @@ function openEditor(existing){
       <div class="field"><label for="fCountry">Country</label><select class="input" id="fCountry"><option value="">—</option>${countryOpts}</select></div>
     </div>
     <div class="field"><span class="label" id="kindLbl">Kind of place</span><div class="chips" role="group" aria-labelledby="kindLbl">${KINDS.map(([k,l]) => `<button type="button" class="chip" data-kind="${k}" aria-pressed="${draft.kind===k}">${l}</button>`).join('')}</div></div>
-    <div class="field"><label for="fWith">Who you were with</label><input class="input" id="fWith" placeholder="Optional" value="${esc(draft.with)}"></div>
+    ${state.books.length > 1 ? `<div class="field"><span class="label" id="bookLbl">${s ? 'In these books' : 'Add to books'}</span><div class="chips" role="group" aria-labelledby="bookLbl">${state.books.map(b => `<button type="button" class="chip" data-addbook="${b.id}" aria-pressed="${draft.books.has(b.id)}">${esc(b.name)}</button>`).join('')}</div></div>` : ''}
+    <div class="field"><label for="fWith">Who you were with</label><div class="people" id="peopleBox"><input id="fWith" placeholder="${draft.people.length ? 'Add someone' : 'Add a name'}" autocomplete="off" enterkeyhint="done"></div><div class="chips people-quick" id="peopleQuick"></div></div>
     <div class="field"><label for="fNote">A note to remember</label><textarea class="input" id="fNote" placeholder="Optional">${esc(draft.note)}</textarea></div>
     <div class="field"><span class="label">Photo</span><div class="photo-pick"><img class="photo-thumb" id="photoThumb" alt="" hidden><label class="btn small file-label"><span id="photoLbl">Add a photo</span><input type="file" id="fPhoto" accept="image/*"></label><button type="button" class="btn small ghost" id="photoRemove" hidden>Remove</button></div></div>
     <div class="actions" style="margin-top:6px"><button class="btn" type="button" id="cancelEdit">Cancel</button><button class="btn primary" type="button" id="saveStamp">${s ? 'Save changes' : 'Stamp it'}</button></div>
@@ -971,7 +1088,23 @@ function openEditor(existing){
   $('#fDate').addEventListener('input', e => { if (e.target.value){ draft.date = e.target.value; updatePreview(); } });
   $('#fCountry').addEventListener('change', e => { draft.cc = e.target.value; updatePreview(); });
   $$('.chip', sheet).forEach(ch => ch.addEventListener('click', () => { draft.kind = ch.dataset.kind; draft.kindTouched = true; $$('.chip', sheet).forEach(c => c.setAttribute('aria-pressed', c === ch)); updatePreview(); }));
-  $('#fWith').addEventListener('input', e => draft.with = e.target.value);
+  const pBox = $('#peopleBox'), pIn = $('#fWith'), pQuick = $('#peopleQuick');
+  const drawPeople = () => {
+    $$('.pchip', pBox).forEach(x => x.remove());
+    draft.people.forEach((n, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'pchip'; b.setAttribute('aria-label', 'Remove ' + n); b.innerHTML = `${esc(n)} <span aria-hidden="true">×</span>`; b.addEventListener('click', () => { draft.people.splice(i, 1); drawPeople(); }); pBox.insertBefore(b, pIn); });
+    const have = new Set(draft.people.map(norm)), q = norm(pIn.value);
+    const opts = knownPeople().filter(n => !have.has(norm(n)) && (!q || norm(n).startsWith(q))).slice(0, 6);
+    pQuick.innerHTML = opts.map(n => `<button type="button" class="chip" data-person="${esc(n)}">+ ${esc(n)}</button>`).join('');
+    $$('[data-person]', pQuick).forEach(b => b.addEventListener('click', () => { draft.people.push(b.dataset.person); pIn.value = ''; drawPeople(); }));
+    pIn.placeholder = draft.people.length ? 'Add someone' : 'Add a name';
+  };
+  const commitPerson = () => { const ps = parsePeople(pIn.value); if (!ps.length) return; ps.forEach(n => { if (!draft.people.some(x => norm(x) === norm(n))) draft.people.push(n); }); pIn.value = ''; drawPeople(); };
+  pIn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ','){ e.preventDefault(); commitPerson(); } else if (e.key === 'Backspace' && !pIn.value && draft.people.length){ draft.people.pop(); drawPeople(); } });
+  pIn.addEventListener('input', () => { if (/[,&]$/.test(pIn.value)) commitPerson(); else drawPeople(); });
+  pIn.addEventListener('blur', () => setTimeout(() => { if (draft) commitPerson(); }, 120));
+  pBox.addEventListener('click', e => { if (e.target === pBox) pIn.focus(); });
+  drawPeople();
+  $$('[data-addbook]', sheet).forEach(b => b.addEventListener('click', () => { const id = b.dataset.addbook; if (draft.books.has(id)){ if (draft.books.size === 1){ toast('A stamp needs at least one book.'); return; } draft.books.delete(id); } else draft.books.add(id); b.setAttribute('aria-pressed', draft.books.has(id)); buzz(6); }));
   $('#fNote').addEventListener('input', e => draft.note = e.target.value);
   $('#fPhoto').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; if (!f) return; try { const data = await shrinkImage(f); draft.photo = data; draft.photoChanged = true; showThumb(data); } catch(err){ toast('That photo couldn\'t be read. Try another one.'); } });
   $('#photoRemove').addEventListener('click', () => { draft.photo = null; draft.photoChanged = true; $('#photoThumb').hidden = true; $('#photoRemove').hidden = true; $('#photoLbl').textContent = 'Add a photo'; });
@@ -1026,10 +1159,24 @@ async function saveDraft(){
   const place = draft.place.trim();
   if (!place){ toast('Add a place name first.'); $('#fPlace').focus(); return; }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(draft.date || '')){ toast('Pick a date for this stamp.'); return; }
+  const pIn = $('#fWith'); if (pIn && pIn.value.trim()) parsePeople(pIn.value).forEach(n => { if (!draft.people.some(x => norm(x) === norm(n))) draft.people.push(n); });
   const isNew = !draft.id;
-  const s = {id: draft.id || makeId(), place, cc: draft.cc || '', lat: draft.lat, lon: draft.lon, kind: draft.kind || 'city', lm: draft.lm || null, lmKind: draft.lmKind || null, date: draft.date, note: (draft.note||'').trim(), with: (draft.with||'').trim(), hasPhoto: draft.hasPhoto || false, created: draft.created || Date.now(), bookId: draft.bookId || state.current, uid: draft.uid || state.settings.uid, by: draft.by || '', updated: Date.now()};
-  if (draft.photoChanged){ if (draft.photo){ await putPhoto(s.id, draft.photo); s.hasPhoto = true; } else { await delPhoto(s.id); s.hasPhoto = false; } }
-  if (isNew) state.stamps.push(s); else state.stamps = state.stamps.map(x => x.id === s.id ? s : x);
+  const trip = draft.trip || draft.id || makeId();
+  const base = {place, cc: draft.cc || '', lat: draft.lat, lon: draft.lon, kind: draft.kind || 'city', lm: draft.lm || null, lmKind: draft.lmKind || null, date: draft.date, note: (draft.note||'').trim(), people: draft.people.slice(), with: draft.people.join(', '), trip, updated: Date.now()};
+  const existing = isNew ? [] : tripCopies(draft);
+  const want = [...draft.books];
+  let primary = null;
+  for (const bid of want){
+    let copy = existing.find(x => x.bookId === bid);
+    if (copy){ Object.assign(copy, base); }
+    else { copy = Object.assign({id: makeId(), bookId: bid, uid: state.settings.uid, by: '', created: Date.now(), hasPhoto: false}, base); if (!isNew && draft.hasPhoto && !draft.photoChanged){ const p = await getPhoto(draft.id); if (p){ await putPhoto(copy.id, p); copy.hasPhoto = true; } } state.stamps.push(copy); }
+    if (draft.photoChanged){ if (draft.photo){ await putPhoto(copy.id, draft.photo); copy.hasPhoto = true; } else { await delPhoto(copy.id); copy.hasPhoto = false; } }
+    if (!primary || bid === state.current) primary = copy;
+  }
+  for (const x of existing) if (!want.includes(x.bookId)){ state.stamps = state.stamps.filter(y => y.id !== x.id); delPhoto(x.id); noteDeleted(x); }
+  const s = primary;
+  if (s.bookId !== state.current){ state.current = s.bookId; page = 0; }
+  if (want.length > 1) setTimeout(() => toast(`Stamped in ${want.length} books.`), 1400);
   save();
   draft = null;
   closeSheet();
@@ -1052,7 +1199,8 @@ function openDetail(id){
     total > 1 ? [`Visit ${rev} of ${total}`, 'Times stamped here'] : null,
     !isMine(s) ? [esc(s.by || 'A friend'), 'Stamped by'] : null,
     tw.length ? [esc(tw.join(', ')), 'Also stamped here that week'] : null,
-    s.with ? [esc(s.with), 'With'] : null,
+    peopleOf(s).length ? [esc(peopleOf(s).join(', ')), 'With'] : null,
+    tripCopies(s).length > 1 ? [esc(tripCopies(s).filter(x => x.id !== s.id).map(x => (state.books.find(b => b.id === x.bookId) || {}).name).filter(Boolean).join(', ')), 'Also in'] : null,
     s.cc ? [esc(CONT[continentOf(s.cc)] || ''), 'Continent'] : null
   ].filter(Boolean);
   openSheet(`
@@ -1070,7 +1218,7 @@ function openDetail(id){
   let armed = false;
   $('#delStamp').addEventListener('click', e => {
     if (!armed){ armed = true; e.currentTarget.textContent = 'Tap again to remove'; return; }
-    state.stamps = state.stamps.filter(x => x.id !== s.id); delPhoto(s.id); save(); closeSheet(); renderBook(); refreshOtherViews(); toast(`Removed ${s.place}.`);
+    state.stamps = state.stamps.filter(x => x.id !== s.id); delPhoto(s.id); noteDeleted(s); save(); closeSheet(); renderBook(); refreshOtherViews(); toast(`Removed ${s.place}.`);
   });
 }
 
@@ -1091,6 +1239,7 @@ function themeOptionsHTML(){
 }
 function bindThemeOptions(root){ $$('[data-theme-opt]', root).forEach(b => b.addEventListener('click', () => { applyTheme(b.dataset.themeOpt); $$('[data-theme-opt]', root).forEach(x => x.setAttribute('aria-pressed', x === b)); buzz(10); })); }
 $('#cloudBtn').addEventListener('click', backupToICloud);
+$('#arrangeBtn').addEventListener('click', () => { unlockAudio(); openArrange(); });
 $('#bookSwitch').addEventListener('click', () => { unlockAudio(); openBooks(); });
 
 /* ---------- Views ---------- */
@@ -1141,7 +1290,7 @@ function renderYear(){
       <div class="card hero"><div class="eyebrow">The story of ${selYear}</div><p style="font-size:17px;color:var(--ink);margin:10px 0 16px">${esc(story)}</p>
         <div class="actions"><button class="btn primary" id="playReplay"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Replay</button><button class="btn" id="shareYear">Share</button></div></div>
       ${delta != null ? `<div class="card compare"><span class="cmp-ic ${delta >= 0 ? 'up' : 'down'}" aria-hidden="true">${delta >= 0 ? '↑' : '↓'}</span><div><b>${delta === 0 ? `Same as ${selYear-1}` : `${plural(Math.abs(delta),'stamp')} ${delta > 0 ? 'more' : 'fewer'} than ${selYear-1}`}</b><small>${plural(prevYear.length,'stamp')} in ${selYear-1} · ${plural(ys.length,'stamp')} in ${selYear}</small></div></div>` : ''}
-      <div class="card"><h3>Month by month</h3><div class="timeline">${mkeys.map((m, i) => `<div class="tl-month" style="--i:${i}"><div class="tl-head"><span class="tl-dot" aria-hidden="true"></span><b>${MONTH_LONG[m-1]}</b><small>${plural(months[m].length,'stamp')}</small></div>${months[m].map(s => `<button class="tl-item" data-id="${s.id}"><span class="tl-thumb">${stampSVG(s, null, {label:false}).svg}</span><span class="grow"><b>${esc(s.place)}</b><small>${esc([countryName(s.cc), fmtLong(s.date)].filter(Boolean).join(' · '))}${!isMine(s) ? ` · ${esc(s.by || 'A friend')}` : ''}</small>${s.note ? `<span class="tl-note">${esc(s.note)}</span>` : ''}</span></button>`).join('')}</div>`).join('')}</div></div>
+      <div class="card"><h3>Month by month</h3><div class="timeline">${mkeys.map((m, i) => `<div class="tl-month" style="--i:${i}"><div class="tl-head"><span class="tl-dot" aria-hidden="true"></span><b>${MONTH_LONG[m-1]}</b><small>${plural(months[m].length,'stamp')}</small></div>${months[m].map(s => `<button class="tl-item" data-id="${s.id}"><span class="tl-thumb">${stampSVG(s, null, {label:false}).svg}</span><span class="grow"><b>${esc(s.place)}</b><small>${esc([countryName(s.cc), fmtLong(s.date)].filter(Boolean).join(' · '))}${!isMine(s) ? ` · ${esc(s.by || 'A friend')}` : ''}${peopleOf(s).length ? ` · with ${esc(peopleOf(s).join(', '))}` : ''}</small>${s.note ? `<span class="tl-note">${esc(s.note)}</span>` : ''}</span></button>`).join('')}</div>`).join('')}</div></div>
       <div class="card"><h3>Firsts in ${selYear}</h3>
         ${newC.map(c => `<div class="list-row">${flagHTML(c)}<div class="grow"><b>First time in ${esc(countryName(c))}</b><small>${esc(ys.find(s => s.cc === c).place)} · ${fmtLong(ys.find(s => s.cc === c).date)}</small></div></div>`).join('')}
         ${newKinds.map(k => `<div class="list-row"><div class="grow"><b>Your first ${esc(kindLabel(k))} stamp</b><small>${esc(ys.find(s => s.kind === k).place)}</small></div></div>`).join('')}
@@ -1247,6 +1396,7 @@ function renderStats(){
         <div class="list-row"><div class="grow"><b>${esc(topPlace.name)}</b><small>Most-stamped place</small></div><span class="count-pill">${topPlace.n}</span></div>
         <div class="list-row"><div class="grow"><b>${esc((KINDS.find(k => k[0]===favKind[0])||['','Places'])[1])}</b><small>Your favourite kind of place</small></div><span class="count-pill">${favKind[1]}</span></div>
       </div>
+      ${(() => { const m = new Map(); list.forEach(s => peopleOf(s).forEach(n => { const k = norm(n); const e = m.get(k) || {name:n, n:0, places:new Set()}; e.n++; e.places.add(norm(s.place)); m.set(k, e); })); const top = [...m.values()].sort((a,b) => b.n - a.n).slice(0, 8); return top.length ? `<div class="card"><h3>Travel companions</h3>${top.map(e => `<div class="list-row"><span class="who" aria-hidden="true">${esc(e.name.charAt(0).toUpperCase())}</span><div class="grow"><b>${esc(e.name)}</b><small>${e.places.size} ${e.places.size===1?'place':'places'} together</small></div><span class="count-pill">${e.n}</span></div>`).join('')}</div>` : ''; })()}
       <div class="card"><h3>Stamps per year</h3>${yrs.map(([y,n],i) => `<div class="hbar-row"><span>${y}</span><div class="hbar" style="width:${Math.max(6, n/maxY*100)}%;animation-delay:${i*60}ms"></div><b>${n}</b></div>`).join('')}</div>
       <div class="card"><h3>Continents</h3>${contAll.map(c => `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:14px"><span>${CONT[c]}</span><span class="muted" style="color:var(--muted)">${contCounts[c]||0}</span></div><div class="progress">${contCounts[c] ? `<i style="width:${Math.max(8,(contCounts[c]/st.n)*100)}%"></i>` : ''}</div></div>`).join('')}</div>
       <div class="card"><h3>Countries</h3>${Object.entries(st.countryCounts).sort((a,b) => b[1]-a[1]).map(([cc,n]) => `<div class="list-row">${flagHTML(cc)}<div class="grow"><b>${esc(countryName(cc))}</b><small>${esc(CONT[continentOf(cc)]||'')}</small></div><span class="count-pill">${n}</span></div>`).join('') || '<p class="help">Add a country to your stamps to see them here.</p>'}</div>
@@ -1443,6 +1593,56 @@ function openShareSheet(canvas, filename, label){
   }, 'image/png');
 }
 
+/* ---------- Companions, arranging, trips across books ---------- */
+function noteDeleted(s){ const b = state.books.find(x => x.id === s.bookId); if (!b || !b.shared || !isMine(s)) return; b.deleted = (b.deleted || []).filter(d => d.id !== s.id); b.deleted.push({id:s.id, uid:s.uid || state.settings.uid, at:Date.now()}); if (b.deleted.length > 500) b.deleted = b.deleted.slice(-500); }
+function parsePeople(str){ return String(str || '').split(/\s*(?:,|&|\band\b|\+)\s*/i).map(x => x.trim()).filter(Boolean); }
+function peopleOf(s){ return Array.isArray(s.people) ? s.people : parsePeople(s.with); }
+function knownPeople(){
+  const counts = new Map(), me = norm(state.settings.name || '');
+  const add = n => { const k = n.trim(); if (!k || norm(k) === me) return; const key = norm(k); const e = counts.get(key) || {name:k, n:0}; e.n++; counts.set(key, e); };
+  state.stamps.forEach(s => peopleOf(s).forEach(add));
+  state.books.forEach(b => (b.members || []).forEach(m => add(m.name)));
+  return [...counts.values()].sort((a,b) => b.n - a.n).map(e => e.name);
+}
+const ARRANGE_GROUPS = [['date','Date'],['year','Year'],['companion','Companion'],['continent','Continent'],['country','Country'],['kind','Kind of place'],['stamper','Who stamped']];
+function arrangement(){ const a = Object.assign({group:'date', order:'asc', only:''}, state.settings.arrange || {}); if (a.group === 'stamper' && !curBook().shared) a.group = 'date'; return a; }
+function groupLabels(s, g){
+  if (g === 'year') return [String(parts(s.date).y)];
+  if (g === 'companion'){ const p = peopleOf(s); return p.length ? p : ['Solo']; }
+  if (g === 'continent') return [CONT[continentOf(s.cc)] || 'Somewhere'];
+  if (g === 'country') return [countryName(s.cc) || 'Unknown country'];
+  if (g === 'kind') return [((KINDS.find(k => k[0] === s.kind) || [])[1]) || 'Place'];
+  if (g === 'stamper') return [isMine(s) ? 'You' : (s.by || 'A friend')];
+  return [''];
+}
+function arrangedGroups(){
+  const a = arrangement(); let list = sorted(); if (a.order === 'desc') list = list.slice().reverse();
+  if (a.group === 'date') return [{label:'', stamps:list}];
+  const groups = new Map();
+  for (const s of list) for (const l of groupLabels(s, a.group)){ const k = norm(l); if (!groups.has(k)) groups.set(k, {label:l, stamps:[]}); groups.get(k).stamps.push(s); }
+  let out = [...groups.values()];
+  if (a.group === 'year') out.sort((x, y) => a.order === 'desc' ? +y.label - +x.label : +x.label - +y.label);
+  if (a.only) out = out.filter(g => norm(g.label) === norm(a.only));
+  return out;
+}
+function arrangeLabel(){ const a = arrangement(); if (a.only) return a.group === 'companion' && a.only !== 'Solo' ? `With ${a.only}` : a.only; if (a.group === 'date') return a.order === 'desc' ? 'Newest first' : 'By date'; return 'By ' + ARRANGE_GROUPS.find(g => g[0] === a.group)[1].toLowerCase(); }
+function openArrange(){
+  const a = arrangement();
+  const groups = ARRANGE_GROUPS.filter(g => g[0] !== 'stamper' || curBook().shared);
+  const labels = a.group === 'date' ? [] : (() => { const m = new Map(); sorted().forEach(s => groupLabels(s, a.group).forEach(l => m.set(norm(l), l))); let v = [...m.values()]; if (a.group === 'year') v.sort((x,y) => +y - +x); else v.sort((x,y) => x.localeCompare(y)); return v; })();
+  openSheet(`<h2 id="sheetTitle">Arrange this book</h2><p class="sheet-sub">Regroup your pages any way you like. Your stamps don't change.</p>
+    <div class="field"><span class="label" id="grpLbl">Group pages by</span><div class="chips" role="group" aria-labelledby="grpLbl">${groups.map(g => `<button type="button" class="chip" data-grp="${g[0]}" aria-pressed="${a.group===g[0]}">${g[1]}</button>`).join('')}</div></div>
+    <div class="field"><span class="label" id="ordLbl">Order</span><div class="chips" role="group" aria-labelledby="ordLbl"><button type="button" class="chip" data-ord="asc" aria-pressed="${a.order==='asc'}">Oldest first</button><button type="button" class="chip" data-ord="desc" aria-pressed="${a.order==='desc'}">Newest first</button></div></div>
+    ${labels.length > 1 ? `<div class="field"><span class="label" id="onlyLbl">Show only</span><div class="chips" role="group" aria-labelledby="onlyLbl"><button type="button" class="chip" data-only="" aria-pressed="${!a.only}">Everything</button>${labels.map(l => `<button type="button" class="chip" data-only="${esc(l)}" aria-pressed="${norm(a.only)===norm(l)}">${esc(l)}</button>`).join('')}</div></div>` : ''}
+    <button class="btn primary block" id="arrDone" style="margin-top:6px">Done</button>`);
+  const set = patch => { state.settings.arrange = Object.assign(arrangement(), patch); save(); page = Math.min(page, 1) || (sorted().length ? 1 : 0); renderBook({fade:true}); openArrange(); };
+  $$('[data-grp]', sheet).forEach(b => b.addEventListener('click', () => set({group:b.dataset.grp, only:''})));
+  $$('[data-ord]', sheet).forEach(b => b.addEventListener('click', () => set({order:b.dataset.ord})));
+  $$('[data-only]', sheet).forEach(b => b.addEventListener('click', () => set({only:b.dataset.only})));
+  $('#arrDone').addEventListener('click', closeSheet);
+}
+function tripCopies(s){ const t = s.trip || s.id; return state.stamps.filter(x => (x.trip || x.id) === t && (x.uid || '') === (s.uid || '')); }
+
 /* ---------- Cover logos ---------- */
 const EMBLEMS = {
   globe:['Globe','<circle r="44"/><ellipse rx="18" ry="44"/><path d="M0 -44V44M-44 0H44M-38 -22H38M-38 22H38"/>'],
@@ -1584,13 +1784,26 @@ function openBookForm(b){
     save(); closeSheet(); showView('book'); renderBook({fade:true}); refreshOtherViews(); toast(b ? 'Renamed.' : `Started "${n}".`);
   });
 }
-async function buildBookPackage(b, withPhotos){
+async function bookPackageObj(b, withPhotos){
   const me = state.settings.uid, myName = (state.settings.name || '').trim() || 'A friend';
-  const stamps = state.stamps.filter(s => s.bookId === b.id).map(s => Object.assign({}, s, {by: s.uid === me ? myName : s.by, hasPhoto: withPhotos ? !!s.hasPhoto : false}));
-  const photos = {};
-  if (withPhotos && b.logo && b.logo.type === 'image'){ const o = await getPhoto('logo-' + b.id), m = await getPhoto('logomask-' + b.id); if (o) photos['logo-' + b.id] = o; if (m) photos['logomask-' + b.id] = m; }
-  if (withPhotos){ for (const s of stamps){ if (s.hasPhoto){ const p = await getPhoto(s.id); if (p) photos[s.id] = p; else s.hasPhoto = false; } } }
-  return JSON.stringify({app:'stamped', kind:'book', version:1, sent:new Date().toISOString(), from:{uid:me, name:myName}, book:{id:b.id, name:b.name, members:b.members || [], logo:b.logo || null}, stamps, photos});
+  const sent = new Set(b.photosSent || []);
+  const stamps = state.stamps.filter(s => s.bookId === b.id).map(s => Object.assign({}, s, {by: s.uid === me ? myName : s.by}));
+  const photos = {}, newlySent = [];
+  if (withPhotos && b.logo && b.logo.type === 'image' && !sent.has('logo')){ const o = await getPhoto('logo-' + b.id), m = await getPhoto('logomask-' + b.id); if (o){ photos['logo-' + b.id] = o; newlySent.push('logo'); } if (m) photos['logomask-' + b.id] = m; }
+  if (withPhotos){ for (const s of stamps){ if (s.hasPhoto && !sent.has(s.id + ':' + (s.updated||0))){ const p = await getPhoto(s.id); if (p){ photos[s.id] = p; newlySent.push(s.id + ':' + (s.updated||0)); } } } }
+  return {obj:{id:b.id, name:b.name, members:b.members || [], logo:b.logo || null, deleted:b.deleted || [], stamps, photos}, newlySent};
+}
+function markPhotosSent(b, list){ b.photosSent = [...new Set([...(b.photosSent || []), ...list])].slice(-2000); }
+async function buildBookPackage(b, withPhotos){
+  const {obj, newlySent} = await bookPackageObj(b, withPhotos);
+  const me = state.settings.uid, myName = (state.settings.name || '').trim() || 'A friend';
+  return {text: JSON.stringify({app:'stamped', kind:'book', version:2, sent:new Date().toISOString(), from:{uid:me, name:myName}, book:{id:obj.id, name:obj.name, members:obj.members, logo:obj.logo, deleted:obj.deleted}, stamps:obj.stamps, photos:obj.photos}), newlySent:{[b.id]:newlySent}};
+}
+async function buildBundle(books, withPhotos){
+  const me = state.settings.uid, myName = (state.settings.name || '').trim() || 'A friend';
+  const out = [], newlySent = {};
+  for (const b of books){ const r = await bookPackageObj(b, withPhotos); out.push(r.obj); newlySent[b.id] = r.newlySent; }
+  return {text: JSON.stringify({app:'stamped', kind:'bundle', version:2, sent:new Date().toISOString(), from:{uid:me, name:myName}, books:out}), newlySent};
 }
 async function sendTextFile(txt, name, title){
   let file = null; try { file = new File([txt], name, {type:'application/json'}); } catch(e){}
@@ -1618,15 +1831,18 @@ function openShareBook(){
       <div class="wl-tip" style="--i:1"><div class="ic">2</div><div><b>They join</b><span>In Stamped, they tap the book name, then <b>Join a shared passport</b>, and choose the file.</span></div></div>
       <div class="wl-tip" style="--i:2"><div class="ic">3</div><div><b>Sync any time</b><span>Either of you sends it again. New trips merge in and nothing doubles up. Trips you both stamped within a week get linked.</span></div></div>
     </div>
-    <div class="switch-row" style="margin:6px 0 10px"><span>Include photos <small style="color:var(--muted)">(bigger file)</small></span><label class="switch"><input type="checkbox" id="pkgPhotos" aria-label="Include photos"><span></span></label></div>
+    <div class="switch-row" style="margin:6px 0 0"><span>Include photos <small style="color:var(--muted)">(only ones not sent yet)</small></span><label class="switch"><input type="checkbox" id="pkgPhotos" aria-label="Include photos"><span></span></label></div>
+    ${state.books.filter(x => x.shared && x.id !== b.id).length ? `<div class="switch-row" style="margin:0 0 10px"><span>Sync all my shared books <small style="color:var(--muted)">(one file)</small></span><label class="switch"><input type="checkbox" id="pkgAll" aria-label="Sync all shared books"><span></span></label></div>` : '<div style="height:10px"></div>'}
     <button class="btn primary block" id="sendPkg" disabled>Preparing…</button>
     <button class="btn ghost block small" id="copyPkg" style="margin-top:8px">Copy as text instead</button>`);
-  const prep = async () => { const v = ++ver; const btn = $('#sendPkg'); if (btn){ btn.disabled = true; btn.textContent = 'Preparing…'; } const t = await buildBookPackage(b, withPhotos); if (v !== ver) return; pkg = t; const bb = $('#sendPkg'); if (bb){ bb.disabled = false; bb.textContent = 'Send passport'; } };
+  let all = false;
+  const prep = async () => { const v = ++ver; const btn = $('#sendPkg'); if (btn){ btn.disabled = true; btn.textContent = 'Preparing…'; } const t = all ? await buildBundle([b, ...state.books.filter(x => x.shared && x.id !== b.id)], withPhotos) : await buildBookPackage(b, withPhotos); if (v !== ver) return; pkg = t; const bb = $('#sendPkg'); if (bb){ bb.disabled = false; bb.textContent = all ? 'Send all shared books' : 'Send passport'; } };
   prep();
   $('#pkgPhotos').addEventListener('change', e => { withPhotos = e.target.checked; prep(); });
-  const markShared = () => { b.shared = true; save(); renderBook(); };
-  $('#sendPkg').addEventListener('click', async () => { if (!pkg) return; const ok = await sendTextFile(pkg, `${b.name.replace(/[^a-z0-9]+/gi,'-') || 'Passport'}.stamped.json`, 'Stamped passport'); if (ok){ markShared(); toast('Sent. They join by choosing the file in Stamped.'); } });
-  $('#copyPkg').addEventListener('click', async () => { if (!pkg) return; try { await navigator.clipboard.writeText(pkg); markShared(); toast('Copied. Paste it to your friend in a message.'); } catch(e){ toast('Couldn\'t copy here.'); } });
+  const pa = $('#pkgAll'); if (pa) pa.addEventListener('change', e => { all = e.target.checked; prep(); });
+  const markShared = () => { b.shared = true; for (const [id, list] of Object.entries(pkg.newlySent || {})){ const bk = state.books.find(x => x.id === id); if (bk) markPhotosSent(bk, list); } save(); renderBook(); };
+  $('#sendPkg').addEventListener('click', async () => { if (!pkg) return; const ok = await sendTextFile(pkg.text, all ? 'Stamped-shared-books.stamped.json' : `${b.name.replace(/[^a-z0-9]+/gi,'-') || 'Passport'}.stamped.json`, 'Stamped passport'); if (ok){ markShared(); toast('Sent. They join by choosing the file in Stamped.'); } });
+  $('#copyPkg').addEventListener('click', async () => { if (!pkg) return; try { await navigator.clipboard.writeText(pkg.text); markShared(); toast('Copied. Paste it to your friend in a message.'); } catch(e){ toast('Couldn\'t copy here.'); } });
 }
 function openJoin(){
   openSheet(`<h2 id="sheetTitle">Join a shared passport</h2><p class="sheet-sub">Choose the passport file a friend sent you. Already in that book? Their new trips merge in.</p>
@@ -1635,32 +1851,46 @@ function openJoin(){
   $('#joinFile').addEventListener('change', async e => { const f = e.target.files && e.target.files[0]; if (!f) return; try { await importBook(await f.text()); } catch(err){ toast('That file isn\'t a Stamped passport.'); } e.target.value = ''; });
   $('#joinPaste').addEventListener('click', async () => { try { await importBook($('#joinText').value); } catch(err){ toast('That text isn\'t a Stamped passport.'); } });
 }
-async function importBook(text){
-  const pkg = JSON.parse(text);
-  if (pkg && pkg.app === 'stamped' && pkg.kind !== 'book' && Array.isArray(pkg.stamps)){ closeSheet(); await restoreBackup(text); return; }
-  if (!pkg || pkg.app !== 'stamped' || pkg.kind !== 'book' || !pkg.book || !pkg.book.id || !Array.isArray(pkg.stamps)) throw new Error('not a passport');
+async function importBookObj(bk, from){
   const me = state.settings.uid;
-  let b = state.books.find(x => x.id === pkg.book.id); const isNew = !b;
-  if (!b){ b = {id:pkg.book.id, name:pkg.book.name || 'Shared passport', shared:true, members:[], created:Date.now()}; state.books.push(b); }
+  let b = state.books.find(x => x.id === bk.id); const isNew = !b;
+  if (!b){ b = {id:bk.id, name:bk.name || 'Shared passport', shared:true, members:[], created:Date.now()}; state.books.push(b); }
   b.shared = true; b.members = b.members || [];
   const addMember = m => { if (!m || !m.uid || m.uid === me) return; const ex = b.members.find(x => x.uid === m.uid); if (ex) ex.name = m.name || ex.name; else b.members.push({uid:m.uid, name:m.name || 'A friend'}); };
-  addMember(pkg.from); (pkg.book.members || []).forEach(addMember);
-  if (pkg.book.logo && (!b.logo || b.logo.type === 'auto')){ const hasImg = pkg.photos && pkg.photos['logo-' + b.id]; if (pkg.book.logo.type !== 'image' || hasImg) b.logo = pkg.book.logo; }
-  const byId = new Map(state.stamps.map(s => [s.id, s])); let added = 0, updated = 0;
-  for (const s of pkg.stamps){
-    if (!s || !s.id || !s.place || !/^\d{4}-\d{2}-\d{2}$/.test(s.date || '')) continue;
+  addMember(from); (bk.members || []).forEach(addMember);
+  const photos = bk.photos || {};
+  if (bk.logo && (!b.logo || b.logo.type === 'auto')){ if (bk.logo.type !== 'image' || photos['logo-' + b.id]) b.logo = bk.logo; }
+  const byId = new Map(state.stamps.map(s => [s.id, s])); let added = 0, updated = 0, removed = 0;
+  const gone = new Set();
+  for (const d of (bk.deleted || [])){ if (!d || !d.id) continue; const ex = byId.get(d.id); if (ex && ex.uid && ex.uid === d.uid && ex.uid !== me){ byId.delete(d.id); delPhoto(d.id); removed++; } gone.add(d.id); }
+  b.deleted = [...(b.deleted || []), ...(bk.deleted || []).filter(d => d && d.id && !(b.deleted || []).some(x => x.id === d.id))].slice(-500);
+  for (const s of (bk.stamps || [])){
+    if (!s || !s.id || !s.place || !/^\d{4}-\d{2}-\d{2}$/.test(s.date || '') || gone.has(s.id)) continue;
     const ex = byId.get(s.id);
     if (ex && isMine(ex)) continue;
     if (!ex && s.uid === me) continue;
-    const ns = Object.assign({}, s, {bookId:b.id, hasPhoto: !!(pkg.photos && pkg.photos[s.id]) || !!(ex && ex.hasPhoto)});
+    const ns = Object.assign({}, s, {bookId:b.id, hasPhoto: !!photos[s.id] || !!(ex && ex.hasPhoto) || (!!s.hasPhoto && !!ex && ex.hasPhoto)});
+    if (!photos[s.id] && !(ex && ex.hasPhoto)) ns.hasPhoto = false;
     if (!ex){ added++; byId.set(s.id, ns); } else if ((s.updated||0) > (ex.updated||0)){ updated++; byId.set(s.id, ns); }
   }
   state.stamps = [...byId.values()];
-  for (const [id, p] of Object.entries(pkg.photos || {})) if (byId.has(id) || id === 'logo-' + b.id || id === 'logomask-' + b.id) await putPhoto(id, p);
+  for (const [id, p] of Object.entries(photos)) if (byId.has(id) || id === 'logo-' + b.id || id === 'logomask-' + b.id) await putPhoto(id, p);
   logoCache.delete(b.id);
-  state.current = b.id; page = 0; save(); closeSheet(); showView('book'); renderBook({fade:true}); refreshOtherViews();
+  return {b, isNew, added, updated, removed};
+}
+async function importBook(text){
+  const pkg = JSON.parse(text);
+  if (pkg && pkg.app === 'stamped' && !pkg.kind && Array.isArray(pkg.stamps)){ closeSheet(); await restoreBackup(text); return; }
+  if (!pkg || pkg.app !== 'stamped' || (pkg.kind !== 'book' && pkg.kind !== 'bundle')) throw new Error('not a passport');
+  const items = pkg.kind === 'bundle' ? (pkg.books || []) : [Object.assign({}, pkg.book, {stamps:pkg.stamps, photos:pkg.photos})];
+  if (!items.length || items.some(x => !x || !x.id)) throw new Error('not a passport');
+  const results = []; for (const it of items) results.push(await importBookObj(it, pkg.from));
+  state.current = results[0].b.id; page = 0; save(); closeSheet(); showView('book'); renderBook({fade:true}); refreshOtherViews();
   const who = (pkg.from && pkg.from.name) || 'your friend';
-  toast(isNew ? `Joined "${b.name}" with ${added} ${added===1?'trip':'trips'} from ${who}.` : `Synced with ${who}: ${added} new, ${updated} updated.`, 3600);
+  const sum = results.reduce((a, r) => ({added:a.added + r.added, updated:a.updated + r.updated, removed:a.removed + r.removed}), {added:0, updated:0, removed:0});
+  const extra = sum.removed ? `, ${sum.removed} removed` : '';
+  if (results.length > 1) toast(`Synced ${results.length} books with ${who}: ${sum.added} new, ${sum.updated} updated${extra}.`, 3800);
+  else toast(results[0].isNew ? `Joined "${results[0].b.name}" with ${sum.added} ${sum.added===1?'trip':'trips'} from ${who}.` : `Synced with ${who}: ${sum.added} new, ${sum.updated} updated${extra}.`, 3600);
 }
 
 /* ---------- Welcome ---------- */
@@ -1772,7 +2002,23 @@ window.addEventListener('orientationchange', () => setTimeout(measureGap, 300));
 document.documentElement.classList.add('book-mode');
 document.addEventListener('touchmove', e => { if (document.documentElement.classList.contains('book-mode') && !e.target.closest('.sheet, .welcome')) e.preventDefault(); }, {passive:false});
 scheduleBackupCache();
-if (!state.settings.onboarded) setTimeout(showWelcome, 120);
+function settleThenReveal(){
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);visibility:hidden;pointer-events:none';
+  document.body.appendChild(probe);
+  let last = '', stable = 0; const t0 = performance.now();
+  const tick = () => {
+    const sig = probe.offsetHeight + '|' + getComputedStyle(probe).paddingBottom + '|' + window.innerHeight + '|' + window.innerWidth;
+    if (sig === last) stable++; else { stable = 0; last = sig; }
+    if (stable >= 8 || performance.now() - t0 > 1000){
+      probe.remove(); measureGap(); window.scrollTo(0, 0);
+      document.documentElement.classList.remove('booting');
+      if (!state.settings.onboarded) setTimeout(showWelcome, 80);
+    } else requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+settleThenReveal();
 document.documentElement.dataset.theme = THEMES[state.settings.theme] ? state.settings.theme : 'classic';
 applyTheme(document.documentElement.dataset.theme, false);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderBook());
