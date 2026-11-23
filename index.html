@@ -55,7 +55,10 @@ html[data-theme=vintage] .h1{font-weight:400}
 .track{position:relative;height:100%;perspective:2200px;perspective-origin:20% 50%;transform-style:flat;isolation:isolate}
 .leaf{position:absolute;inset:0;display:none;transform-origin:left center;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;will-change:transform;transform:rotateY(0deg)}
 .leaf.leaving{display:block;z-index:0}
-.leaf.current,.leaf.under,.leaf.turning{display:block}
+.leaf.current,.leaf.under,.leaf.turning,.leaf.near{display:block}
+.leaf.near{z-index:0}
+.track.flipping .stamp{transition:none;pointer-events:none}
+.shade,.curl{will-change:opacity}
 .leaf.current{z-index:2}.leaf.under{z-index:1}.leaf.turning{z-index:3}
 .leaf>.page{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .leaf>.back{position:absolute;inset:0;border-radius:var(--r);background:var(--page);transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
@@ -299,6 +302,46 @@ html[data-theme=vintage] .wl-title{font-weight:400}
 .tags{position:absolute;left:10%;top:8%;display:flex;gap:4px;transform:rotate(calc(var(--rot) * -1));pointer-events:none}
 .who{min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:700 12px/24px Inter,system-ui,sans-serif;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.22);display:inline-flex;align-items:center;justify-content:center}
 .who.link{background:var(--ink);color:var(--page)}
+/* Cover logos */
+.cover-emblem{cursor:pointer;display:grid;place-items:center}
+.cover-emblem svg,.cover-emblem .logo{width:100%;height:100%}
+.logo{display:block;object-fit:contain;border-radius:14px}
+.logo.foil{background:var(--cover-ink);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+.mini-cover .logo{width:28px;height:28px;border-radius:4px}
+.cover-preview{display:flex;justify-content:center;margin:4px 0 16px}
+.mini-book{width:150px;aspect-ratio:3/4;border-radius:12px;background:var(--cover);color:var(--cover-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:var(--shadow);text-align:center;padding:12px}
+.mini-book #coverPreview{width:64px;height:64px;display:grid;place-items:center}
+.mini-book #coverPreview svg,.mini-book #coverPreview .logo{width:100%;height:100%}
+.mini-book b{font-family:var(--head);letter-spacing:3px;font-size:14px}
+.mini-book small{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.85;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.emb-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.emb-opt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px 8px;border-radius:var(--r-sm);border:2px solid transparent;background:var(--surface-2);color:var(--ink);transition:border-color .25s,transform .2s var(--ease)}
+.emb-opt[aria-pressed=true]{border-color:var(--accent)}
+.emb-opt:active{transform:scale(.95)}
+.emb-sw{width:100%;aspect-ratio:1;border-radius:10px;background:var(--cover);display:grid;place-items:center;padding:10px}
+.emb-sw svg{width:100%;height:100%}
+.emb-opt small{font-size:11px;font-weight:600;color:var(--muted)}
+/* Year timeline */
+.compare{display:flex;align-items:center;gap:14px}
+.compare b{display:block;font-size:16px}
+.compare small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.cmp-ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:700;flex-shrink:0;background:var(--surface-2);color:var(--accent-text)}
+.timeline{position:relative;padding-left:20px}
+.timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tl-month{position:relative;margin-bottom:14px;animation:viewIn .5s var(--ease) both;animation-delay:calc(var(--i)*70ms)}
+.tl-month:last-child{margin-bottom:0}
+.tl-head{display:flex;align-items:center;gap:10px;margin:0 0 8px -20px}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--surface);flex-shrink:0}
+.tl-head b{font-size:15.5px}
+.tl-head small{color:var(--muted);font-size:12.5px}
+.tl-item{display:flex;gap:12px;align-items:center;width:100%;padding:8px;border:0;border-radius:var(--r-sm);background:var(--surface-2);color:var(--ink);text-align:left;margin-bottom:6px;transition:transform .2s var(--ease)}
+.tl-item:active{transform:scale(.98)}
+.tl-item .grow{flex:1;min-width:0}
+.tl-thumb{width:58px;height:58px;flex-shrink:0;background:var(--page);border-radius:10px;padding:4px}
+.tl-thumb svg{width:100%;height:100%;overflow:visible}
+.tl-item b{display:block;font-size:15px}
+.tl-item small{display:block;color:var(--muted);font-size:12.5px;margin-top:1px}
+.tl-note{display:block;font-size:13px;margin-top:3px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Toast */
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 100px);z-index:70;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:14px;font-size:14px;max-width:min(92vw,420px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:all .4s var(--ease);pointer-events:none}
 html[data-theme=night] .toast{background:#F2F5FB;color:#0A1428}
@@ -723,12 +766,6 @@ function decorSVG(){
   let w=''; for (let y=30;y<620;y+=48) w += `<path d="M-20 ${y} Q80 ${y-16} 180 ${y} T380 ${y} T580 ${y}"/>`;
   return `<svg class="decor" aria-hidden="true" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 600"><g fill="none" stroke="var(--page-line)" stroke-width="1.2">${w}</g></svg>`;
 }
-function emblemSVG(){
-  const t = state.settings.theme, c = 'var(--cover-ink)';
-  if (t==='vintage') return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2"><circle r="52"/><circle r="44" stroke-dasharray="1 5" stroke-linecap="round"/><path d="M0 -40L8 -8L40 0L8 8L0 40L-8 8L-40 0L-8 -8Z"/><path d="M0 -40L0 40M-40 0H40" stroke-width="1"/><circle r="5"/></g><text y="-47" text-anchor="middle" font-family="Special Elite, monospace" font-size="8" fill="${c}">N</text></svg>`;
-  if (t==='night') return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round"><path d="M-34 14A34 34 0 0 1 34 14"/><path d="M-48 14H48M-38 26H38M-26 38H26" stroke-width="1.4"/><path d="M0 -40V-30M-28 -28L-21 -21M28 -28L21 -21M-42 -6H-34M42 -6H34"/></g></svg>`;
-  return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2"><circle r="44"/><ellipse rx="18" ry="44"/><path d="M0 -44V44M-44 0H44M-38 -22H38M-38 22H38"/><path d="M-52 -52L-44 -44M52 -52L44 -44" stroke-width="1" opacity=".6"/></g></svg>`;
-}
 function placement(s, slot){ const r = rng(seedOf(s) ^ 0x51ED27); const base = [[29,26],[71,29],[29,72],[71,74]][slot]; const spread = state.settings.theme==='night' ? 14 : 26; return {x:base[0] + (r()-.5)*7, y:base[1] + (r()-.5)*6, rot:((r()-.5)*spread).toFixed(1)}; }
 function stampButton(s, slot, cls=''){ const p = placement(s, slot); const {svg, ink} = stampSVG(s); return `<button class="stamp ${cls}" data-id="${s.id}" style="--x:${p.x}%;--y:${p.y}%;--rot:${p.rot}deg;color:${ink}">${svg}${stampTags(s)}</button>`; }
 function leafHTML(inner, cls){ return `<div class="leaf"><div class="page ${cls||''}">${inner}<div class="curl"></div><div class="shade"></div></div><div class="back"></div></div>`; }
@@ -738,7 +775,7 @@ function renderBook(opts={}){
   const pages = []; for (let i=0;i<list.length;i+=4) pages.push(list.slice(i,i+4));
   if (!pages.length || pages[pages.length-1].length === 4) pages.push([]);
   const bk = curBook(); $('#bookName').textContent = bk.name;
-  let html = leafHTML(`<div class="cover-emblem">${emblemSVG()}</div><div class="cover-title">PASSPORT</div><div class="cover-sub">${esc(bk.name)}</div><div class="cover-meta">${st.n} ${st.n===1?'stamp':'stamps'} · ${st.countries.size} ${st.countries.size===1?'country':'countries'}</div>${bk.shared ? `<div class="cover-meta">Shared${bk.members && bk.members.length ? ' with ' + esc(bk.members.map(m => m.name).join(', ')) : ''}</div>` : ''}<div class="cover-hint">Swipe to open →</div>`, 'cover');
+  let html = leafHTML(`<div class="cover-emblem" role="button" aria-label="Change cover logo">${coverEmblemHTML(bk)}</div><div class="cover-title">PASSPORT</div><div class="cover-sub">${esc(bk.name)}</div><div class="cover-meta">${st.n} ${st.n===1?'stamp':'stamps'} · ${st.countries.size} ${st.countries.size===1?'country':'countries'}</div>${bk.shared ? `<div class="cover-meta">Shared${bk.members && bk.members.length ? ' with ' + esc(bk.members.map(m => m.name).join(', ')) : ''}</div>` : ''}<div class="cover-hint">Swipe to open →</div>`, 'cover');
   pages.forEach((p, pi) => {
     const last = pi === pages.length-1;
     let inner = decorSVG() + `<div class="page-no">${pi+1}</div>`;
@@ -766,8 +803,9 @@ function renderDots(){
 }
 /* Page turning */
 let flip = null;
-function setShade(leaf, shade, curl){ const pg = leaf && leaf.firstElementChild; if (!pg) return; const s = pg.querySelector(':scope > .shade'), c = pg.querySelector(':scope > .curl'); if (s) s.style.opacity = shade; if (c) c.style.opacity = curl; }
-function layoutLeaves(){ [...track.children].forEach((el, i) => { el.classList.remove('under','turning','anim'); el.classList.toggle('current', i === page); el.style.transition = 'none'; el.style.transform = 'rotateY(0deg)'; setShade(el, 0, 0); }); }
+function shadeEls(leaf){ if (!leaf) return {}; if (!leaf._fx){ const pg = leaf.firstElementChild; leaf._fx = pg ? {s:pg.querySelector(':scope > .shade'), c:pg.querySelector(':scope > .curl')} : {}; } return leaf._fx; }
+function setShade(leaf, shade, curl){ const fx = shadeEls(leaf); if (fx.s) fx.s.style.opacity = shade; if (fx.c) fx.c.style.opacity = curl; }
+function layoutLeaves(){ [...track.children].forEach((el, i) => { el.classList.remove('under','turning','anim'); el.classList.toggle('current', i === page); el.classList.toggle('near', Math.abs(i - page) === 1); el.style.transition = 'none'; el.style.transform = 'rotateY(0deg)'; setShade(el, 0, 0); }); }
 function startFlip(dir){
   if (flip) return false;
   $$('.leaf.leaving', track).forEach(el => el.classList.remove('leaving'));
@@ -775,68 +813,74 @@ function startFlip(dir){
   if (dir > 0 && page >= pageCount-1) return false;
   if (dir < 0 && page <= 0) return false;
   const cur = L[page];
+  track.classList.add('flipping');
   if (dir > 0){ const nxt = L[page+1]; nxt.classList.add('under'); cur.classList.remove('current'); cur.classList.add('turning'); flip = {dir, turning:cur, under:nxt, angle:0}; }
   else { const prev = L[page-1]; prev.style.transform = 'rotateY(-180deg)'; prev.classList.add('turning'); cur.classList.remove('current'); cur.classList.add('under'); flip = {dir, turning:prev, under:cur, angle:-180}; }
   setFlipAngle(flip, flip.angle);
   return true;
 }
 function setFlipAngle(f, a){
-  f.angle = a; f.turning.style.transform = `rotateY(${a}deg)`;
+  f.angle = a; f.turning.style.transform = `rotateY(${a.toFixed(2)}deg)`;
   const p = -a/180;
   setShade(f.turning, p*.25, Math.sin(p*Math.PI)*.95);
-  setShade(f.under, (1-p)*.32, 0);
+  setShade(f.under, (1-p)*.3, 0);
 }
-function finishFlip(complete){
+let rafId = 0, pendingA = null;
+function queueAngle(a){ pendingA = a; if (rafId) return; rafId = requestAnimationFrame(() => { rafId = 0; if (flip && pendingA != null) setFlipAngle(flip, pendingA); }); }
+function finishFlip(complete, v=0){
   const f = flip; if (!f) return;
+  if (rafId){ cancelAnimationFrame(rafId); rafId = 0; }
   const target = f.dir > 0 ? (complete ? -180 : 0) : (complete ? 0 : -180);
-  f.turning.classList.add('anim'); f.under.classList.add('anim');
-  const ms = Math.max(260, Math.abs(target - f.angle) / 180 * 720);
-  [f.turning, f.under].forEach(el => { el.style.transition = `transform ${ms}ms cubic-bezier(.3,.75,.25,1)`; const pg = el.firstElementChild; $$(':scope > .shade, :scope > .curl', pg).forEach(x => x.style.transition = `opacity ${ms}ms ease`); });
+  const remain = Math.abs(target - f.angle) / 180;
+  const ms = Math.round(Math.max(200, Math.min(620, remain * 640 / (1 + Math.min(2.5, Math.abs(v))))));
+  const ease = 'cubic-bezier(.2,.8,.25,1)';
+  [f.turning, f.under].forEach(el => { el.style.transition = `transform ${ms}ms ${ease}`; const fx = shadeEls(el); [fx.s, fx.c].forEach(x => { if (x) x.style.transition = `opacity ${ms}ms ${ease}`; }); });
   requestAnimationFrame(() => setFlipAngle(f, target));
-  if (complete) setTimeout(rustle, 40);
+  if (complete) setTimeout(rustle, 30);
   let done = false;
   const end = () => {
     if (done) return; done = true;
     const leaving = complete ? (f.dir > 0 ? f.turning : f.under) : (f.dir > 0 ? f.under : f.turning);
-    [f.turning, f.under].forEach(el => { const pg = el.firstElementChild; if (pg) $$(':scope > .shade, :scope > .curl', pg).forEach(x => x.style.transition = 'none'); });
+    [f.turning, f.under].forEach(el => { const fx = shadeEls(el); [fx.s, fx.c].forEach(x => { if (x) x.style.transition = 'none'; }); });
     if (complete) page += f.dir;
-    flip = null;
+    flip = null; track.classList.remove('flipping');
     leaving.classList.add('leaving');
     layoutLeaves(); renderDots();
     requestAnimationFrame(() => requestAnimationFrame(() => { leaving.classList.remove('leaving'); }));
   };
-  setTimeout(end, ms + 40);
+  setTimeout(end, ms + 30);
 }
 function goPage(p){
   p = Math.max(0, Math.min(pageCount-1, p));
   if (p === page || flip) return;
-  if (Math.abs(p - page) === 1){ if (startFlip(p > page ? 1 : -1)) requestAnimationFrame(() => finishFlip(true)); return; }
   page = p; layoutLeaves(); renderDots();
-  const cur = track.children[page]; if (cur && cur.animate) cur.animate([{opacity:0, transform:'translateX(14px)'},{opacity:1, transform:'none'}], {duration:380, easing:'cubic-bezier(.22,1,.36,1)'});
 }
 $('#prevPage').addEventListener('click', () => goPage(page-1));
 $('#nextPage').addEventListener('click', () => goPage(page+1));
 let drag = null, suppressClick = false;
 viewport.addEventListener('scroll', () => { if (viewport.scrollLeft) viewport.scrollLeft = 0; });
-viewport.addEventListener('pointerdown', e => { unlockAudio(); if (flip) return; if (e.pointerType === 'mouse' && e.button !== 0) return; drag = {x:e.clientX, y:e.clientY, dx:0, moved:false, t:performance.now(), lastX:e.clientX, lastT:performance.now(), v:0, id:e.pointerId, locked:null, started:false, edge:false}; });
+viewport.addEventListener('pointerdown', e => { unlockAudio(); if (flip) return; if (e.pointerType === 'mouse' && e.button !== 0) return; drag = {x:e.clientX, y:e.clientY, dx:0, moved:false, lastX:e.clientX, lastT:performance.now(), v:0, id:e.pointerId, locked:null, started:false, edge:false, w:viewport.clientWidth}; });
 viewport.addEventListener('pointermove', e => {
   if (!drag || e.pointerId !== drag.id) return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (drag.locked === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)){ drag.locked = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y'; if (drag.locked === 'x'){ try { viewport.setPointerCapture(e.pointerId); } catch(err){} } }
+  if (drag.locked === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)){ drag.locked = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y'; if (drag.locked === 'x'){ try { viewport.setPointerCapture(e.pointerId); } catch(err){} } }
   if (drag.locked !== 'x') return;
-  const now = performance.now(); drag.v = (e.clientX - drag.lastX) / Math.max(1, now - drag.lastT); drag.lastX = e.clientX; drag.lastT = now;
+  const now = performance.now(), dt = Math.max(1, now - drag.lastT);
+  drag.v = drag.v * .6 + ((e.clientX - drag.lastX) / dt) * .4; drag.lastX = e.clientX; drag.lastT = now;
   drag.moved = true; drag.dx = dx;
-  const w = viewport.clientWidth;
+  const w = drag.w;
   if (!drag.started && !drag.edge){ const dir = dx < 0 ? 1 : -1; if (startFlip(dir)) drag.started = true; else drag.edge = dir > 0; }
-  if (drag.started){ const f = flip; const k = dx / w * 180 * 1.15; const a = f.dir > 0 ? Math.max(-180, Math.min(0, k)) : Math.max(-180, Math.min(0, -180 + k)); setFlipAngle(f, a); }
+  if (drag.started){ const f = flip; const k = dx / w * 180 * 1.1; queueAngle(f.dir > 0 ? Math.max(-180, Math.min(0, k)) : Math.max(-180, Math.min(0, -180 + k))); }
   else if (drag.edge){ const cur = track.children[page]; cur.style.transform = `rotateY(${Math.max(-12, Math.min(0, dx / w * 30))}deg)`; }
 });
 function endDrag(e){
   if (!drag || (e && e.pointerId !== drag.id)) return;
   const d = drag; drag = null;
   if (!d.moved) return;
-  if (d.started && flip){ const f = flip; const complete = f.dir > 0 ? (f.angle < -75 || d.v < -.35) : (f.angle > -105 || d.v > .35); finishFlip(complete); }
-  else if (d.edge){ const cur = track.children[page]; cur.style.transition = 'transform .45s cubic-bezier(.34,1.56,.64,1)'; cur.style.transform = 'rotateY(0deg)'; setTimeout(() => { cur.style.transition = ''; }, 460); }
+  if (performance.now() - d.lastT > 90) d.v = 0;
+  if (d.started && flip){ const f = flip; const a = pendingA != null ? pendingA : f.angle; f.angle = a; const complete = f.dir > 0 ? (a < -70 || d.v < -.3) : (a > -110 || d.v > .3); finishFlip(complete, d.v); }
+  else if (d.edge){ const cur = track.children[page]; cur.style.transition = 'transform .45s cubic-bezier(.34,1.56,.64,1)'; cur.style.transform = 'rotateY(0deg)'; setTimeout(() => { cur.style.transition = 'none'; }, 460); }
+  pendingA = null;
   suppressClick = true; setTimeout(() => suppressClick = false, 80);
 }
 viewport.addEventListener('pointerup', endDrag);
@@ -844,6 +888,7 @@ viewport.addEventListener('pointercancel', endDrag);
 viewport.addEventListener('click', e => {
   if (suppressClick) { e.preventDefault(); e.stopPropagation(); return; }
   const b = e.target.closest('[data-id]'); if (b) return openDetail(b.dataset.id);
+  if (e.target.closest('.cover-emblem')) return openCoverPicker();
   const a = e.target.closest('[data-act]'); if (a) handleAct(a.dataset.act);
 });
 function handleAct(act){ if (act === 'add') openEditor(); else if (act === 'sample') loadSamples(); }
@@ -857,7 +902,7 @@ function landStamp(id){
     setTimeout(() => { thunk(); buzz(22); }, 400);
   };
   if (el) el.style.visibility = 'hidden';
-  if (page !== target){ const far = Math.abs(target - page) > 1; goPage(target); setTimeout(go, far ? 420 : 800); } else setTimeout(go, 60);
+  if (page !== target){ goPage(target); setTimeout(go, 90); } else setTimeout(go, 60);
 }
 
 /* ---------- Backup nudge ---------- */
@@ -1071,43 +1116,42 @@ let selYear = null;
 function renderYear(){
   const root = $('#view-year'); const list = sorted(scopeKey());
   const years = [...new Set(list.map(s => parts(s.date).y))].sort((a,b) => b-a);
-  if (!years.length){ root.innerHTML = `<div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your year, in stamps</h1></div></div>` + emptyCard('Nothing here yet', 'Once you have a few stamps, your year comes together here with a replay you can watch.'); bindEmpty(root); return; }
+  if (!years.length){ root.innerHTML = `<div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your year, in stamps</h1></div></div>` + scopeChips() + emptyCard('Nothing here yet', 'Once you have a few stamps, your year comes together here as a story you can replay and share.'); bindEmpty(root); bindScope(root, renderYear); return; }
   if (!years.includes(selYear)) selYear = years[0];
   const ys = list.filter(s => parts(s.date).y === selYear);
+  const prevYear = list.filter(s => parts(s.date).y === selYear - 1);
   const before = list.filter(s => parts(s.date).y < selYear);
-  const prevCountries = new Set(before.map(s => s.cc).filter(Boolean));
+  const seenC = new Set(before.map(s => s.cc).filter(Boolean)), seenP = new Set(before.map(s => norm(s.place))), seenK = new Set(before.map(s => s.kind));
   const st = computeStats(ys);
-  const newC = [...st.countries].filter(c => !prevCountries.has(c));
-  const busiest = st.months.indexOf(Math.max(...st.months));
-  const maxM = Math.max(1, ...st.months);
-  const topCountry = Object.entries(st.countryCounts).sort((a,b) => b[1]-a[1])[0];
-  const sentence = `${st.n} ${st.n===1?'stamp':'stamps'} across ${st.countries.size} ${st.countries.size===1?'country':'countries'}${newC.length ? `, ${newC.length} of them new to you` : ''}.${st.farPlace ? ` Farthest from home: ${esc(st.farPlace.place)}.` : ''}`;
+  const newC = [...st.countries].filter(c => !seenC.has(c));
+  const newPlaces = [...new Set(ys.map(s => norm(s.place)))].filter(p => !seenP.has(p)).length;
+  const newKinds = [...new Set(ys.map(s => s.kind))].filter(k => !seenK.has(k) && before.length);
+  const months = {}; ys.forEach(s => { const m = parts(s.date).m; (months[m] = months[m] || []).push(s); });
+  const mkeys = Object.keys(months).map(Number).sort((a,b) => a-b);
+  const busiest = mkeys.reduce((a,m) => months[m].length > (months[a]||[]).length ? m : a, mkeys[0]);
+  const delta = prevYear.length ? ys.length - prevYear.length : null;
+  const plural = (n, w, p) => `${n} ${n===1 ? w : (p || w + 's')}`;
+  const story = `${plural(ys.length,'stamp')} across ${plural(mkeys.length,'month')}${newC.length ? `, with ${plural(newC.length,'new country','new countries')}` : ''}. ${mkeys.length > 1 ? `${MONTH_LONG[busiest-1]} was your busiest month.` : `All of it in ${MONTH_LONG[mkeys[0]-1]}.`}`;
+  const kindLabel = k => ((KINDS.find(x => x[0]===k) || [])[1] || 'place').toLowerCase();
   root.innerHTML = `
-    <div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your year, in stamps</h1></div></div>
+    <div class="book-meta"><div><div class="eyebrow">Year in review</div><h1 class="h1">Your ${selYear}</h1></div></div>
     ${scopeChips()}<div class="year-chips" role="group" aria-label="Choose a year">${years.map(y => `<button class="ychip" data-y="${y}" aria-pressed="${y===selYear}">${y}</button>`).join('')}</div>
     <div class="stack">
-      <div class="card hero"><div class="eyebrow">${selYear} in review</div><div class="big" data-count="${st.n}">0</div><p>${sentence}</p><button class="btn primary" id="playReplay"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Replay my year</button> <button class="btn" id="shareYear">Share</button></div>
-      <div class="tiles">
-        <div class="tile" style="--i:0"><div class="num" data-count="${st.countries.size}">0</div><div class="lbl">Countries</div></div>
-        <div class="tile" style="--i:1"><div class="num" data-count="${newC.length}">0</div><div class="lbl">New countries</div></div>
-        <div class="tile" style="--i:2"><div class="num" data-count="${st.places.size}">0</div><div class="lbl">Places</div></div>
-        <div class="tile" style="--i:3"><div class="num" data-count="${Math.round(st.farKm)}" data-suffix=" km">0</div><div class="lbl">Farthest from home</div>${st.farPlace ? `<div class="sub">${esc(st.farPlace.place)}</div>` : ''}</div>
+      <div class="card hero"><div class="eyebrow">The story of ${selYear}</div><p style="font-size:17px;color:var(--ink);margin:10px 0 16px">${esc(story)}</p>
+        <div class="actions"><button class="btn primary" id="playReplay"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Replay</button><button class="btn" id="shareYear">Share</button></div></div>
+      ${delta != null ? `<div class="card compare"><span class="cmp-ic ${delta >= 0 ? 'up' : 'down'}" aria-hidden="true">${delta >= 0 ? '↑' : '↓'}</span><div><b>${delta === 0 ? `Same as ${selYear-1}` : `${plural(Math.abs(delta),'stamp')} ${delta > 0 ? 'more' : 'fewer'} than ${selYear-1}`}</b><small>${plural(prevYear.length,'stamp')} in ${selYear-1} · ${plural(ys.length,'stamp')} in ${selYear}</small></div></div>` : ''}
+      <div class="card"><h3>Month by month</h3><div class="timeline">${mkeys.map((m, i) => `<div class="tl-month" style="--i:${i}"><div class="tl-head"><span class="tl-dot" aria-hidden="true"></span><b>${MONTH_LONG[m-1]}</b><small>${plural(months[m].length,'stamp')}</small></div>${months[m].map(s => `<button class="tl-item" data-id="${s.id}"><span class="tl-thumb">${stampSVG(s, null, {label:false}).svg}</span><span class="grow"><b>${esc(s.place)}</b><small>${esc([countryName(s.cc), fmtLong(s.date)].filter(Boolean).join(' · '))}${!isMine(s) ? ` · ${esc(s.by || 'A friend')}` : ''}</small>${s.note ? `<span class="tl-note">${esc(s.note)}</span>` : ''}</span></button>`).join('')}</div>`).join('')}</div></div>
+      <div class="card"><h3>Firsts in ${selYear}</h3>
+        ${newC.map(c => `<div class="list-row">${flagHTML(c)}<div class="grow"><b>First time in ${esc(countryName(c))}</b><small>${esc(ys.find(s => s.cc === c).place)} · ${fmtLong(ys.find(s => s.cc === c).date)}</small></div></div>`).join('')}
+        ${newKinds.map(k => `<div class="list-row"><div class="grow"><b>Your first ${esc(kindLabel(k))} stamp</b><small>${esc(ys.find(s => s.kind === k).place)}</small></div></div>`).join('')}
+        <div class="list-row"><div class="grow"><b>${plural(newPlaces,'place')} you'd never stamped before</b><small>${newPlaces === new Set(ys.map(s => norm(s.place))).size ? 'Every stop was new' : 'The rest were return visits'}</small></div></div>
       </div>
-      <div class="card"><h3>Month by month</h3><div class="months">${st.months.map((n,i) => `<div class="mcol"><div class="bar ${n && i===busiest ? 'hot' : n ? 'has' : ''}" style="--i:${i};height:${n ? Math.max(12, n/maxM*100) : 4}%" title="${MONTH_LONG[i]}: ${n}"></div><div class="mlabel">${MONTH_LONG[i][0]}</div></div>`).join('')}</div><p class="help" style="margin:12px 0 0">Busiest month: <b>${MONTH_LONG[busiest]}</b> with ${st.months[busiest]} ${st.months[busiest]===1?'stamp':'stamps'}.</p></div>
-      ${newC.length ? `<div class="card"><h3>New countries</h3>${newC.map(c => `<div class="list-row">${flagHTML(c)}<div class="grow"><b>${esc(countryName(c))}</b><small>First stamp: ${esc(ys.find(s => s.cc === c).place)}</small></div></div>`).join('')}</div>` : ''}
-      <div class="card"><h3>Highlights</h3>
-        <div class="list-row"><div class="grow"><b>${esc(st.first.place)}</b><small>First stamp of the year · ${fmtLong(st.first.date)}</small></div></div>
-        <div class="list-row"><div class="grow"><b>${esc(st.last.place)}</b><small>Latest stamp · ${fmtLong(st.last.date)}</small></div></div>
-        ${topCountry ? `<div class="list-row">${flagHTML(topCountry[0])}<div class="grow"><b>${esc(countryName(topCountry[0]))}</b><small>Most-stamped country</small></div><span class="count-pill">${topCountry[1]}</span></div>` : ''}
-      </div>
-      <div class="card"><h3>Every stamp</h3><div class="minis">${ys.map(s => `<button class="mini" data-id="${s.id}" aria-label="${esc(s.place)}">${stampSVG(s, null, {label:false}).svg}</button>`).join('')}</div></div>
     </div>`;
   $$('.ychip[data-y]', root).forEach(b => b.addEventListener('click', () => { selYear = +b.dataset.y; renderYear(); }));
   bindScope(root, renderYear);
-  $$('.mini', root).forEach(b => b.addEventListener('click', () => openDetail(b.dataset.id)));
+  $$('.tl-item', root).forEach(b => b.addEventListener('click', () => openDetail(b.dataset.id)));
   $('#playReplay').addEventListener('click', () => playReplay(selYear));
   $('#shareYear').addEventListener('click', async e => { const btn = e.currentTarget; btn.disabled = true; btn.textContent = 'Making…'; try { const c = await makeYearCard(selYear); openShareSheet(c, `Stamped-${selYear}.png`, `${selYear} in stamps`); } catch(err){ toast('Couldn\'t make the image.'); } btn.disabled = false; btn.textContent = 'Share'; });
-  countUp(root);
 }
 let replayTimers = [];
 function playReplay(year){
@@ -1271,6 +1315,7 @@ function renderSettings(){
 async function buildBackup(){
   const photos = {};
   for (const s of state.stamps){ if (s.hasPhoto){ const p = await getPhoto(s.id); if (p) photos[s.id] = p; } }
+  for (const b of state.books){ if (b.logo && b.logo.type === 'image'){ for (const k of ['logo-', 'logomask-']){ const p = await getPhoto(k + b.id); if (p) photos[k + b.id] = p; } } }
   return JSON.stringify({app:'stamped', version:2, exported:new Date().toISOString(), settings:state.settings, books:state.books, current:state.current, stamps:state.stamps, photos});
 }
 function markBackedUp(){ state.settings.lastBackup = Date.now(); state.settings.stampsAtBackup = state.stamps.length; save(); renderNudge(); if (currentView === 'settings') renderSettings(); }
@@ -1397,6 +1442,83 @@ function openShareSheet(canvas, filename, label){
   }, 'image/png');
 }
 
+/* ---------- Cover logos ---------- */
+const EMBLEMS = {
+  globe:['Globe','<circle r="44"/><ellipse rx="18" ry="44"/><path d="M0 -44V44M-44 0H44M-38 -22H38M-38 22H38"/>'],
+  compass:['Compass','<circle r="52"/><circle r="44" stroke-dasharray="1 5"/><path d="M0 -40L8 -8L40 0L8 8L0 40L-8 8L-40 0L-8 -8Z"/><circle r="5"/>'],
+  sun:['Sunrise','<path d="M-34 14A34 34 0 0 1 34 14"/><path d="M-48 14H48M-38 26H38M-26 38H26" stroke-width="1.6"/><path d="M0 -40V-30M-28 -28L-21 -21M28 -28L21 -21M-42 -6H-34M42 -6H34"/>'],
+  plane:['Plane','<path d="M46 0C46 -4 40 -5 34 -5L10 -5L-8 -34L-18 -34L-6 -5L-28 -5L-36 -16L-44 -16L-38 -2L-38 2L-44 16L-36 16L-28 5L-6 5L-18 34L-8 34L10 5L34 5C40 5 46 4 46 0Z"/>'],
+  mountain:['Peaks','<path d="M-48 34L-16 -20L0 6L16 -30L48 34Z"/><path d="M-24 -6L-16 -20L-8 -6M8 -16L16 -30L24 -16"/>'],
+  palm:['Palm','<path d="M4 44Q0 10 -4 -14M-4 -14Q-24 -30 -44 -16M-4 -14Q-14 -40 4 -46M-4 -14Q14 -36 36 -26M-4 -14Q20 -18 30 4M-4 -14Q-26 -10 -32 10M-30 44H30"/>'],
+  maple:['Maple leaf','<path d="M0 -48L8 -30L20 -36L16 -12L34 -20L30 -8L44 -4L26 10L30 18L8 14L4 30H-4L-8 14L-30 18L-26 10L-44 -4L-30 -8L-34 -20L-16 -12L-20 -36L-8 -30Z"/><path d="M0 30V48"/>'],
+  heart:['Heart','<path d="M0 40C-60 0 -40 -44 0 -18C40 -44 60 0 0 40Z"/>'],
+  anchor:['Anchor','<circle cy="-36" r="8"/><path d="M0 -28V40M-20 -14H20M-38 14Q-36 40 0 40Q36 40 38 14M-44 20L-38 12L-30 20M44 20L38 12L30 20"/>'],
+  star:['Star','<path d="M0 -46L11 -15L44 -14L18 6L27 37L0 19L-27 37L-18 6L-44 -14L-11 -15Z"/>']
+};
+const THEME_EMBLEM = {classic:'globe', vintage:'compass', night:'sun'};
+function emblemSVG(key){
+  key = EMBLEMS[key] ? key : THEME_EMBLEM[state.settings.theme] || 'globe';
+  const c = 'var(--cover-ink)';
+  return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g fill="none" stroke="${c}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${EMBLEMS[key][1]}</g>${key==='compass' ? `<text y="-47" text-anchor="middle" font-family="Special Elite, monospace" font-size="8" fill="${c}">N</text>` : ''}</svg>`;
+}
+function monoSVG(text){
+  const t = (text || '?').slice(0, 3).toUpperCase(); const fs = t.length === 1 ? 54 : t.length === 2 ? 42 : 32;
+  return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><circle r="52" fill="none" stroke="var(--cover-ink)" stroke-width="2.4"/><circle r="45" fill="none" stroke="var(--cover-ink)" stroke-width="1.4" stroke-dasharray="1 4.5" stroke-linecap="round"/><text y="${fs*.34}" text-anchor="middle" style="font-family:var(--head)" font-weight="700" font-size="${fs}" fill="var(--cover-ink)" letter-spacing="1">${esc(t)}</text></svg>`;
+}
+const logoCache = new Map();
+async function loadLogo(id){ const [orig, mask] = await Promise.all([getPhoto('logo-' + id), getPhoto('logomask-' + id)]); if (orig) logoCache.set(id, {orig, mask: mask || orig}); return logoCache.get(id); }
+function coverEmblemHTML(b){
+  const L = b.logo || {type:'auto'};
+  if (L.type === 'emblem') return emblemSVG(L.key);
+  if (L.type === 'mono') return monoSVG(L.text);
+  if (L.type === 'image'){
+    const c = logoCache.get(b.id);
+    if (!c){ loadLogo(b.id).then(r => { if (r) refreshCovers(); }); return emblemSVG(); }
+    return L.foil ? `<span class="logo foil" style="-webkit-mask-image:url(${c.mask});mask-image:url(${c.mask})"></span>` : `<img class="logo" src="${c.orig}" alt="">`;
+  }
+  return emblemSVG();
+}
+function refreshCovers(){
+  const el = track.querySelector('.cover .cover-emblem'); if (el) el.innerHTML = coverEmblemHTML(curBook());
+  const pv = $('#coverPreview'); if (pv) pv.innerHTML = coverEmblemHTML(curBook());
+}
+async function processLogo(file){
+  const url = URL.createObjectURL(file);
+  const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+  const k = Math.min(1, 480 / Math.max(img.width, img.height)); const w = Math.max(1, Math.round(img.width*k)), h = Math.max(1, Math.round(img.height*k));
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, w, h); URL.revokeObjectURL(url);
+  const orig = c.toDataURL('image/png');
+  const d = ctx.getImageData(0, 0, w, h), px = d.data;
+  let clear = 0; for (let i = 3; i < px.length; i += 4) if (px[i] < 240) clear++;
+  const hasAlpha = clear > (px.length/4) * .02;
+  const lumAt = i => px[i]*.299 + px[i+1]*.587 + px[i+2]*.114;
+  const bg = hasAlpha ? 0 : [0, (w-1)*4, (h-1)*w*4, ((h-1)*w + w - 1)*4].reduce((s, i) => s + lumAt(i), 0) / 4;
+  for (let i = 0; i < px.length; i += 4){ const a = hasAlpha ? px[i+3] : Math.max(0, Math.min(255, (Math.abs(lumAt(i) - bg) - 28) * 2.4)); px[i] = px[i+1] = px[i+2] = 255; px[i+3] = a; }
+  ctx.putImageData(d, 0, 0);
+  return {orig, mask: c.toDataURL('image/png')};
+}
+function openCoverPicker(){
+  const b = curBook(); const L = b.logo || {type:'auto'};
+  const opt = (key, label, svg, on) => `<button class="emb-opt" data-emb="${key}" aria-pressed="${on}" aria-label="${esc(label)}"><span class="emb-sw">${svg}</span><small>${esc(label)}</small></button>`;
+  openSheet(`<h2 id="sheetTitle">Cover logo</h2><p class="sheet-sub">For "${esc(b.name)}". Pick an emblem, use initials, or upload your own.</p>
+    <div class="cover-preview"><div class="mini-book"><span id="coverPreview">${coverEmblemHTML(b)}</span><b>PASSPORT</b><small>${esc(b.name)}</small></div></div>
+    <div class="emb-grid">${opt('auto', 'Style default', emblemSVG(), L.type === 'auto')}${Object.entries(EMBLEMS).map(([k, v]) => opt(k, v[0], emblemSVG(k), L.type === 'emblem' && L.key === k)).join('')}</div>
+    <div class="field" style="margin-top:16px"><label for="monoText">Initials</label><div class="row"><input class="input" id="monoText" maxlength="3" placeholder="e.g. L&M" value="${esc(L.type === 'mono' ? L.text : '')}"><button class="btn" id="monoUse" style="flex:0 0 auto">Use initials</button></div></div>
+    <label class="btn block file-label" style="margin-top:4px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>${L.type === 'image' ? 'Replace your logo' : 'Upload your own logo'}<input type="file" id="logoFile" accept="image/*"></label>
+    ${L.type === 'image' ? `<div class="switch-row" style="margin-top:6px"><span>Gold foil <small style="color:var(--muted)">(one colour, like a real passport)</small></span><label class="switch"><input type="checkbox" id="logoFoil" ${L.foil ? 'checked' : ''} aria-label="Gold foil"><span></span></label></div>` : ''}
+    <button class="btn primary block" id="coverDone" style="margin-top:12px">Done</button>`);
+  const apply = logo => { b.logo = logo; save(); refreshCovers(); };
+  $$('[data-emb]', sheet).forEach(btn => btn.addEventListener('click', () => { const k = btn.dataset.emb; apply(k === 'auto' ? {type:'auto'} : {type:'emblem', key:k}); $$('[data-emb]', sheet).forEach(x => x.setAttribute('aria-pressed', x === btn)); buzz(8); }));
+  $('#monoUse').addEventListener('click', () => { const t = $('#monoText').value.trim(); if (!t){ toast('Type up to 3 letters.'); return; } apply({type:'mono', text:t}); $$('[data-emb]', sheet).forEach(x => x.setAttribute('aria-pressed', 'false')); });
+  $('#logoFile').addEventListener('change', async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    try { const r = await processLogo(f); await putPhoto('logo-' + b.id, r.orig); await putPhoto('logomask-' + b.id, r.mask); logoCache.set(b.id, r); apply({type:'image', foil:true}); openCoverPicker(); toast('Logo added. Turn off gold foil to keep its colours.'); }
+    catch(err){ toast('That image couldn\'t be used. Try a PNG or JPG.'); }
+  });
+  const foil = $('#logoFoil'); if (foil) foil.addEventListener('change', e => apply({type:'image', foil:e.target.checked}));
+  $('#coverDone').addEventListener('click', closeSheet);
+}
+
 /* ---------- Books & shared passports ---------- */
 let scope = 'book';
 const scopeKey = () => state.books.length > 1 ? scope : 'book';
@@ -1428,19 +1550,20 @@ function switchBook(id){
 }
 function openBooks(){
   const cur = curBook();
-  const rows = state.books.map(b => `<button class="book-row" data-book="${b.id}" aria-pressed="${b.id===state.current}"><span class="mini-cover" aria-hidden="true"><svg viewBox="-60 -60 120 120"><circle r="36" fill="none" stroke="var(--cover-ink)" stroke-width="5"/><path d="M-36 0H36M0 -36V36" stroke="var(--cover-ink)" stroke-width="4"/></svg></span><span class="grow"><b>${esc(b.name)}</b><small>${esc(bookSub(b))}</small></span>${b.id===state.current ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-text)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Open"><path d="M5 12l5 5 9-10"/></svg>' : ''}</button>`).join('');
+  const rows = state.books.map(b => `<button class="book-row" data-book="${b.id}" aria-pressed="${b.id===state.current}"><span class="mini-cover" aria-hidden="true">${coverEmblemHTML(b)}</span><span class="grow"><b>${esc(b.name)}</b><small>${esc(bookSub(b))}</small></span>${b.id===state.current ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-text)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Open"><path d="M5 12l5 5 9-10"/></svg>' : ''}</button>`).join('');
   openSheet(`<h2 id="sheetTitle">Your books</h2><p class="sheet-sub">Keep separate passports for different trips, people or years.</p>
     <div class="book-list">${rows}</div>
     <div class="btn-grid" style="margin-top:14px"><button class="btn small" id="newBook">New book</button><button class="btn small" id="joinBook">Join a shared passport</button></div>
     <div class="sub-card"><div class="label" style="margin-bottom:10px">This book · ${esc(cur.name)}</div>
       <button class="btn primary block" id="shareBook">${cur.shared ? 'Sync with friends' : 'Share with friends'}</button>
-      <div class="btn-grid" style="margin-top:10px"><button class="btn small" id="editBook">Rename</button>${state.books.length > 1 ? '<button class="btn small danger" id="delBook">Delete book</button>' : '<span></span>'}</div>
+      <div class="btn-grid" style="margin-top:10px"><button class="btn small" id="editBook">Rename</button><button class="btn small" id="coverBook">Cover logo</button></div>${state.books.length > 1 ? '<button class="btn small danger block" id="delBook" style="margin-top:10px">Delete book</button>' : ''}
     </div>`);
   $$('[data-book]', sheet).forEach(b => b.addEventListener('click', () => switchBook(b.dataset.book)));
   $('#newBook').addEventListener('click', () => openBookForm(null));
   $('#joinBook').addEventListener('click', openJoin);
   $('#shareBook').addEventListener('click', openShareBook);
   $('#editBook').addEventListener('click', () => openBookForm(cur));
+  $('#coverBook').addEventListener('click', openCoverPicker);
   const del = $('#delBook');
   if (del){ let armed = false; del.addEventListener('click', () => {
     if (!armed){ armed = true; del.textContent = 'Tap again: deletes its stamps'; return; }
@@ -1464,8 +1587,9 @@ async function buildBookPackage(b, withPhotos){
   const me = state.settings.uid, myName = (state.settings.name || '').trim() || 'A friend';
   const stamps = state.stamps.filter(s => s.bookId === b.id).map(s => Object.assign({}, s, {by: s.uid === me ? myName : s.by, hasPhoto: withPhotos ? !!s.hasPhoto : false}));
   const photos = {};
+  if (withPhotos && b.logo && b.logo.type === 'image'){ const o = await getPhoto('logo-' + b.id), m = await getPhoto('logomask-' + b.id); if (o) photos['logo-' + b.id] = o; if (m) photos['logomask-' + b.id] = m; }
   if (withPhotos){ for (const s of stamps){ if (s.hasPhoto){ const p = await getPhoto(s.id); if (p) photos[s.id] = p; else s.hasPhoto = false; } } }
-  return JSON.stringify({app:'stamped', kind:'book', version:1, sent:new Date().toISOString(), from:{uid:me, name:myName}, book:{id:b.id, name:b.name, members:b.members || []}, stamps, photos});
+  return JSON.stringify({app:'stamped', kind:'book', version:1, sent:new Date().toISOString(), from:{uid:me, name:myName}, book:{id:b.id, name:b.name, members:b.members || [], logo:b.logo || null}, stamps, photos});
 }
 async function sendTextFile(txt, name, title){
   let file = null; try { file = new File([txt], name, {type:'application/json'}); } catch(e){}
@@ -1520,6 +1644,7 @@ async function importBook(text){
   b.shared = true; b.members = b.members || [];
   const addMember = m => { if (!m || !m.uid || m.uid === me) return; const ex = b.members.find(x => x.uid === m.uid); if (ex) ex.name = m.name || ex.name; else b.members.push({uid:m.uid, name:m.name || 'A friend'}); };
   addMember(pkg.from); (pkg.book.members || []).forEach(addMember);
+  if (pkg.book.logo && (!b.logo || b.logo.type === 'auto')){ const hasImg = pkg.photos && pkg.photos['logo-' + b.id]; if (pkg.book.logo.type !== 'image' || hasImg) b.logo = pkg.book.logo; }
   const byId = new Map(state.stamps.map(s => [s.id, s])); let added = 0, updated = 0;
   for (const s of pkg.stamps){
     if (!s || !s.id || !s.place || !/^\d{4}-\d{2}-\d{2}$/.test(s.date || '')) continue;
@@ -1530,7 +1655,8 @@ async function importBook(text){
     if (!ex){ added++; byId.set(s.id, ns); } else if ((s.updated||0) > (ex.updated||0)){ updated++; byId.set(s.id, ns); }
   }
   state.stamps = [...byId.values()];
-  for (const [id, p] of Object.entries(pkg.photos || {})) if (byId.has(id)) await putPhoto(id, p);
+  for (const [id, p] of Object.entries(pkg.photos || {})) if (byId.has(id) || id === 'logo-' + b.id || id === 'logomask-' + b.id) await putPhoto(id, p);
+  logoCache.delete(b.id);
   state.current = b.id; page = 0; save(); closeSheet(); showView('book'); renderBook({fade:true}); refreshOtherViews();
   const who = (pkg.from && pkg.from.name) || 'your friend';
   toast(isNew ? `Joined "${b.name}" with ${added} ${added===1?'trip':'trips'} from ${who}.` : `Synced with ${who}: ${added} new, ${updated} updated.`, 3600);
