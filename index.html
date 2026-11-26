@@ -446,8 +446,8 @@ html[data-theme=night] .lg-pin{background:#9CC3FF;border-color:#0A1428}
 .lg-route{width:18px;border-top:2px dashed var(--frame-muted)}
 .lg-wish{width:10px;height:10px;border-radius:50%;border:1.5px dashed var(--frame-muted)}
 /* bucket list */
-.wish-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 8px;margin-top:6px}
-.wish{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:var(--ink);padding:4px 2px;text-align:center}
+.wish-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;margin-top:6px}
+.wish{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;background:none;border:0;color:var(--ink);padding:4px 2px;text-align:center}
 .wish .ws{width:84px;height:84px;display:block}.wish .ws svg{width:100%;height:100%}
 .wish b{font-size:13px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .wish small{font-size:11.5px;color:var(--muted)}
@@ -1373,7 +1373,7 @@ function openDetail(id){
   if (s.hasPhoto) getPhoto(s.id).then(p => { const box = $('#detailPhoto'); if (p && box) box.innerHTML = `<img class="detail-photo" src="${p}" alt="Photo from ${esc(s.place)}">`; });
   $('#editStamp').addEventListener('click', () => { closeSheet(); setTimeout(() => openEditor(s), 420); });
   if (dj) $('#openTripBtn').addEventListener('click', () => openTrip(dj.id));
-  $('#shareStamp').addEventListener('click', async e => { e.currentTarget.disabled = true; e.currentTarget.lastChild.textContent = 'Making your image…'; try { const c = await makeStampCard(s); openShareSheet(c, `Stamped-${s.place.replace(/[^a-z0-9]+/gi,'-')}.png`, s.place); } catch(err){ toast('Couldn\'t make the image.'); } });
+  $('#shareStamp').addEventListener('click', async e => { const btn = e.currentTarget; btn.disabled = true; btn.lastChild.textContent = 'Making your image…'; try { const c = await makeStampCard(s); openShareSheet(c, `Stamped-${s.place.replace(/[^a-z0-9]+/gi,'-')}.png`, s.place); } catch(err){ btn.disabled = false; btn.lastChild.textContent = 'Share as image'; toast('Couldn\'t make the image.'); } });
   let armed = false;
   $('#delStamp').addEventListener('click', e => {
     if (!armed){ armed = true; e.currentTarget.textContent = 'Tap again to remove'; return; }
@@ -1658,6 +1658,7 @@ async function restoreBackup(text){
   state.stamps = [...byId.values()];
   if (Array.isArray(data.books)) data.books.forEach(b => { if (b && b.id && !state.books.some(x => x.id === b.id)) state.books.push(b); });
   initBooks();
+  if (data.current && data.current !== state.current && state.books.some(b => b.id === data.current) && !state.stamps.some(s => s.bookId === state.current)){ state.current = data.current; page = 0; }
   mergeJourneys(data.journeys);
   (Array.isArray(data.wishes) ? data.wishes : []).forEach(w => { if (w && w.id && w.place && !wishes().some(x => x.id === w.id)) wishes().push(w); });
   if (data.settings) state.settings = Object.assign({}, state.settings, {name: data.settings.name ?? state.settings.name, home: data.settings.home || state.settings.home});
